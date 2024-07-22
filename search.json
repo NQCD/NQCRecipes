@@ -1,0 +1,99 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "NQCRecipes",
+    "section": "",
+    "text": "Welcome to NQCRecipes. This page serves as a collection of tutorials and examples for projects in our group using NQCDynamics.jl.\nThe examples here are more complex than in the NQCD documentation."
+  },
+  {
+    "objectID": "contributing/example-notebook.html",
+    "href": "contributing/example-notebook.html",
+    "title": "Jupyter notebook example",
+    "section": "",
+    "text": "This notebook contains some Python code which was executed before committing the notebook to the repository. The code is not executed during the build process, but the cached execution results are rendered in the final webpage.\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nBad value in file PosixPath('/Users/spears/.matplotlib/stylelib/RSC_Style.mplstyle'), line 8 ('mathtext.rm: Arial:narrow'): Key mathtext.rm: \nArial:narrow\n     ^\nParseException: Expected end of text, found ':'  (at char 5), (line:1, col:6)\n\n\n\nrandom_matrix = np.random.rand(10, 10)\n\nfigure = plt.figure(figsize=(8,6))\nax = figure.subplots(1,1)\nax.imshow(random_matrix, cmap='hot')\n\nfigure",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Jupyter notebook example"
+    ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "tutorials/overview.html",
+    "href": "tutorials/overview.html",
+    "title": "Overview",
+    "section": "",
+    "text": "Overview\nHere you will find an overview of the types of tutorials offered and a quick summary.",
+    "crumbs": [
+      "Tutorials",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "contributing/executable-code-example.html",
+    "href": "contributing/executable-code-example.html",
+    "title": "Example quarto notebook with executable code",
+    "section": "",
+    "text": "This notebook contains a single code cell which runs a bit of Julia code just to demonstrate how execution results are cached.\n\ntest_matrix = rand(10,10)\n\n10×10 Matrix{Float64}:\n 0.657005   0.183138   0.0808069  0.570109   …  0.643091  0.671801   0.121435\n 0.989064   0.796656   0.714917   0.704536      0.786184  0.532048   0.868468\n 0.446004   0.772455   0.709376   0.444346      0.52513   0.698942   0.675387\n 0.988399   0.0107792  0.366325   0.192599      0.509549  0.296207   0.330535\n 0.295898   0.715054   0.906218   0.275641      0.401412  0.475633   0.859457\n 0.751324   0.183901   0.138687   0.787041   …  0.354393  0.982124   0.506181\n 0.0341659  0.794492   0.636141   0.295598      0.659028  0.162562   0.165534\n 0.643365   0.95677    0.582924   0.0576614     0.392878  0.0602917  0.959374\n 0.498144   0.766346   0.157821   0.238751      0.372297  0.23881    0.446971\n 0.683848   0.770158   0.426446   0.718226      0.879704  0.97708    0.417502",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Example quarto notebook with executable code"
+    ]
+  },
+  {
+    "objectID": "contributing/contributing.html",
+    "href": "contributing/contributing.html",
+    "title": "Contributing to NQCRecipes",
+    "section": "",
+    "text": "This website is generated using Quarto. Quarto uses a markdown-style format to generate documents in a wide range of file types, in this case HTML.\nIn addition, Quarto can include other formats such as jupyter notebooks, which are then rendered as HTML pages.\nSince the pages here are rendered using Github CI, we want to avoid executing any of the tutorial examples during the build process.\nHowever, we can use cached execution results to show what executing snippets of code will do. This requires you to render the section of documentation you are creating on your own device, caching the results and uploading the cache along with the Quarto files. Examples for how to do this are given below.\n\n\nBy placing a .ipynb file in a subfolder of tutorials/ in this repository, it should automatically be included in the Tutorials section.\nThe name of the notebook in the sidebar is automatically taken from the first top-level heading in the notebook. You can change it by adding a top-level heading to a markdown block in the notebook file:\n# Top-level heading \n\nAdd some text to explain what your notebook does. \n\n## Subsection in the notebook\n\nUse [Quarto's Markdown syntax](https://quarto.org/docs/authoring/markdown-basics.html) to explain the code blocks in your notebook. \n\n\nBy running all the code contained in your notebook locally before committing the jupyter notebook to the NQCRecipes repository, you can include execution results (such as any plots generated in the notebook) in the final website.\nThis is shown in contributing/example-notebook.ipynb, which generates the page Jupyter Notebook example\n\n\n\n\nIn this case, you can write your tutorial section in Markdown, with various extra features detailed in the Quarto guide.\nIn particular, the Website Navigation guide explains how to modify the overall structure of the website contained in _quarto.yml (add git permalink) to include your new tutorial section.\n\n\n\n\n\n\nImportant\n\n\n\nRemember that your .qmd files should not contain any executable code blocks.\nUse non-executable code blocks as shown in the following example to include source code with syntax highlighting:\n    ```julia\n    a = [1,2,3]\n    sum(a)\n    ```\n\n\n\n\n\nThe Quarto Project for this website is already configured to freeze executable code, so execution results are cached to the _freeze directory as described in the docs.\nThis means you will need to run your executable code as part of rendering the website on your own local machine, then committing your addition including the modifications made to the _freeze/ directory. The build process via Github CI will then use the cached execution results, shortening build times and removing the need for implementing each project environment in the CI.\n\n\ngit clone git@github.com:NQCD/NQCRecipes.git\ngit add contributing/executable-code-example.qmd\ngit commit -m \"Added code execution example\"\n\n1\n\nClone the website source code to your local machine.\n\n2\n\nAdd and commit your additions to the tutorials.\n\n\nUpdate _quarto.yml if necessary to make sure your files are included.\nquarto preview contributing/executable-code-example.qmd\nBy previewing or rendering your executable notebook, execution results were cached under _freeze/contributing/executable-code-example/execute-results/.\ngit add _freeze/*\ngit commit -m \"Cache execution results\"\nYou can now push your changes to the website, which should be rendered including the executed code by Github CI.",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Contributing to NQCRecipes"
+    ]
+  },
+  {
+    "objectID": "contributing/contributing.html#contributing-jupyter-notebooks",
+    "href": "contributing/contributing.html#contributing-jupyter-notebooks",
+    "title": "Contributing to NQCRecipes",
+    "section": "",
+    "text": "By placing a .ipynb file in a subfolder of tutorials/ in this repository, it should automatically be included in the Tutorials section.\nThe name of the notebook in the sidebar is automatically taken from the first top-level heading in the notebook. You can change it by adding a top-level heading to a markdown block in the notebook file:\n# Top-level heading \n\nAdd some text to explain what your notebook does. \n\n## Subsection in the notebook\n\nUse [Quarto's Markdown syntax](https://quarto.org/docs/authoring/markdown-basics.html) to explain the code blocks in your notebook. \n\n\nBy running all the code contained in your notebook locally before committing the jupyter notebook to the NQCRecipes repository, you can include execution results (such as any plots generated in the notebook) in the final website.\nThis is shown in contributing/example-notebook.ipynb, which generates the page Jupyter Notebook example",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Contributing to NQCRecipes"
+    ]
+  },
+  {
+    "objectID": "contributing/contributing.html#contributing-quarto-documents-.qmd-files-without-executable-code",
+    "href": "contributing/contributing.html#contributing-quarto-documents-.qmd-files-without-executable-code",
+    "title": "Contributing to NQCRecipes",
+    "section": "",
+    "text": "In this case, you can write your tutorial section in Markdown, with various extra features detailed in the Quarto guide.\nIn particular, the Website Navigation guide explains how to modify the overall structure of the website contained in _quarto.yml (add git permalink) to include your new tutorial section.\n\n\n\n\n\n\nImportant\n\n\n\nRemember that your .qmd files should not contain any executable code blocks.\nUse non-executable code blocks as shown in the following example to include source code with syntax highlighting:\n    ```julia\n    a = [1,2,3]\n    sum(a)\n    ```",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Contributing to NQCRecipes"
+    ]
+  },
+  {
+    "objectID": "contributing/contributing.html#contributing-quarto-markdown-files-.qmd-with-executable-code",
+    "href": "contributing/contributing.html#contributing-quarto-markdown-files-.qmd-with-executable-code",
+    "title": "Contributing to NQCRecipes",
+    "section": "",
+    "text": "The Quarto Project for this website is already configured to freeze executable code, so execution results are cached to the _freeze directory as described in the docs.\nThis means you will need to run your executable code as part of rendering the website on your own local machine, then committing your addition including the modifications made to the _freeze/ directory. The build process via Github CI will then use the cached execution results, shortening build times and removing the need for implementing each project environment in the CI.\n\n\ngit clone git@github.com:NQCD/NQCRecipes.git\ngit add contributing/executable-code-example.qmd\ngit commit -m \"Added code execution example\"\n\n1\n\nClone the website source code to your local machine.\n\n2\n\nAdd and commit your additions to the tutorials.\n\n\nUpdate _quarto.yml if necessary to make sure your files are included.\nquarto preview contributing/executable-code-example.qmd\nBy previewing or rendering your executable notebook, execution results were cached under _freeze/contributing/executable-code-example/execute-results/.\ngit add _freeze/*\ngit commit -m \"Cache execution results\"\nYou can now push your changes to the website, which should be rendered including the executed code by Github CI.",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Contributing to NQCRecipes"
+    ]
+  }
+]
