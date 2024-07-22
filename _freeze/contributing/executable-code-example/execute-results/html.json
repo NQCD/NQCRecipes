@@ -1,0 +1,12 @@
+{
+  "hash": "60ad26fe89adcb58f3b4bcb7c2823712",
+  "result": {
+    "engine": "julia",
+    "markdown": "---\nengine: julia\n\nexecute: \n  freeze: true\n\ntitle: \"Example quarto notebook with executable code\"\n\n---\n\n\n\n\nThis notebook contains a single code cell which runs a bit of Julia code just to demonstrate how execution results are cached. \n\n\n\n\n::: {#2 .cell execution_count=1}\n``` {.julia .cell-code}\ntest_matrix = rand(10,10)\n```\n\n::: {.cell-output .cell-output-display execution_count=1}\n```\n10×10 Matrix{Float64}:\n 0.657005   0.183138   0.0808069  0.570109   …  0.643091  0.671801   0.121435\n 0.989064   0.796656   0.714917   0.704536      0.786184  0.532048   0.868468\n 0.446004   0.772455   0.709376   0.444346      0.52513   0.698942   0.675387\n 0.988399   0.0107792  0.366325   0.192599      0.509549  0.296207   0.330535\n 0.295898   0.715054   0.906218   0.275641      0.401412  0.475633   0.859457\n 0.751324   0.183901   0.138687   0.787041   …  0.354393  0.982124   0.506181\n 0.0341659  0.794492   0.636141   0.295598      0.659028  0.162562   0.165534\n 0.643365   0.95677    0.582924   0.0576614     0.392878  0.0602917  0.959374\n 0.498144   0.766346   0.157821   0.238751      0.372297  0.23881    0.446971\n 0.683848   0.770158   0.426446   0.718226      0.879704  0.97708    0.417502\n```\n:::\n:::\n\n\n",
+    "supporting": [
+      "executable-code-example_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

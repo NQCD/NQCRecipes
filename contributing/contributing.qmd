@@ -1,0 +1,86 @@
+# Contributing to NQCRecipes
+
+This website is generated using [Quarto](https://quarto.org/). Quarto uses a markdown-style format to generate documents in a wide range of file types, in this case HTML. 
+
+In addition, Quarto can include other formats such as jupyter notebooks, which are then rendered as HTML pages. 
+
+Since the pages here are rendered using Github CI, we want to avoid executing any of the tutorial examples during the build process. 
+
+However, we can use cached execution results to show what executing snippets of code will do. This requires you to render the section of documentation you are creating on your own device, caching the results and uploading the cache along with the Quarto files. 
+Examples for how to do this are given below. 
+
+
+
+## Contributing Jupyter notebooks
+
+By placing a `.ipynb` file in a subfolder of `tutorials/` in this repository, it should automatically be included in the Tutorials section. 
+
+The name of the notebook in the sidebar is automatically taken from the first top-level heading in the notebook. You can change it by adding a top-level heading to a markdown block in the notebook file:
+
+```markdown
+# Top-level heading 
+
+Add some text to explain what your notebook does. 
+
+## Subsection in the notebook
+
+Use [Quarto's Markdown syntax](https://quarto.org/docs/authoring/markdown-basics.html) to explain the code blocks in your notebook. 
+```
+
+### Caching execution results
+
+By running all the code contained in your notebook locally before committing the jupyter notebook to the NQCRecipes repository, you can include execution results (such as any plots generated in the notebook) in the final website. 
+
+This is shown in [`contributing/example-notebook.ipynb`](github.com), which generates the page [Jupyter Notebook example](example-notebook.ipynb)
+
+## Contributing Quarto documents (.qmd files) without executable code
+
+In this case, you can write your tutorial section in Markdown, with various extra features detailed in the [Quarto guide](https://quarto.org/docs/guide/). 
+
+In particular, the [Website Navigation](https://quarto.org/docs/websites/website-navigation.html) guide explains how to modify the overall structure of the website contained in `_quarto.yml` (add git permalink) to include your new tutorial section. 
+
+::: {.callout-important}
+
+Remember that your `.qmd` files should not contain any executable code blocks. 
+
+Use non-executable code blocks as shown in the following example to include source code with syntax highlighting:
+```markdown
+    ```julia
+    a = [1,2,3]
+    sum(a)
+    ```
+```
+
+:::
+
+## Contributing Quarto Markdown files (.qmd) with executable code
+
+The Quarto Project for this website is already configured to freeze executable code, so execution results are cached to the `_freeze` directory as described in the [docs](https://quarto.org/docs/computations/julia.html#freezing-execution). 
+
+This means you will need to run your executable code as part of rendering the website on your own local machine, then committing your addition including the modifications made to the `_freeze/` directory. The build process via Github CI will then use the cached execution results, shortening build times and removing the need for implementing each project environment in the CI. 
+
+### Example
+
+```
+git clone git@github.com:NQCD/NQCRecipes.git # <1>
+git add contributing/executable-code-example.qmd # <2>
+git commit -m "Added code execution example"
+```
+1. Clone the website source code to your local machine. 
+2. Add and commit your additions to the tutorials. 
+
+Update `_quarto.yml` if necessary to make sure your files are included. 
+
+```
+quarto preview contributing/executable-code-example.qmd
+```
+
+By previewing or rendering your executable notebook, execution results were cached under `_freeze/contributing/executable-code-example/execute-results/`. 
+
+```
+git add _freeze/*
+git commit -m "Cache execution results"
+```
+
+You can now push your changes to the website, which should be rendered including the executed code by Github CI. 
+

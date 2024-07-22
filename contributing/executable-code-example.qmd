@@ -1,0 +1,15 @@
+---
+engine: julia
+
+execute: 
+  freeze: true
+
+title: "Example quarto notebook with executable code"
+
+---
+
+This notebook contains a single code cell which runs a bit of Julia code just to demonstrate how execution results are cached. 
+
+```{julia}
+test_matrix = rand(10,10)
+```

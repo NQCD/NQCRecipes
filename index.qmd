@@ -1,0 +1,7 @@
+---
+title: "NQCRecipes"
+---
+
+Welcome to NQCRecipes. This page serves as a collection of tutorials and examples for projects in our group using [NQCDynamics.jl](https://github.com/NQCD/NQCDynamics.jl). 
+
+The examples here are more complex than in the [NQCD documentation](https://nqcd.github.io/NQCDynamics.jl/stable/). 
