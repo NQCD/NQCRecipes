@@ -1,52 +1,54 @@
 [
   {
+    "objectID": "tutorials/julia-python-hpc-scaling.html",
+    "href": "tutorials/julia-python-hpc-scaling.html",
+    "title": "Improving MD simulation throughput by GPU batch evaluation.",
+    "section": "",
+    "text": "Since each point in a trajectory requires a model evaluation / inference step on the previous point, we want fast evaluation of our MACE model to allow us to simulate more / longer trajectories.\nWhile MACE model inference is much faster on a GPU, copying the input structure and output tensors from CPU -&gt; GPU -&gt; CPU (host-device copy) is somewhat inefficient and can introduce a bottleneck.\nThis is something the developers of MACE also realise, hence why MACE allows for batch evaluation of structures, where model input data is prepared for multiple structures at once, then concatenated into a larger array before transfer to a GPU. GPU memory can easily deal with large arrays and it appears that a single copy + sync operation of an array concatenated from multiple structures is significantly faster than N separate copy + synchronise operations, each containing data for a single structure.\nTo eliminate some of the bottleneck associated with host-device copies, the batch processing capability of MACE can be used to accelerate MD trajectories in a multiprocess setting by passing all model evaluation / inference steps to a single instance of the MACE model, as shown below.\nIn this tutorial, I show a method of speeding up MD simulations using a MACE potential energy surface and ACE friction model by batch evaluating the MACE potential on GPU.\n\n\nThis workflow should work with any MACE potential, either on CPUs or GPUs, using my MACEModels.jl package.\n\n\n\nIn this example, we are running a MACE model on a single process (1 CPU + GPU) to batch evaluate for 31 runner processes. The performance implications of this will be discussed later.\nWe begin by loading the minimum necessary modules and launching additional processes.\nusing Distributed\nusing PythonCall\n\naddprocs(\n    33; # One process for MACE inference, the rest of them run NQCDynamics \n1    env = [\"JULIA_PYTHONCALL_EXE\" =&gt; PythonCall.python_executable_path()]\n) \n\n1\n\nBy default, PythonCall.jl resolves the loaded Conda environment when every process launches. Since process 1 has already ensured Python is available and works, we can skip the check on subsequent workers.\n\n\n1@everywhere begin\n    using CUDA \n    using PythonCall\n    using NQCModels, NQCBase, NQCDynamics, MACEModels, Unitful, UnitfulAtomic, FrictionProviders\n    using DiffEqBase\n    import SciMLBase\n    using CSV, DataFrames, BSplineKit\n    import JuLIP, ACE1\nend\n\n@everywhere begin\n2    function load_mace_model()\n        ase_io = pyimport(\"ase.io\")\n        starting_structure = ase_io.read(\"Cu111_T-300K_3x3x6_lowH_relax.in\")\n        nqcd_atoms, nqcd_positions, nqcd_cell = convert_from_ase_atoms(starting_structure)\n        model = MACEModel(\n            nqcd_atoms,\n            nqcd_cell,\n            [\"wojciech-best-mace-model.model\"];\n            device = \"cuda:1\",\n            default_dtype = Float32,\n            batch_size = 32,\n        )\n        println(\"MACE model loaded on worker:\", myid())\n        return model\n    end\nend\n\n1\n\nWe now load additional modules needed for our simulation. This needs to be done on all running processes to ensure everything needed for the simulation can be recreated on each process.\n\n2\n\nThis function is able to load the MACE model with the correct input parameters independent of the process calling it. Ideally, we want to call it as few times as possible and only within the scope of functions running on the evaluator processes to avoid unnecessary copying of data between processes.\n\n\n# model_ref = @spawnat 3 load_mace_model()\nremote_mace_model = remotecall_fetch(() -&gt; load_mace_model(), 2)\n\n@everywhere begin\n    # Starting structure data needs to be available for worker configuration\n    ase_io = pyimport(\"ase.io\")\n    starting_structure = ase_io.read(\"Cu111_T-300K_3x3x6_lowH_relax.in\")\n    nqcd_atoms, nqcd_positions, nqcd_cell = convert_from_ase_atoms(starting_structure)\nend\n\n\n1const mpi_config = Ensemble.MultiProcessConfig(\n    collect(3:33), # Vector of \"runner\" worker IDs\n    [2], # Vector of \"evaluator\" worker IDs\n    load_mace_model, # Model loading function\n    nqcd_positions # Example of atomic positions to determine system size. \n) \n2const ensemble_settings = Ensemble.CustomSplitDistributed(\n    mpi_config, # MultiProcessConfig\n    Dict(:retry_delays =&gt; [1,1]) # Arguments to the pmap() function used to parallelise evaluation. \n) \n\n1\n\nMACEModels.Ensemble provides a MultiProcessConfig object which contains information about the desired splitting of work over processes.\n\n2\n\nThe Ensemble.CustomSplitDistributed is a SciML Ensemble Algorithm, which is used in DifferentialEquations.jl to tell the solve command how to parallelise solving an ODE problem. NQCDynamics makes use of this under the hood, so it can be passed as a keyword argument.\n\n\nIn this code cell, we split all available worker processes into two types:\nRunners, which propagate an MD trajectory except for the evaluation of forces and energies.\nEvaluators, which evaluate the MACE model for all structures that were passed to them by the runners.\n\n\n\nExample for process splitting between evaluators and runners\n\n\nCustomSplitDistributed allows for inclusion of additional keyword arguments to the pmap() function used internally to enable retrying of failed trajectories, or custom error handling.\n\n\n\nfunction EFT_LDFA_ACE(ase_structure, parameters)\n1    ...\nend\n\neft_model = EFT_LDFA_ACE(starting_structure, Dict(\n    \"starting_structure\" =&gt; \"Cu111_T-300K_3x3x6_lowH_relax.in\",\n    \"eft_model_path\" =&gt; \"h2cu_ace.json\",\n    \"friction_atoms\" =&gt; [55,56]\n))\n\n# PES model\n2model = Ensemble.RemoteModel(mpi_config, nqcd_positions)\n\n# Combined model\nnew_model = CompositeFrictionModel(model, eft_model)\n\n1\n\nI’m keeping this private for now. @ maurergroup ask Wojciech.\n\n2\n\nThe RemoteModel reads the multiprocessing configuration and implements its own custom methods for NQCModels.potential and NQCModels.derivative!, which send the necessary data from Runner → Evaluator, wait for evaluation to finish and copy the results from Evaluator → Runner.\n\n\n# Load 2TM progression for T_el only\nfunction T_function_from_file(file::String, index::Int=2)\n    TTM_file = CSV.read(file, DataFrame)\n    T_spline = interpolate(TTM_file.Time, TTM_file[:, index], BSplineOrder(4)) # is a cubic spline\n    T_extrapolation = extrapolate(T_spline, Smooth()) #! Don't use to go earlier than the first point!\n    T_function(time_ps) = T_extrapolation(ustrip(u\"ps\", time_ps)) * u\"K\"\n    return T_function\nend\n\nttm_function = T_function_from_file(\"/storage/mssgwp_grp/msrkhg/H2onCu/2TM_profiles/2TM1D-toponly-J120-100K.csv\")\n\nsim = Simulation{MDEF}(nqcd_atoms, new_model, cell = nqcd_cell, temperature = ttm_function)\ninitial_conditions = DynamicsVariables(sim, zeros(size(nqcd_positions)), nqcd_positions)\n\n1Ensemble.start(mpi_config)\n\n2kick = run_dynamics(\n    sim, \n    (0.0, 0.1u\"fs\"),\n    initial_conditions,\n    dt = 0.1u\"fs\",\n    trajectories = 31, \n    output = (OutputDynamicsVariables),\n    ensemble_algorithm = ensemble_settings,\n)\n\n3results = run_dynamics(\n    sim, \n    (0.0, 10u\"fs\"),\n    initial_conditions,\n    dt = 0.1u\"fs\",\n    trajectories = 48, \n    output = (OutputDynamicsVariables, OutputPotentialEnergy),\n    ensemble_algorithm = ensemble_settings,\n)\n\n1\n\nEnsemble.start initiates model loading on the evaluator workers and makes them wait for structures to evaluate once loaded.\n\n2\n\nCalling run_dynamics for a single time step seems to take maximum advantage of precompilation.\n\n3\n\nThe final run_dynamics command contains the instructions for our desired simulation. Note that ensemble_algorithm needs to be set to the CustomSplitDistributed instance we generated earlier.\n\n\n\n\n\n\n\n\n\nExample of two evaluator steps. In the first step, the evaluator was already working on a structure when another process sent a new structure for processing. In the second step, multiple structures are ready for evaluation and can thus be evaluated in parallel\n\n\n\n\n\n1 Julia SLURM task per node\n\n3 Potential evaluators\n\nEach on their own GPU\n\n123 Trajectory runners\n\n41 runners per GPU process\n\n\n\n      From worker 4:    MACE inference step on worker 4 with 41 structures: 0.076100 seconds (24.78 k allocations: 789.703 KiB)\n      From worker 87:     0.090103 seconds (46 allocations: 2.391 KiB)\n      ...\n      From worker 2:    MACE inference step on worker 2 with 41 structures: 0.087901 seconds (24.78 k allocations: 791.828 KiB)\n      From worker 5:      0.102934 seconds (45 allocations: 2.375 KiB)\n      ...\n      From worker 3:    MACE inference step on worker 3 with 41 structures: 0.074337 seconds (24.78 k allocations: 789.703 KiB)\n      From worker 46:     0.092226 seconds (46 allocations: 2.391 KiB)\nImpressions so far: - MPI comms overhead adds about 20 ms per model evaluation step",
+    "crumbs": [
+      "Tutorials",
+      "Improving MD simulation throughput by GPU batch evaluation."
+    ]
+  },
+  {
+    "objectID": "tutorials/julia-python-hpc-scaling.html#requirements",
+    "href": "tutorials/julia-python-hpc-scaling.html#requirements",
+    "title": "Improving MD simulation throughput by GPU batch evaluation.",
+    "section": "",
+    "text": "This workflow should work with any MACE potential, either on CPUs or GPUs, using my MACEModels.jl package.",
+    "crumbs": [
+      "Tutorials",
+      "Improving MD simulation throughput by GPU batch evaluation."
+    ]
+  },
+  {
+    "objectID": "tutorials/julia-python-hpc-scaling.html#example-script",
+    "href": "tutorials/julia-python-hpc-scaling.html#example-script",
+    "title": "Improving MD simulation throughput by GPU batch evaluation.",
+    "section": "",
+    "text": "In this example, we are running a MACE model on a single process (1 CPU + GPU) to batch evaluate for 31 runner processes. The performance implications of this will be discussed later.\nWe begin by loading the minimum necessary modules and launching additional processes.\nusing Distributed\nusing PythonCall\n\naddprocs(\n    33; # One process for MACE inference, the rest of them run NQCDynamics \n1    env = [\"JULIA_PYTHONCALL_EXE\" =&gt; PythonCall.python_executable_path()]\n) \n\n1\n\nBy default, PythonCall.jl resolves the loaded Conda environment when every process launches. Since process 1 has already ensured Python is available and works, we can skip the check on subsequent workers.\n\n\n1@everywhere begin\n    using CUDA \n    using PythonCall\n    using NQCModels, NQCBase, NQCDynamics, MACEModels, Unitful, UnitfulAtomic, FrictionProviders\n    using DiffEqBase\n    import SciMLBase\n    using CSV, DataFrames, BSplineKit\n    import JuLIP, ACE1\nend\n\n@everywhere begin\n2    function load_mace_model()\n        ase_io = pyimport(\"ase.io\")\n        starting_structure = ase_io.read(\"Cu111_T-300K_3x3x6_lowH_relax.in\")\n        nqcd_atoms, nqcd_positions, nqcd_cell = convert_from_ase_atoms(starting_structure)\n        model = MACEModel(\n            nqcd_atoms,\n            nqcd_cell,\n            [\"wojciech-best-mace-model.model\"];\n            device = \"cuda:1\",\n            default_dtype = Float32,\n            batch_size = 32,\n        )\n        println(\"MACE model loaded on worker:\", myid())\n        return model\n    end\nend\n\n1\n\nWe now load additional modules needed for our simulation. This needs to be done on all running processes to ensure everything needed for the simulation can be recreated on each process.\n\n2\n\nThis function is able to load the MACE model with the correct input parameters independent of the process calling it. Ideally, we want to call it as few times as possible and only within the scope of functions running on the evaluator processes to avoid unnecessary copying of data between processes.\n\n\n# model_ref = @spawnat 3 load_mace_model()\nremote_mace_model = remotecall_fetch(() -&gt; load_mace_model(), 2)\n\n@everywhere begin\n    # Starting structure data needs to be available for worker configuration\n    ase_io = pyimport(\"ase.io\")\n    starting_structure = ase_io.read(\"Cu111_T-300K_3x3x6_lowH_relax.in\")\n    nqcd_atoms, nqcd_positions, nqcd_cell = convert_from_ase_atoms(starting_structure)\nend\n\n\n1const mpi_config = Ensemble.MultiProcessConfig(\n    collect(3:33), # Vector of \"runner\" worker IDs\n    [2], # Vector of \"evaluator\" worker IDs\n    load_mace_model, # Model loading function\n    nqcd_positions # Example of atomic positions to determine system size. \n) \n2const ensemble_settings = Ensemble.CustomSplitDistributed(\n    mpi_config, # MultiProcessConfig\n    Dict(:retry_delays =&gt; [1,1]) # Arguments to the pmap() function used to parallelise evaluation. \n) \n\n1\n\nMACEModels.Ensemble provides a MultiProcessConfig object which contains information about the desired splitting of work over processes.\n\n2\n\nThe Ensemble.CustomSplitDistributed is a SciML Ensemble Algorithm, which is used in DifferentialEquations.jl to tell the solve command how to parallelise solving an ODE problem. NQCDynamics makes use of this under the hood, so it can be passed as a keyword argument.\n\n\nIn this code cell, we split all available worker processes into two types:\nRunners, which propagate an MD trajectory except for the evaluation of forces and energies.\nEvaluators, which evaluate the MACE model for all structures that were passed to them by the runners.\n\n\n\nExample for process splitting between evaluators and runners\n\n\nCustomSplitDistributed allows for inclusion of additional keyword arguments to the pmap() function used internally to enable retrying of failed trajectories, or custom error handling.\n\n\n\nfunction EFT_LDFA_ACE(ase_structure, parameters)\n1    ...\nend\n\neft_model = EFT_LDFA_ACE(starting_structure, Dict(\n    \"starting_structure\" =&gt; \"Cu111_T-300K_3x3x6_lowH_relax.in\",\n    \"eft_model_path\" =&gt; \"h2cu_ace.json\",\n    \"friction_atoms\" =&gt; [55,56]\n))\n\n# PES model\n2model = Ensemble.RemoteModel(mpi_config, nqcd_positions)\n\n# Combined model\nnew_model = CompositeFrictionModel(model, eft_model)\n\n1\n\nI’m keeping this private for now. @ maurergroup ask Wojciech.\n\n2\n\nThe RemoteModel reads the multiprocessing configuration and implements its own custom methods for NQCModels.potential and NQCModels.derivative!, which send the necessary data from Runner → Evaluator, wait for evaluation to finish and copy the results from Evaluator → Runner.\n\n\n# Load 2TM progression for T_el only\nfunction T_function_from_file(file::String, index::Int=2)\n    TTM_file = CSV.read(file, DataFrame)\n    T_spline = interpolate(TTM_file.Time, TTM_file[:, index], BSplineOrder(4)) # is a cubic spline\n    T_extrapolation = extrapolate(T_spline, Smooth()) #! Don't use to go earlier than the first point!\n    T_function(time_ps) = T_extrapolation(ustrip(u\"ps\", time_ps)) * u\"K\"\n    return T_function\nend\n\nttm_function = T_function_from_file(\"/storage/mssgwp_grp/msrkhg/H2onCu/2TM_profiles/2TM1D-toponly-J120-100K.csv\")\n\nsim = Simulation{MDEF}(nqcd_atoms, new_model, cell = nqcd_cell, temperature = ttm_function)\ninitial_conditions = DynamicsVariables(sim, zeros(size(nqcd_positions)), nqcd_positions)\n\n1Ensemble.start(mpi_config)\n\n2kick = run_dynamics(\n    sim, \n    (0.0, 0.1u\"fs\"),\n    initial_conditions,\n    dt = 0.1u\"fs\",\n    trajectories = 31, \n    output = (OutputDynamicsVariables),\n    ensemble_algorithm = ensemble_settings,\n)\n\n3results = run_dynamics(\n    sim, \n    (0.0, 10u\"fs\"),\n    initial_conditions,\n    dt = 0.1u\"fs\",\n    trajectories = 48, \n    output = (OutputDynamicsVariables, OutputPotentialEnergy),\n    ensemble_algorithm = ensemble_settings,\n)\n\n1\n\nEnsemble.start initiates model loading on the evaluator workers and makes them wait for structures to evaluate once loaded.\n\n2\n\nCalling run_dynamics for a single time step seems to take maximum advantage of precompilation.\n\n3\n\nThe final run_dynamics command contains the instructions for our desired simulation. Note that ensemble_algorithm needs to be set to the CustomSplitDistributed instance we generated earlier.",
+    "crumbs": [
+      "Tutorials",
+      "Improving MD simulation throughput by GPU batch evaluation."
+    ]
+  },
+  {
+    "objectID": "tutorials/julia-python-hpc-scaling.html#performance-considerations",
+    "href": "tutorials/julia-python-hpc-scaling.html#performance-considerations",
+    "title": "Improving MD simulation throughput by GPU batch evaluation.",
+    "section": "",
+    "text": "Example of two evaluator steps. In the first step, the evaluator was already working on a structure when another process sent a new structure for processing. In the second step, multiple structures are ready for evaluation and can thus be evaluated in parallel\n\n\n\n\n\n1 Julia SLURM task per node\n\n3 Potential evaluators\n\nEach on their own GPU\n\n123 Trajectory runners\n\n41 runners per GPU process\n\n\n\n      From worker 4:    MACE inference step on worker 4 with 41 structures: 0.076100 seconds (24.78 k allocations: 789.703 KiB)\n      From worker 87:     0.090103 seconds (46 allocations: 2.391 KiB)\n      ...\n      From worker 2:    MACE inference step on worker 2 with 41 structures: 0.087901 seconds (24.78 k allocations: 791.828 KiB)\n      From worker 5:      0.102934 seconds (45 allocations: 2.375 KiB)\n      ...\n      From worker 3:    MACE inference step on worker 3 with 41 structures: 0.074337 seconds (24.78 k allocations: 789.703 KiB)\n      From worker 46:     0.092226 seconds (46 allocations: 2.391 KiB)\nImpressions so far: - MPI comms overhead adds about 20 ms per model evaluation step",
+    "crumbs": [
+      "Tutorials",
+      "Improving MD simulation throughput by GPU batch evaluation."
+    ]
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "NQCRecipes",
     "section": "",
     "text": "Welcome to NQCRecipes. This page serves as a collection of tutorials and examples for projects in our group using NQCDynamics.jl.\nThe examples here are more complex than in the NQCD documentation."
-  },
-  {
-    "objectID": "contributing/example-notebook.html",
-    "href": "contributing/example-notebook.html",
-    "title": "Jupyter notebook example",
-    "section": "",
-    "text": "This notebook contains some Python code which was executed before committing the notebook to the repository. The code is not executed during the build process, but the cached execution results are rendered in the final webpage.\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nBad value in file PosixPath('/Users/spears/.matplotlib/stylelib/RSC_Style.mplstyle'), line 8 ('mathtext.rm: Arial:narrow'): Key mathtext.rm: \nArial:narrow\n     ^\nParseException: Expected end of text, found ':'  (at char 5), (line:1, col:6)\n\n\n\nrandom_matrix = np.random.rand(10, 10)\n\nfigure = plt.figure(figsize=(8,6))\nax = figure.subplots(1,1)\nax.imshow(random_matrix, cmap='hot')\n\nfigure",
-    "crumbs": [
-      "How to contribute",
-      "Contributing",
-      "Jupyter notebook example"
-    ]
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
-  },
-  {
-    "objectID": "tutorials/overview.html",
-    "href": "tutorials/overview.html",
-    "title": "Overview",
-    "section": "",
-    "text": "Overview\nHere you will find an overview of the types of tutorials offered and a quick summary.",
-    "crumbs": [
-      "Tutorials",
-      "Overview"
-    ]
-  },
-  {
-    "objectID": "contributing/executable-code-example.html",
-    "href": "contributing/executable-code-example.html",
-    "title": "Example quarto notebook with executable code",
-    "section": "",
-    "text": "This notebook contains a single code cell which runs a bit of Julia code just to demonstrate how execution results are cached.\n\ntest_matrix = rand(10,10)\n\n10×10 Matrix{Float64}:\n 0.657005   0.183138   0.0808069  0.570109   …  0.643091  0.671801   0.121435\n 0.989064   0.796656   0.714917   0.704536      0.786184  0.532048   0.868468\n 0.446004   0.772455   0.709376   0.444346      0.52513   0.698942   0.675387\n 0.988399   0.0107792  0.366325   0.192599      0.509549  0.296207   0.330535\n 0.295898   0.715054   0.906218   0.275641      0.401412  0.475633   0.859457\n 0.751324   0.183901   0.138687   0.787041   …  0.354393  0.982124   0.506181\n 0.0341659  0.794492   0.636141   0.295598      0.659028  0.162562   0.165534\n 0.643365   0.95677    0.582924   0.0576614     0.392878  0.0602917  0.959374\n 0.498144   0.766346   0.157821   0.238751      0.372297  0.23881    0.446971\n 0.683848   0.770158   0.426446   0.718226      0.879704  0.97708    0.417502",
-    "crumbs": [
-      "How to contribute",
-      "Contributing",
-      "Example quarto notebook with executable code"
-    ]
   },
   {
     "objectID": "contributing/contributing.html",
@@ -94,6 +96,48 @@
       "How to contribute",
       "Contributing",
       "Contributing to NQCRecipes"
+    ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "contributing/executable-code-example.html",
+    "href": "contributing/executable-code-example.html",
+    "title": "Example quarto notebook with executable code",
+    "section": "",
+    "text": "This notebook contains a single code cell which runs a bit of Julia code just to demonstrate how execution results are cached.\n\ntest_matrix = rand(10,10)\n\n10×10 Matrix{Float64}:\n 0.657005   0.183138   0.0808069  0.570109   …  0.643091  0.671801   0.121435\n 0.989064   0.796656   0.714917   0.704536      0.786184  0.532048   0.868468\n 0.446004   0.772455   0.709376   0.444346      0.52513   0.698942   0.675387\n 0.988399   0.0107792  0.366325   0.192599      0.509549  0.296207   0.330535\n 0.295898   0.715054   0.906218   0.275641      0.401412  0.475633   0.859457\n 0.751324   0.183901   0.138687   0.787041   …  0.354393  0.982124   0.506181\n 0.0341659  0.794492   0.636141   0.295598      0.659028  0.162562   0.165534\n 0.643365   0.95677    0.582924   0.0576614     0.392878  0.0602917  0.959374\n 0.498144   0.766346   0.157821   0.238751      0.372297  0.23881    0.446971\n 0.683848   0.770158   0.426446   0.718226      0.879704  0.97708    0.417502",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Example quarto notebook with executable code"
+    ]
+  },
+  {
+    "objectID": "contributing/example-notebook.html",
+    "href": "contributing/example-notebook.html",
+    "title": "Jupyter notebook example",
+    "section": "",
+    "text": "This notebook contains some Python code which was executed before committing the notebook to the repository. The code is not executed during the build process, but the cached execution results are rendered in the final webpage.\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nBad value in file PosixPath('/Users/spears/.matplotlib/stylelib/RSC_Style.mplstyle'), line 8 ('mathtext.rm: Arial:narrow'): Key mathtext.rm: \nArial:narrow\n     ^\nParseException: Expected end of text, found ':'  (at char 5), (line:1, col:6)\n\n\n\nrandom_matrix = np.random.rand(10, 10)\n\nfigure = plt.figure(figsize=(8,6))\nax = figure.subplots(1,1)\nax.imshow(random_matrix, cmap='hot')\n\nfigure",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Jupyter notebook example"
+    ]
+  },
+  {
+    "objectID": "tutorials/overview.html",
+    "href": "tutorials/overview.html",
+    "title": "Overview",
+    "section": "",
+    "text": "Overview\nHere you will find an overview of the types of tutorials offered and a quick summary.\nImproving MD simulation throughput by GPU batch evaluation in MACEModels.jl",
+    "crumbs": [
+      "Tutorials",
+      "Overview"
     ]
   }
 ]
