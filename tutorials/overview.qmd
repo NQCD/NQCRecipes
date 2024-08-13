@@ -2,3 +2,4 @@
 
 Here you will find an overview of the types of tutorials offered and a quick summary. 
 
+[Improving MD simulation throughput by GPU batch evaluation in MACEModels.jl](julia-python-hpc-scaling.qmd)
