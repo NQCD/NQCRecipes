@@ -355,7 +355,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="annotated-cell-6-7"><a href="#annotated-cell-6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> T_function</span>
 <span id="annotated-cell-6-8"><a href="#annotated-cell-6-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
 <span id="annotated-cell-6-9"><a href="#annotated-cell-6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-6-10"><a href="#annotated-cell-6-10" aria-hidden="true" tabindex="-1"></a>ttm_function <span class="op">=</span> <span class="fu">T_function_from_file</span>(<span class="st">"/storage/mssgwp_grp/msrkhg/H2onCu/2TM_profiles/2TM1D-toponly-J120-100K.csv"</span>)</span>
+<span id="annotated-cell-6-10"><a href="#annotated-cell-6-10" aria-hidden="true" tabindex="-1"></a>ttm_function <span class="op">=</span> <span class="fu">T_function_from_file</span>(<span class="st">"2TM1D-toponly-100K.csv"</span>)</span>
 <span id="annotated-cell-6-11"><a href="#annotated-cell-6-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="annotated-cell-6-12"><a href="#annotated-cell-6-12" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> <span class="fu">Simulation</span><span class="dt">{MDEF}</span>(nqcd_atoms, new_model, cell <span class="op">=</span> nqcd_cell, temperature <span class="op">=</span> ttm_function)</span>
 <span id="annotated-cell-6-13"><a href="#annotated-cell-6-13" aria-hidden="true" tabindex="-1"></a>initial_conditions <span class="op">=</span> <span class="fu">DynamicsVariables</span>(sim, <span class="fu">zeros</span>(<span class="fu">size</span>(nqcd_positions)), nqcd_positions)</span>
