@@ -139,7 +139,7 @@ function T_function_from_file(file::String, index::Int=2)
     return T_function
 end
 
-ttm_function = T_function_from_file("/storage/mssgwp_grp/msrkhg/H2onCu/2TM_profiles/2TM1D-toponly-J120-100K.csv")
+ttm_function = T_function_from_file("2TM1D-toponly-100K.csv")
 
 sim = Simulation{MDEF}(nqcd_atoms, new_model, cell = nqcd_cell, temperature = ttm_function)
 initial_conditions = DynamicsVariables(sim, zeros(size(nqcd_positions)), nqcd_positions)
