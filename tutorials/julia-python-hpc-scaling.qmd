@@ -1,5 +1,14 @@
 ---
 code-annotations: below 
+
+author:
+  - name: Alexander Spears
+    affiliation: 
+      name: University of Warwick
+      department: Department of Chemistry
+      address: Gibbet Hill Road, Coventry, CV4 7AL
+    url: https://warwick.ac.uk/fac/sci/chemistry/research/maurer/maurergroup/people/alex/
+
 ---
 
 # Improving MD simulation throughput by GPU batch evaluation. 
