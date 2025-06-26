@@ -1,5 +1,82 @@
 [
   {
+    "objectID": "tutorials/mdef-ttm-tutorial.html#introduction",
+    "href": "tutorials/mdef-ttm-tutorial.html#introduction",
+    "title": "Simulating laser-driven desorption with MDEF and the TTM",
+    "section": "Introduction",
+    "text": "Introduction\nOn this page, we will look at the example of simulating the response of hydrogen adsorbed to a Cu(111) surface to an ultrafast laser pulse using Molecular Dynamics with Electronic Friction and the Two-temperature model.\nAs detailed before, the nuclear coordinates in MDEF evolve as follows: \\[\n\\mathbf{M}\\ddot{\\mathbf{R}} = - \\nabla_R V(\\mathbf{R}) + \\mathbf{F}(t) - \\Gamma(\\mathbf{R}) \\dot{\\mathbf{R}}\n\\] The first term on the right hand side of the equation corresponds to a conservative force associated with the potential energy surface (PES) as in the adiabatic case. The third term is the friction force and it comes from multiplication between the electronic friction object (\\(\\Gamma(\\mathbf{R})\\)) and the velocity. Finally, the second term is a temperature and friction-dependent stochastic force which ensures detailed balance.",
+    "crumbs": [
+      "Tutorials",
+      "Simulating laser-driven desorption with MDEF and the TTM"
+    ]
+  },
+  {
+    "objectID": "tutorials/mdef-ttm-tutorial.html#the-two-temperature-model",
+    "href": "tutorials/mdef-ttm-tutorial.html#the-two-temperature-model",
+    "title": "Simulating laser-driven desorption with MDEF and the TTM",
+    "section": "The two-temperature model",
+    "text": "The two-temperature model\n\n\n\n\n\n\nNote\n\n\n\nTemperature profiles for the Two-temperature model can be generated using the LightMatter.jl package. (Will be released soon)\n\n\nThe two-temperature model (TTM) is a system of two coupled differential equations that describe the time evolution of the electronic and lattice temperatures, \\(T_{el}\\) and \\(T_{ph}\\). In this work, lateral heat transport across the metal surface is neglected, allowing for a simplified one-dimensional representation of the two-temperature model. The TTM is given by the following set of equations:\nElectronic heat capacity \\[\nC_{el}\\frac{\\partial}{\\partial t}T_{el}=\\nabla(\\kappa\\nabla T_{el})-g(T_{el}-T_{ph})+S(z,t)\n\\]\nPhononic heat capacity \\[\nC_{ph}\\frac{\\partial}{\\partial t}T_{ph}=g(T_{el}-T_{ph})\n\\]\nLaser source term \\[\nS(z,t)=F\\cdot\\frac{\\exp{\\frac{-z}{\\xi}}\\cdot\\exp{\\frac{-(t-t_0)^2}{2r^2}}}{\\xi\\cdot\\sqrt{2\\pi}\\tau};\n        \\tau=\\frac{\\mathrm{FWHM}}{2\\sqrt{2\\ln{2}}}\n\\]\nThe model is parametrised with material-specific parameters obtained from ab-initio calculations or experiments. As an example, the material-specific parameters for bulk crystalline Cu are shown here (Scholz2019):\n\n\n\n\n\n\n\n\nParameter\nExplanation\nValue\n\n\n\n\n\\(g\\)\nElectron-phonon coupling constant\n\\(1\\times 10^{-17}~\\mathrm{W~m^{-3}~K^{-1}}\\)\n\n\n\\(\\xi\\)\nLaser penetration depth for \\(\\lambda=400~\\mathrm{nm}\\)\n\\(\\frac{1}{\\xi}=14.9~\\mathrm{nm}\\)\n\n\n\\(\\gamma_{el}\\)\nScaling constant for the electronic heat capacity \\(C_{el}\\).\n\\(98.0~\\mathrm{J~m^{-3}~K^{-2}}\\)\n\n\n\\(\\theta_D\\)\nDebye temperature of Cu.\n\\(343~\\mathrm{K}\\)\n\n\n\\(N\\)\nAtom density of bulk Cu\n\\(8.5\\times 10^{28}\\)\n\n\n\\(\\kappa_{RT}\\)\nThermal conductivity at room temperature\n\\(401.0~\\mathrm{W^{-1}~K^{-1}}\\)\n\n\n\\(\\mathrm{FWHM}\\)\nFull width half maximum of the laser pulse\n\\(150~\\mathrm{fs}\\)\n\n\n\nThe electronic heat capacity \\(C_{el}(T_{el})\\) was determined using a linear scaling relation:\n\\[\nC_{el}(T_{el})=\\gamma_{el}T_{el}\n\\]\nThe temperature dependence of the thermal conductivity of Cu was modelled using the following relation:\n\\[\n\\kappa(T_{el}, T_{ph})=\\kappa_{RT}\\frac{T_{el}}{T_{ph}}\n\\]\nThe phononic heat capacity was calculated using the Debye model with \\(N\\) and \\(\\theta_D\\) values given above:\n\\[\nC_{ph}(T_{ph})=9nk_B\\left(\\frac{T_{ph}}{\\theta_D}\\right)^3\\int_0^{\\frac{\\theta_D}{T_{ph}}}\\frac{x^4e^x}{(e^x-1)^2}~dx\n\\]\nAn example of the TTM progression for a \\(80~\\mathrm{J~m^{-2}}\\) absorbed fluence is shown in the video below.\n\n\nVideo\nTemperature progressions, energy distributions and laser power for a TTM progression.\n\n\nIn our implementation of the TTM, the temperature progressions are saved to CSV files, which need to be interpolated to provide a continuous temperature function to use for our Simulations.\nusing BSplineKit\nusing Unitful, UnitfulAtomic\nusing CSV, DataFrames\n\n\"\"\"\nThis function reads a CSV file for a TTM solution containing:\n1. The time in ps\n2. Electronic temperature\n3. Phononic temperature\n\nDepending on which index is specified, a continuous temperature function for the electronic or phononic temperature is returned. \n\"\"\"\nfunction T_function_from_file(file::String, index::Int=2)\n    TTM_file = CSV.read(file, DataFrame)\n    T_spline = interpolate(TTM_file.Time, TTM_file[:, index], BSplineOrder(4)) # is a cubic spline\n    T_extrapolation = extrapolate(T_spline, Smooth()) #! Don't use to go earlier than the first point!\n    T_function(time_ps) = T_extrapolation(ustrip(u\"ps\", time_ps)) * u\"K\"\n    return T_function\nend\n\nT_el_function = T_function_from_file(\"ttm-file.csv\", 2)\nT_ph_function = T_function_from_file(\"ttm-file.csv\", 3)",
+    "crumbs": [
+      "Tutorials",
+      "Simulating laser-driven desorption with MDEF and the TTM"
+    ]
+  },
+  {
+    "objectID": "tutorials/mdef-ttm-tutorial.html#models",
+    "href": "tutorials/mdef-ttm-tutorial.html#models",
+    "title": "Simulating laser-driven desorption with MDEF and the TTM",
+    "section": "Models",
+    "text": "Models\nIn the following, we use machine learning interatomic potentials from Stark et al. to predict energies, forces and electronic friction tensors. These will be needed multiple times in the remaining tutorial, so we define functions to load them here.\nusing MACEModels\nusing FrictionProviders\n\n\"\"\"\nFunction to load the MACE models used in this tutorial.\n\"\"\"\nfunction load_mace_model()\n    atoms, position, cell = read_extxyz(\"starting_structure.xyz\")\n    \n    # Load PES model\n    pes_model = MACEModel(\n        atoms,\n        cell,\n        [\"mace-model.model\"];\n        device=\"cpu\",\n        default_dtype=Float32,\n        mobile_atoms::Vector{Int}=18:56, # Keep the top 4 layers mobile, freeze the bottom 2. \n    )\n    return pes_model\nend\n\nfunction load_ldfa_eft_ace()\n    ## Create ACE LDFA model\n    # We need to make a copy of our structure containing only one H atom to evaluate the density\n    atoms, positions, cell = read_extxyz(\"starting_structure.xyz\")\n    positions_copy = deepcopy(positions)\n    H_indices = sort(findall(atoms.types .== :H); rev=true)\n    indices_to_copy = symdiff(1:lastindex(atoms.types), H_indices[2:end])\n    single_H_atoms = Atoms(atoms.types[indices_to_copy])\n    single_H_positions = positions_copy[:, indices_to_copy]\n    write_extxyz(\"single_H_structure.xyz\", single_H_atoms, single_H_positions, cell)\n    # Now we load the single H copy and the LDFA model\n    julip_atoms = ACEpotentials.read_extxyz(\"single_H_structure.xyz\")[1] # Hacky workaround to avoid using python more\n    eft_model = ACEpotentials.read_dict(ACEpotentials.load_dict(\"ace_ldfa_H2Cu.json\")[\"IP\"])\n    JuLIP.set_calculator!(julip_atoms, eft_model)\n    density_model = AceLDFA(AdiabaticModels.JuLIPModel(julip_atoms); density_unit=u\"Å^-3\")\n    ldfa_model = LDFAFriction(density_model, atoms; friction_atoms=H_indices)\n    return ldfa_model\nend",
+    "crumbs": [
+      "Tutorials",
+      "Simulating laser-driven desorption with MDEF and the TTM"
+    ]
+  },
+  {
+    "objectID": "tutorials/mdef-ttm-tutorial.html#generating-initial-conditions",
+    "href": "tutorials/mdef-ttm-tutorial.html#generating-initial-conditions",
+    "title": "Simulating laser-driven desorption with MDEF and the TTM",
+    "section": "Generating initial conditions",
+    "text": "Generating initial conditions\nInitial conditions are generated by Metropolis-Hastings Monte Carlo sampling of atomic positions. All Cu(111) structures were generated with a temperature-dependent lattice constant interpolated from NPT ensemble MD trajectories at different temperatures.@starkMachineLearningInteratomic2023a\nFor a unit cell size of \\(3\\times 3\\times 6\\) layers, structures with two and four H atoms were generated with the atoms located in the hollow adsorption sites. For each combination of temperature and coverage, an evenly spaced sample of 100000 structures was taken from a single random walk, discarding the first 1000 steps due to similarity to the starting configuration. Additional parameters for the Monte Carlo sampling are given in the following code block.\nfunction thermal_montecarlo(parameters)\n    # Import starting structure\n    atoms, position, cell = read_extxyz(\"starting_structure.xyz\")\n    \n    # Load PES model\n    pes_model = load_mace_model()\n    simulation = Simulation{Classical}(\n        atoms,\n        pes_model;\n        cell = cell,\n        temperature = 100.0u\"K\",\n    )\n    \n    simulation.atoms.types[1:18] .= :X\n    step_sizes = Dict(\n        :H =&gt; 3.0, # High step size to have a chance of traversing diffusion barriers. \n        :Cu =&gt; 0.075, # Step size close to kT. \n        :X =&gt; 0.0, # No movement for frozen atoms\n    )\n    # Now start MC sampling\n    mc_chain = InitialConditions.ThermalMonteCarlo.run_advancedmh_sampling(\n        simulation, # Simulation to run HMC sampling with\n        positions, # Initial configuration\n        100000, # Number of MonteCarlo steps to do.\n        step_sizes; # Step sizes per atom species.\n        movement_ratio = 2/56, # on average, move two atoms per step\n        thinning = 15, # Record only every 15 steps to capture fewer similar structures\n        discard_initial = 10000, # Ignore the first 10000 structures as they are too similar to the starting structure\n    )\n    \n    nqcd_distribution = DynamicalDistribution(\n        VelocityBoltzmann(100.0u\"K\", simulation),\n        mc_chain,\n        sim\n    )\n    jldsave(\"initial_conditions.jld2\"; nqcd_distribution = nqcd_distribution) # Save as a JLD2 file to reload later. \nend\n\n\n\nH position density resulting from an example Monte Carlo sampling run for H2 on a Cu(111) surface.",
+    "crumbs": [
+      "Tutorials",
+      "Simulating laser-driven desorption with MDEF and the TTM"
+    ]
+  },
+  {
+    "objectID": "tutorials/mdef-ttm-tutorial.html#setting-up-a-single-simulation",
+    "href": "tutorials/mdef-ttm-tutorial.html#setting-up-a-single-simulation",
+    "title": "Simulating laser-driven desorption with MDEF and the TTM",
+    "section": "Setting up a single simulation",
+    "text": "Setting up a single simulation\n\nConditional termination of simulations on desorption\nSince we want our laser-driven desorption simulations to terminate once a H2 molecule has definitely desorbed, we need to write a termination condition for the simulation.\nWe consider a H2 molecule as desorbed if it is more than a certain distance away from the top layer of the surface, where the cutoff radius of the MACE MLIP will ensure it can’t return to the surface. The code snippet below shows how this can be achieved with a DiffEq callback which is used later in the tutorial, which also works for an arbitrary amount of H atoms on the surface to allow for desorption detection at different coverages.\nusing Parameters\n\n@with_kw mutable struct DesorptionTerminator\n    hydrogen_indices\n    top_layer_indices::Vector{Int}\n    min_desorption_distance = 8.0\n    simulation::NQCDynamics.AbstractSimulation\nend\n\n\"\"\"\n    (desorption_terminator::DesorptionTerminator)(u,t,integrator)::Bool\n\n    DesorptionTerminator checks whether any combination of `hydrogen_indices` has a centre of mass distance larger than `min_desorption_distance` from `cu_surface_z`.\n\"\"\"\nfunction (desorption_terminator::DesorptionTerminator)(u, t, integrator)::Bool\n    # Find possible hydrogen molecules from all unique distance combinations of H atoms.\n    h_combinations = collect(multiset_combinations(desorption_terminator.hydrogen_indices, 2)) # Unique H neighbour list\n    surface_z = cu_surface_z(u, desorption_terminator.top_layer_indices)\n    for molecule in h_combinations\n        if NQCDynamics.Structure.pbc_center_of_mass(u, molecule..., desorption_terminator.simulation; cutoff=1)[3] - surface_z &gt;= ang_to_au(desorption_terminator.min_desorption_distance) # Check if H2 COM is far enough away from the surface COM\n            return true\n        end\n    end\n    return false\nend\n\n\nCombining Electronic and phononic thermostats\nThe electron and phonon temperatures are propagated as described above, yielding temperature profiles that are applied to MDEF simulations through the \\mathcal{W} term in the Langevin equation. T_{el} is applied directly to the adsorbate H atoms, while \\gamma as a function of H positions is determined using one of the MLIPs detailed above. T_{ph} is coupled to the surface Cu atoms using a position-independent coupling constant.\n\n\n\nDifferent thermostatting strategies for our system\n\n\nAs shown above, T_{ph} can enter our system in different ways. We will use Subsystems to generate a CompositeModel and Simulation for these different strategies.\n\n\nElectron thermostat only\n# PES applies to all atoms\npes_subsystem = Subsystem(pes_model)\n\n# Electronic friction applies to adsorbate atoms 55,56\nelectronic_friction = Subsystem(load_ldfa_eft_ace(), indices=[55,56])\n\n# Combine models and generate Simulation\ncombined_model = CompositeModel(pes_subsystem, electronic_friction)\n\nsim_T_el_only = Simulation{MDEF}(\n    atoms, \n    combined_model; \n    temperature = T_el_function, \n    cell=cell\n)\n\n\nPhonon thermostatting top four layers\n# PES applies to all atoms\npes_subsystem = Subsystem(pes_model)\n\n# Electronic friction applies to adsorbate atoms 55,56\nelectronic_friction = Subsystem(load_ldfa_eft_ace(), indices=[55,56])\n\n# Phononic friction applies to surface atoms 18:54\nγ_phonon = austrip(uconvert(u\"ps^-1\", 97694097465737.3 * u\"rad/s\" / 2 / π / u\"rad\")) * austrip(101.07u\"u\") # Friction coefficent based on Debye frequency. \nphononic_friction = Subsystem(ConstantFriction(size(positions,1), γ_phonon), indices=18:54)\n\n# Combine models and generate Simulation\ncombined_model = CompositeModel(\n    pes_subsystem, \n    electronic_friction, \n    phononic_friction\n)\n\n# Create TemperatureSetting objects to apply T_el to adsorbates, T_ph to surface\n# Manually specified indices\nelectron_thermostat = TemperatureSetting(T_el_function, indices = [55,56]) \n# Inherit indices from a Subsystem\nphonon_thermostat = TemperatureSetting(T_ph_function, phononic_friction) \n\nsim_T_el_only = Simulation{MDEF}(\n    atoms, \n    combined_model; \n    temperature = [\n        electron_thermostat,\n        phonon_thermostat\n    ], \n    cell=cell\n)\n\n\nRunning the simulation\nthermostats = TemperatureSetting[]\nsubsystems = Subsystem[Subsystem(pes_model, 1:size(initial_positions,2))]\n# Apply phonon thermostat to selected atoms\nT_ph_function = T_function_from_file(parameters[\"2TM-file\"], 3)\nphonon_indices = 1:54\npush!(thermostats, TemperatureSetting(T_ph_function, phonon_indices)) # Apply T_ph profile\npush!(subsystems, Subsystem(ConstantFriction(size(initial_positions,1), parameters[\"γ_phonon\"]), phonon_indices)) # Apply phononic friction\n\nT_el_function = T_function_from_file(parameters[\"2TM-file\"], 2)\natom_indices = [55,56]\npush!(thermostats, TemperatureSetting(T_el_function, atom_indices)) # Assign T_el profile\npush!(subsystems, Subsystem(EFT_model, atom_indices)) # Apply electronic friction\n\nremaining_atoms = symdiff(1:size(initial_positions)[2], [t.indices for t in thermostats]...) # Should be empty\nif remaining_atoms != [] # If any atoms aren't assigned to a thermostat, make them classical.\n    push!(thermostats, TemperatureSetting(0.0, remaining_atoms))\nend\ncomplete_model = CompositeModel(subsystems...) # Build model for simulations\n@info \"Generated PES (+Friction) model with thermostats\"\n# Setup simulation and termination condition.\n# Initialise NCQD Simulation\nsimulation = Simulation{MDEF}(\n    atoms,\n    complete_model;\n    cell = cell,\n    temperature = thermostats\n)\n\nnqcd_distribution = jldopen(\"initial_conditions.jld2\")[\"nqcd_distribution\"]\n\n\ndesorption_callback = DesorptionTerminator([55,56], collect([46:54]), 6.0, simulation)\nterminate_callback = DynamicsUtils.TerminatingCallback(desorption_callback)\noutputs = (OutputDesorptionTrajectory, OutputDesorptionAngle, OutputFinalTime, )\nsaveat = 0.1u\"fs\"\nGC.gc()\ntraj = run_dynamics(\n    simulation,\n    (0.0u\"fs\", 4.75u\"ps\"),\n    nqcd_distribution;\n    dt = 0.1u\"fs\",\n    trajectories = 1,\n    output = outputs,\n    callback = CallbackSet(\n        DynamicsUtils.CellBoundaryCallback(), # This wraps around periodic boundary conditions. \n        terminate_callback # This stops the simulation on desorption. \n    ),\n    saveat=saveat_arg,\n    savetime = false, # Don't save the time at each step, it makes trajectories take up less space. \n)\njldsave(\"trajectory.jld2\", results = results, parameters = parameters)\n\n\nVideo\nExample desorption trajectories from LDFA and ODF simulations.",
+    "crumbs": [
+      "Tutorials",
+      "Simulating laser-driven desorption with MDEF and the TTM"
+    ]
+  },
+  {
+    "objectID": "tutorials/mdef-ttm-tutorial.html#scaling-up-for-hpc-systems.",
+    "href": "tutorials/mdef-ttm-tutorial.html#scaling-up-for-hpc-systems.",
+    "title": "Simulating laser-driven desorption with MDEF and the TTM",
+    "section": "Scaling up for HPC systems.",
+    "text": "Scaling up for HPC systems.",
+    "crumbs": [
+      "Tutorials",
+      "Simulating laser-driven desorption with MDEF and the TTM"
+    ]
+  },
+  {
+    "objectID": "tutorials/mdef-ttm-tutorial.html#analysing-results",
+    "href": "tutorials/mdef-ttm-tutorial.html#analysing-results",
+    "title": "Simulating laser-driven desorption with MDEF and the TTM",
+    "section": "Analysing results",
+    "text": "Analysing results",
+    "crumbs": [
+      "Tutorials",
+      "Simulating laser-driven desorption with MDEF and the TTM"
+    ]
+  },
+  {
     "objectID": "tutorials/julia-python-hpc-scaling.html",
     "href": "tutorials/julia-python-hpc-scaling.html",
     "title": "Improving MD simulation throughput by GPU batch evaluation.",
@@ -44,11 +121,16 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "NQCRecipes",
+    "objectID": "contributing/executable-code-example.html",
+    "href": "contributing/executable-code-example.html",
+    "title": "Example quarto notebook with executable code",
     "section": "",
-    "text": "Welcome to NQCRecipes. This page serves as a collection of tutorials and examples for projects in our group using NQCDynamics.jl.\nThe examples here are more complex than in the NQCD documentation."
+    "text": "This notebook contains a single code cell which runs a bit of Julia code just to demonstrate how execution results are cached.\n\ntest_matrix = rand(10,10)\n\n10×10 Matrix{Float64}:\n 0.657005   0.183138   0.0808069  0.570109   …  0.643091  0.671801   0.121435\n 0.989064   0.796656   0.714917   0.704536      0.786184  0.532048   0.868468\n 0.446004   0.772455   0.709376   0.444346      0.52513   0.698942   0.675387\n 0.988399   0.0107792  0.366325   0.192599      0.509549  0.296207   0.330535\n 0.295898   0.715054   0.906218   0.275641      0.401412  0.475633   0.859457\n 0.751324   0.183901   0.138687   0.787041   …  0.354393  0.982124   0.506181\n 0.0341659  0.794492   0.636141   0.295598      0.659028  0.162562   0.165534\n 0.643365   0.95677    0.582924   0.0576614     0.392878  0.0602917  0.959374\n 0.498144   0.766346   0.157821   0.238751      0.372297  0.23881    0.446971\n 0.683848   0.770158   0.426446   0.718226      0.879704  0.97708    0.417502",
+    "crumbs": [
+      "How to contribute",
+      "Contributing",
+      "Example quarto notebook with executable code"
+    ]
   },
   {
     "objectID": "contributing/contributing.html",
@@ -106,18 +188,6 @@
     "text": "About this site"
   },
   {
-    "objectID": "contributing/executable-code-example.html",
-    "href": "contributing/executable-code-example.html",
-    "title": "Example quarto notebook with executable code",
-    "section": "",
-    "text": "This notebook contains a single code cell which runs a bit of Julia code just to demonstrate how execution results are cached.\n\ntest_matrix = rand(10,10)\n\n10×10 Matrix{Float64}:\n 0.657005   0.183138   0.0808069  0.570109   …  0.643091  0.671801   0.121435\n 0.989064   0.796656   0.714917   0.704536      0.786184  0.532048   0.868468\n 0.446004   0.772455   0.709376   0.444346      0.52513   0.698942   0.675387\n 0.988399   0.0107792  0.366325   0.192599      0.509549  0.296207   0.330535\n 0.295898   0.715054   0.906218   0.275641      0.401412  0.475633   0.859457\n 0.751324   0.183901   0.138687   0.787041   …  0.354393  0.982124   0.506181\n 0.0341659  0.794492   0.636141   0.295598      0.659028  0.162562   0.165534\n 0.643365   0.95677    0.582924   0.0576614     0.392878  0.0602917  0.959374\n 0.498144   0.766346   0.157821   0.238751      0.372297  0.23881    0.446971\n 0.683848   0.770158   0.426446   0.718226      0.879704  0.97708    0.417502",
-    "crumbs": [
-      "How to contribute",
-      "Contributing",
-      "Example quarto notebook with executable code"
-    ]
-  },
-  {
     "objectID": "contributing/example-notebook.html",
     "href": "contributing/example-notebook.html",
     "title": "Jupyter notebook example",
@@ -128,6 +198,13 @@
       "Contributing",
       "Jupyter notebook example"
     ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "NQCRecipes",
+    "section": "",
+    "text": "Welcome to NQCRecipes. This page serves as a collection of tutorials and examples for projects in our group using NQCDynamics.jl.\nThe examples here are more complex than in the NQCD documentation."
   },
   {
     "objectID": "tutorials/overview.html",
