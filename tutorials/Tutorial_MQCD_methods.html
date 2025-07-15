@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Scattering of a mono-energetic particle from a surface – NQCRecipes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-025db3b089a7e65f2676a8a92be6aa8b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-102e179a960cf1fbf7c4fba1cb07053a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-025db3b089a7e65f2676a8a92be6aa8b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">NQCRecipes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../tutorials/overview.html" aria-current="page"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../contributing/contributing.html"> 
+<span class="menu-text">How to contribute</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/julia-python-hpc-scaling.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../tutorials/Tutorial_MQCD_methods.html">Scattering of a mono-energetic particle from a surface</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/julia-python-hpc-scaling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Improving MD simulation throughput by GPU batch evaluation.</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/mdef-ttm-tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating laser-driven desorption with MDEF and the TTM</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/Tutorial_MQCD_methods.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Scattering of a mono-energetic particle from a surface</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#termination-criteria-output" id="toc-termination-criteria-output" class="nav-link active" data-scroll-target="#termination-criteria-output">Termination criteria &amp; Output</a></li>
+  <li><a href="#definition-of-the-model" id="toc-definition-of-the-model" class="nav-link" data-scroll-target="#definition-of-the-model">Definition of the model</a></li>
+  <li><a href="#combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces" id="toc-combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces" class="nav-link" data-scroll-target="#combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces">Combining the intial conditions for both the electronic and nuclear subspaces</a></li>
+  <li><a href="#ehrenfest" id="toc-ehrenfest" class="nav-link" data-scroll-target="#ehrenfest">Ehrenfest</a></li>
+  <li><a href="#independent-electron-surface-hopping" id="toc-independent-electron-surface-hopping" class="nav-link" data-scroll-target="#independent-electron-surface-hopping">Independent electron surface hopping</a></li>
+  <li><a href="#broadened-classical-master-equation" id="toc-broadened-classical-master-equation" class="nav-link" data-scroll-target="#broadened-classical-master-equation">Broadened Classical Master Equation</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/julia-python-hpc-scaling.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../tutorials/Tutorial_MQCD_methods.html">Scattering of a mono-energetic particle from a surface</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Scattering of a mono-energetic particle from a surface</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="42d83cc1-f514-4662-9de4-63ce40a06433" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Loading required packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">NQCDynamics</span>, <span class="bu">NQCCalculators</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Unitful</span>, <span class="bu">UnitfulAtomic</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Statistics</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This tutorial covers how to run atomic scattering simulations from a metal surface with NQCDynamics where electronic excitations in various flavours are included. To demonstrate how this is done, we will use a simple one-dimensional model, a Newns-Anderson Hamiltonian constructed from a simple one-dimensional, diabatic two-state model, for a neutral and a charged particle interacting with a substrate.</p>
+<p>With intention to convey the concepts in the most simplifying manner, we will focus onto a monoenergetic ensemble of impinging Li atoms. At the very beginning, we will define the initial conditions and the other propagation settings which is done in the cell below.</p>
+<p>This toy model is supposed to mimic the scattering of a single, mono-energetic Li atom from a metal surface. #7up!</p>
+<div id="50ef5e32-3eef-4b0c-a04d-01f28588bea9" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Define initial conditions and output</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>atoms <span class="op">=</span> <span class="fu">Atoms</span>(<span class="fl">7</span>u<span class="st">"u"</span>) <span class="co"># Our projectile is a Li atom; #7up!</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>r0 <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">5</span>u<span class="st">"Å"</span>) <span class="co"># Projectile is 5A away from surface</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> atoms.masses[<span class="fl">1</span>] <span class="co"># Mass of projectile</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>ke <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">2</span>u<span class="st">"eV"</span>) <span class="co"># Initial kinetic energy</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>v0 <span class="op">=</span> <span class="fu">-sqrt</span>(<span class="fl">2</span><span class="op">*</span>ke<span class="op">/</span>m) <span class="co"># Velocity direction towards the surface with magnitude defined by kinetic energy</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">0.01</span>u<span class="st">"fs"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>0.01 fs</code></pre>
+</div>
+</div>
+<section id="termination-criteria-output" class="level3">
+<h3 class="anchored" data-anchor-id="termination-criteria-output">Termination criteria &amp; Output</h3>
+<p>We are interested in scattering simulations. Typcially for this type of simulations, we need to ensure that the run time is sufficiently long which we ensure by setting the maximum distance the particle is allowed to travel to three times of the initial distance from the surface. This is very sufficient for a simple 1D model (in full dimensions, where subsurface scattering can occur, we might need to be more tolerant to longer trajectories). With velocity calculated from the initial kinetic energy, this gives us our maximum run time parameter, tcut.</p>
+<p>The parameter ‘tcut’ defines the maximum runtime. Yet, this single termination criterion is not enough because the scattered particle will travel through the vacuum until the run time meets our termination criterion (in periodic surface cells this is even worse because the particle might impact with the periodic images of the surface in perpendicular direction). Lest to artificially increase the required time for our batch of trajectories, we insert a second criterion namely that the trajectory gets terminated once the particle’s position is higher than it’s initial position and the sign of the velocity has changed.</p>
+<p>Next, we also set the number of trajectories we want to run: the amount of required trajectories are typically determined by the quantity of interest and sensitivity of the quantity of interest against the number of trajectories should always be checked! Here, we will use only 10 trajectories to ensure very quick runtimes so that one gets a feeling for the simulation and can easily play with other parameters (:</p>
+<p>Finally, we also set the required output. For scattering simulations, all quantities of interest can typically extracted from the initial &amp; final positions along with the inital &amp; final velocities of the system. For convenience, we also set the kinetic energy directly albeit not being necessary from a technical point of view.</p>
+<div id="d14a3faf-05c1-4cf7-8c49-3f20fa506d83" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dcut <span class="op">=</span> <span class="fl">3</span><span class="op">*</span>r0</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tcut <span class="op">=</span> <span class="fu">abs</span>(dcut<span class="op">/</span>v0)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">termination_condition</span>(u, t, integrator)<span class="op">::</span><span class="dt">Bool</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">&gt;</span> tcut) <span class="op">||</span> ((<span class="fu">mean</span>(DynamicsUtils.<span class="fu">get_positions</span>(u)) <span class="op">&gt;</span> <span class="fu">austrip</span>(<span class="fl">5.5</span>u<span class="st">"Å"</span>)) <span class="op">&amp;&amp;</span> (<span class="fu">mean</span>(DynamicsUtils.<span class="fu">get_velocities</span>(u)) <span class="op">&gt;</span> <span class="fl">0</span>)))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ntrajs <span class="op">=</span> <span class="fl">10</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>output<span class="op">=</span> (OutputVelocity, OutputPosition, OutputKineticEnergy)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">### Defining termination criterion</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>(NQCDynamics.DynamicsOutputs.OutputVelocity, NQCDynamics.DynamicsOutputs.OutputPosition, NQCDynamics.DynamicsOutputs.OutputKineticEnergy)</code></pre>
+</div>
+</div>
+</section>
+<section id="definition-of-the-model" class="level1">
+<h1>Definition of the model</h1>
+<p>Now it’s getting more technical. The first two lines of the cell below define the parameterisation of the diabatic two-state model. Γ is a measure for the coupling between the neutral state and the charged state of the incoming atom (the larger Γ, the stronger the avoided crossing of the adiabats and thus the less non-adiabatic the simulations are going to be</p>
+<p>The next lines describe the discretisation of the electronic band from the spectral properties of the bath to the method of the discretisation. Here, we’re using the ‘ShenviGaussLegendre’ method, the method of choice in NQCDynamics for metal substrates.</p>
+<p>Next, we construct our Newns-Anderson Hamiltonian from the two diabates, the finite number of bathstates and the couplings between them which is done with the keyword ‘AndersonHolstein’. The following two keywords define the temperature of the electronic subsystem of the solid, i.e., the population of the substrate’s states with the electrons.</p>
+<div id="21188841-d47c-4a67-93a6-fadfd2b9df0c" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#### Using model and setting its parameters</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Γ <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">0.2</span>u<span class="st">"eV"</span>) <span class="co"># Defines coupling strength between diabatic ground state and diabatic excited state</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>thossmodel <span class="op">=</span> <span class="fu">ErpenbeckThoss</span>(;Γ, m<span class="op">=</span>atoms.masses[<span class="fl">1</span>]) <span class="co"># This model defines the position dependence of the ingeredients for the Newns-Anderson Hamiltonian U0, U1, and Vk. Here, we're using the Erpenbeck-Thoss model.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fermi_level <span class="op">=</span> <span class="fl">0</span><span class="op">*</span>u<span class="st">"eV"</span> <span class="co"># We reference the spectrum of electronic states of the surface to the Fermi level</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>nstates <span class="op">=</span> <span class="fl">20</span> <span class="co"># Number of states into which the electronic continuum of the substrate is discretised into</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>bandwidth <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">50</span><span class="op">*</span>u<span class="st">"eV"</span>) <span class="co">#Spectral width of the electronic bands</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>bandmin <span class="op">=</span> <span class="op">-</span>bandwidth <span class="op">/</span> <span class="fl">2</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>bandmax <span class="op">=</span> bandwidth <span class="op">/</span> <span class="fl">2</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>bath <span class="op">=</span> <span class="fu">ShenviGaussLegendre</span>(nstates, bandmin, bandmax) <span class="co">#Discretisation method</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">AndersonHolstein</span>(thossmodel, bath)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>temperature <span class="op">=</span> <span class="fl">300</span>u<span class="st">"K"</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>β <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fu">austrip</span>(temperature)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>1052.5834160174613</code></pre>
+</div>
+</div>
+</section>
+<section id="combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces" class="level1">
+<h1>Combining the intial conditions for both the electronic and nuclear subspaces</h1>
+<p>Since we’re evolving both the electrons and the nuclei in mixed-quantum classical dynamics, we need to bring together both the electronic space, and the nuclear space. (not so satisfied with the explanation here) The first keyword in the cell below, defines the dimensionality of the nuclear phasespace, and the second line defines the dimensionality of the electronic state with the third line folding both subspaces into one big space. The final line sets the termination criterion.</p>
+<div id="5553b82d-1fc7-4261-98d5-4dabc5a1e553" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Setting up distributions</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>nuclear_distribution <span class="op">=</span> <span class="fu">DynamicalDistribution</span>(v0, r0, (<span class="fl">1</span>,<span class="fl">1</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>electronic_distribution <span class="op">=</span> <span class="fu">FermiDiracState</span>(fermi_level, temperature)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> electronic_distribution <span class="op">*</span> nuclear_distribution</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>terminate <span class="op">=</span> DynamicsUtils.<span class="fu">TerminatingCallback</span>(termination_condition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>SciMLBase.DiscreteCallback{typeof(termination_condition), typeof(SciMLBase.terminate!), typeof(SciMLBase.INITIALIZE_DEFAULT), typeof(SciMLBase.FINALIZE_DEFAULT), Nothing}(Main.termination_condition, SciMLBase.terminate!, SciMLBase.INITIALIZE_DEFAULT, SciMLBase.FINALIZE_DEFAULT, Bool[1, 1], nothing)</code></pre>
+</div>
+</div>
+</section>
+<section id="ehrenfest" class="level1">
+<h1>Ehrenfest</h1>
+<p>We have now set everything up to successfully start mixed-quantum classical scattering trajectories. We first start with Ehrenfest simulations. Ehrenfest dynamics is governed by a potential energy surfaces which is averaged from the entire spectrum of potential energy surfaces which are obtained from the Newns-Anderson Hamiltonian. Since Ehrenfest dynamics is entirely determinestic, we only need a single trajectory given our deterministic initial conditions (if we had an ensemble of different positions &amp; velocities, things would be different).</p>
+<p>The first line defines the simulation environment. The second line’s purpose is only to accelerate the actual simulations (blame Diffeq.jl for this lol). The third line launches our IESH simulations. :)</p>
+<div id="3febb9b1-6041-4848-beae-f7e05e0d42ad" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run single Ehrenfest calculation</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> <span class="fu">Simulation</span><span class="dt">{EhrenfestNA}</span>(atoms, model)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>kick <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, dt),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span><span class="fl">1</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                    dt</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                   )</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, tcut),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span><span class="fl">1</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                    dt</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                   )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-yellow-fg ansi-bold">┌ </span><span class="ansi-yellow-fg ansi-bold">Warning: </span>No friction evaluation algorithm has been specified, the friction tensor will be empty
+
+<span class="ansi-yellow-fg ansi-bold">└ </span><span class="ansi-bright-black-fg">@ NQCCalculators ~/.julia/packages/NQCCalculators/t5bm5/src/Caches.jl:425</span>
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 6.671770086 seconds.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 1 trajectory.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 0.00196775 seconds.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 1.096891014 seconds.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 1 trajectory.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 1.655033598 seconds.
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>4-element Dictionaries.Dictionary{Symbol, Any}:
+                :Time │ [0.0, 4553.338859154286, 4553.338859154286]
+      :OutputVelocity │ [[-0.0033941074835368125;;], [0.002989208858542591;;], …
+      :OutputPosition │ [[9.448630623128851;;], [10.394314983127463;;], [10.394…
+ :OutputKineticEnergy │ [0.07349864435103717, 0.057008638273709694, 0.057008638…</code></pre>
+</div>
+</div>
+</section>
+<section id="independent-electron-surface-hopping" class="level1">
+<h1>Independent electron surface hopping</h1>
+<p>Next, we will run independent electron surface hopping (IESH) simulations. Since IESH is stochastic, we need to run a batch of trajectories. Here, we do only 10 trajectories for briefness’s sake but in practice one should do several hundreds for a 1D model to ensure numerical convergence!</p>
+<div id="adf0402f-a29c-482d-8ea0-1192972bdb9c" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run IESH simulations</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> <span class="fu">Simulation</span><span class="dt">{AdiabaticIESH}</span>(atoms, model)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>kick <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, dt),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span><span class="fl">1</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                    dt</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                   )</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, tcut),</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span>ntrajs,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>                    dt</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>                   )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-yellow-fg ansi-bold">┌ </span><span class="ansi-yellow-fg ansi-bold">Warning: </span>No friction evaluation algorithm has been specified, the friction tensor will be empty
+
+<span class="ansi-yellow-fg ansi-bold">└ </span><span class="ansi-bright-black-fg">@ NQCCalculators ~/.julia/packages/NQCCalculators/t5bm5/src/Caches.jl:425</span>
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 8.984125601 seconds.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 1 trajectory.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 0.00293141 seconds.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 4.484304186 seconds.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 10 trajectories.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 30.387933773 seconds.
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>10-element Vector{Dictionaries.Dictionary{Symbol, Any}}:
+ {:Time = [0.0, 4755.498174763943, 4755.498174763943], :OutputVelocity = [[-0.0033941074835368125;;], [0.003390554049472842;;], [0.003390554049472842;;]], :OutputPosition = [[9.448630623128851;;], [10.394067981186835;;], [10.394067981186835;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07334482725981725, 0.07334482725981725]}
+ {:Time = [0.0, 6908.143484333439, 6908.143484333439], :OutputVelocity = [[-0.0033941074835368125;;], [0.0019137599364812902;;], [0.0019137599364812902;;]], :OutputPosition = [[9.448630623128851;;], [10.393977928595763;;], [10.393977928595763;;]], :OutputKineticEnergy = [0.07349864435103717, 0.023367005642973365, 0.023367005642973365]}
+ {:Time = [0.0, 5149.894876382783, 5149.894876382783], :OutputVelocity = [[-0.0033941074835368125;;], [0.003391372268450932;;], [0.003391372268450932;;]], :OutputPosition = [[9.448630623128851;;], [10.39460863098261;;], [10.39460863098261;;]], :OutputKineticEnergy = [0.07349864435103717, 0.0733802311318035, 0.0733802311318035]}
+ {:Time = [0.0, 4779.476171298422, 4779.476171298422], :OutputVelocity = [[-0.0033941074835368125;;], [0.003389471655311061;;], [0.003389471655311061;;]], :OutputPosition = [[9.448630623128851;;], [10.39457013031362;;], [10.39457013031362;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07329800580242475, 0.07329800580242475]}
+ {:Time = [0.0, 4755.498174763943, 4755.498174763943], :OutputVelocity = [[-0.0033941074835368125;;], [0.003390554049472842;;], [0.003390554049472842;;]], :OutputPosition = [[9.448630623128851;;], [10.394067981186835;;], [10.394067981186835;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07334482725981725, 0.07334482725981725]}
+ {:Time = [0.0, 4755.498174763943, 4755.498174763943], :OutputVelocity = [[-0.0033941074835368125;;], [0.003390554049472842;;], [0.003390554049472842;;]], :OutputPosition = [[9.448630623128851;;], [10.394067981186835;;], [10.394067981186835;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07334482725981725, 0.07334482725981725]}
+ {:Time = [0.0, 6867.215524731484, 6867.215524731484], :OutputVelocity = [[-0.0033941074835368125;;], [0.0019159104212118413;;], [0.0019159104212118413;;]], :OutputPosition = [[9.448630623128851;;], [10.394006780484904;;], [10.394006780484904;;]], :OutputKineticEnergy = [0.07349864435103717, 0.02341954997830035, 0.02341954997830035]}
+ {:Time = [0.0, 6920.1324826006785, 6920.1324826006785], :OutputVelocity = [[-0.0033941074835368125;;], [0.0019131900032905525;;], [0.0019131900032905525;;]], :OutputPosition = [[9.448630623128851;;], [10.393625057469878;;], [10.393625057469878;;]], :OutputKineticEnergy = [0.07349864435103717, 0.02335308994876223, 0.02335308994876223]}
+ {:Time = [0.0, 6932.121480867918, 6932.121480867918], :OutputVelocity = [[-0.0033941074835368125;;], [0.001912343383677912;;], [0.001912343383677912;;]], :OutputPosition = [[9.448630623128851;;], [10.39359885110002;;], [10.39359885110002;;]], :OutputKineticEnergy = [0.07349864435103717, 0.02333242623069217, 0.02333242623069217]}
+ {:Time = [0.0, 5371.898051193388, 5371.898051193388], :OutputVelocity = [[-0.0033941074835368125;;], [0.0033903822208739354;;], [0.0033903822208739354;;]], :OutputPosition = [[9.448630623128851;;], [10.393584023900164;;], [10.393584023900164;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07333739341898975, 0.07333739341898975]}</code></pre>
+</div>
+</div>
+<div id="5c8527f0-7683-4907-8102-a221e421c109" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run MDEF calculations</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ρ <span class="op">=</span> (nstates<span class="op">+</span><span class="fl">1</span>)<span class="op">/</span>(bandwidth)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> nuclear_distribution</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>bath <span class="op">=</span> <span class="fu">TrapezoidalRule</span>(nstates, bandmin, bandmax)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">AndersonHolstein</span>(thossmodel, bath)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> <span class="fu">Simulation</span><span class="dt">{DiabaticMDEF}</span>(atoms, model; temperature,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    friction_method<span class="op">=</span>DynamicsMethods.ClassicalMethods.<span class="fu">WideBandExact</span>(ρ, β)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, tcut),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span>ntrajs,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>                    dt</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                   )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 7.318874167 seconds.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 10 trajectories.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 11.450519627 seconds.
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>10-element Vector{Dictionaries.Dictionary{Symbol, Any}}:
+ {:Time = [0.0, 4034.918037529455, 4034.918037529455], :OutputVelocity = [[-0.0033941074835368125;;], [0.003193553989325685;;], [0.003193553989325685;;]], :OutputPosition = [[9.448630623128851;;], [10.394478255783389;;], [10.394478255783389;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06506938041276734, 0.06506938041276734]}
+ {:Time = [0.0, 4160.182398735506, 4160.182398735506], :OutputVelocity = [[-0.0033941074835368125;;], [0.0031109426375222366;;], [0.0031109426375222366;;]], :OutputPosition = [[9.448630623128851;;], [10.39424342624923;;], [10.39424342624923;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06174647260912539, 0.06174647260912539]}
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [-0.0008992790747204714;;]], :OutputPosition = [[9.448630623128851;;], [3.630990717748359;;]], :OutputKineticEnergy = [0.07349864435103717, 0.005159612926114991]}
+ {:Time = [0.0, 4202.35059953752, 4202.35059953752], :OutputVelocity = [[-0.0033941074835368125;;], [0.003067233235301346;;], [0.003067233235301346;;]], :OutputPosition = [[9.448630623128851;;], [10.394359440789202;;], [10.394359440789202;;]], :OutputKineticEnergy = [0.07349864435103717, 0.060023559877279885, 0.060023559877279885]}
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [0.0031150647333923914;;]], :OutputPosition = [[9.448630623128851;;], [8.07614955243684;;]], :OutputKineticEnergy = [0.07349864435103717, 0.061910213015883495]}
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [-0.0010694066620026246;;]], :OutputPosition = [[9.448630623128851;;], [3.607434621185741;;]], :OutputKineticEnergy = [0.07349864435103717, 0.007296488742024349]}
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [0.0009207799154834855;;]], :OutputPosition = [[9.448630623128851;;], [3.5398661907586115;;]], :OutputKineticEnergy = [0.07349864435103717, 0.005409284473658406]}
+ {:Time = [0.0, 4326.788133276797, 4326.788133276797], :OutputVelocity = [[-0.0033941074835368125;;], [0.003122846551089521;;], [0.003122846551089521;;]], :OutputPosition = [[9.448630623128851;;], [10.393550854060857;;], [10.393550854060857;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06221991814122039, 0.06221991814122039]}
+ {:Time = [0.0, 5793.166645480178, 5793.166645480178], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030642385556808034;;], [0.0030642385556808034;;]], :OutputPosition = [[9.448630623128851;;], [10.394637039995343;;], [10.394637039995343;;]], :OutputKineticEnergy = [0.07349864435103717, 0.059906409619686254, 0.059906409619686254]}
+ {:Time = [0.0, 4223.84811367188, 4223.84811367188], :OutputVelocity = [[-0.0033941074835368125;;], [0.003054213014402486;;], [0.003054213014402486;;]], :OutputPosition = [[9.448630623128851;;], [10.393969614940438;;], [10.393969614940438;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05951504865810761, 0.05951504865810761]}</code></pre>
+</div>
+</div>
+<div id="ac948e29-0d6e-4e67-989b-9fc9dd15b71e" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">typeof</span>(atoms))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Atoms{Float64}</code></pre>
+</div>
+</div>
+</section>
+<section id="broadened-classical-master-equation" class="level1">
+<h1>Broadened Classical Master Equation</h1>
+<p>Finally, we can also use the Broadened Classical Master Equation (BCME) which is governed by the two diabatic energy curves and the hybridisation function Γ themselves instead of a Newns-Anderson Hamiltonian. We therefore have to adapt the electronic subspace and thence the total space which is done in the first and second line, respectively. The rest goes as ever. Albeit one might consider BCME calculations to be gimmicky, an advantageous attribute of them is that they are computationally extremely efficient and can therefore serve as a nice test system for analysis tools which require numerical statics on the one hand, and electronically non-adiabatic effects on the other hand. I definitely learned to love them ;P</p>
+<div id="c56efc33-6f8d-496a-b5e0-461fbad40b93" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Calculation of BCME</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>electronic_distribution <span class="op">=</span> <span class="fu">PureState</span>(<span class="fl">1</span>, <span class="fu">Diabatic</span>())</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> electronic_distribution <span class="op">*</span> nuclear_distribution</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> <span class="fu">Simulation</span><span class="dt">{BCME}</span>(atoms, thossmodel;</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    temperature, bandwidth<span class="op">=</span>bandwidth)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, tcut),</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span>ntrajs,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                    dt</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>                   )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 23.242684995 seconds.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 10 trajectories.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 2.196294334 seconds.
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>10-element Vector{Dictionaries.Dictionary{Symbol, Any}}:
+ {:Time = [0.0, 4484.063935063259, 4484.063935063259], :OutputVelocity = [[-0.0033941074835368125;;], [0.0035949399176046074;;], [0.0035949399176046074;;]], :OutputPosition = [[9.448630623128851;;], [10.590909554623925;;], [10.590909554623925;;]], :OutputKineticEnergy = [0.07349864435103717, 0.08245394115227975, 0.08245394115227975]}
+ {:Time = [0.0, 4812.37182697698, 4812.37182697698], :OutputVelocity = [[-0.0033941074835368125;;], [0.003294608187157551;;], [0.003294608187157551;;]], :OutputPosition = [[9.448630623128851;;], [10.996908751639259;;], [10.996908751639259;;]], :OutputKineticEnergy = [0.07349864435103717, 0.069252537773449, 0.069252537773449]}
+ {:Time = [0.0, 5844.0894748216915, 5844.0894748216915], :OutputVelocity = [[-0.0033941074835368125;;], [0.00245585220525486;;], [0.00245585220525486;;]], :OutputPosition = [[9.448630623128851;;], [11.212913643901299;;], [11.212913643901299;;]], :OutputKineticEnergy = [0.07349864435103717, 0.03847978177923337, 0.03847978177923337]}
+ {:Time = [0.0, 5281.757657152533, 5281.757657152533], :OutputVelocity = [[-0.0033941074835368125;;], [0.0031512592107842234;;], [0.0031512592107842234;;]], :OutputPosition = [[9.448630623128851;;], [11.199215174953348;;], [11.199215174953348;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06335726222062493, 0.06335726222062493]}
+ {:Time = [0.0, 5056.621156805089, 5056.621156805089], :OutputVelocity = [[-0.0033941074835368125;;], [0.0033187663627387903;;], [0.0033187663627387903;;]], :OutputPosition = [[9.448630623128851;;], [10.97440389512251;;], [10.97440389512251;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07027186916569567, 0.07027186916569567]}
+ {:Time = [0.0, 5411.944547755553, 5411.944547755553], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030283382572178245;;], [0.0030283382572178245;;]], :OutputPosition = [[9.448630623128851;;], [11.19285857013145;;], [11.19285857013145;;]], :OutputKineticEnergy = [0.07349864435103717, 0.058510918045305955, 0.058510918045305955]}
+ {:Time = [0.0, 5546.172057013184, 5546.172057013184], :OutputVelocity = [[-0.0033941074835368125;;], [0.002856339750440248;;], [0.002856339750440248;;]], :OutputPosition = [[9.448630623128851;;], [10.921674310694197;;], [10.921674310694197;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05205325281345526, 0.05205325281345526]}
+ {:Time = [0.0, 5883.752328813726, 5883.752328813726], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030119621079222466;;], [0.0030119621079222466;;]], :OutputPosition = [[9.448630623128851;;], [11.265588538394013;;], [11.265588538394013;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05787981762351772, 0.05787981762351772]}
+ {:Time = [0.0, 5555.143439497792, 5555.143439497792], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030619046335191315;;], [0.0030619046335191315;;]], :OutputPosition = [[9.448630623128851;;], [10.831537877460322;;], [10.831537877460322;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05981518718533298, 0.05981518718533298]}
+ {:Time = [0.0, 5495.630579476603, 5495.630579476603], :OutputVelocity = [[-0.0033941074835368125;;], [0.0029345289845891256;;], [0.0029345289845891256;;]], :OutputPosition = [[9.448630623128851;;], [11.097839346861583;;], [11.097839346861583;;]], :OutputKineticEnergy = [0.07349864435103717, 0.054942061798054644, 0.054942061798054644]}</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/NQCD\.github\.io\/NQCRecipes\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
