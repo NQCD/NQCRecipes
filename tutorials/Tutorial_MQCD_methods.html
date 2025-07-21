@@ -462,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#### Using model and setting its parameters</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Γ <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">0.2</span>u<span class="st">"eV"</span>) <span class="co"># Defines coupling strength between diabatic ground state and diabatic excited state</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>thossmodel <span class="op">=</span> <span class="fu">ErpenbeckThoss</span>(;Γ, m<span class="op">=</span>atoms.masses[<span class="fl">1</span>]) <span class="co"># This model defines the position dependence of the ingeredients for the Newns-Anderson Hamiltonian U0, U1, and Vk. Here, we're using the Erpenbeck-Thoss model.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>thossmodel <span class="op">=</span> <span class="fu">ErpenbeckThoss</span>(;Γ, m<span class="op">=</span>atoms.masses[<span class="fl">1</span>]) <span class="co"># This model defines the position dependence of the ingredients for the Newns-Anderson Hamiltonian U0, U1, and Vk. Here, we're using the Erpenbeck-Thoss model.</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fermi_level <span class="op">=</span> <span class="fl">0</span><span class="op">*</span>u<span class="st">"eV"</span> <span class="co"># We reference the spectrum of electronic states of the surface to the Fermi level</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>nstates <span class="op">=</span> <span class="fl">20</span> <span class="co"># Number of states into which the electronic continuum of the substrate is discretised into</span></span>
@@ -481,7 +481,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces" class="level1">
 <h1>Combining the intial conditions for both the electronic and nuclear subspaces</h1>
-<p>Since we’re evolving both the electrons and the nuclei in mixed-quantum classical dynamics, we need to bring together both the electronic space, and the nuclear space. (not so satisfied with the explanation here) The first keyword in the cell below, defines the dimensionality of the nuclear phasespace, and the second line defines the dimensionality of the electronic state with the third line folding both subspaces into one big space. The final line sets the termination criterion.</p>
+<p>Since we’re evolving both the electrons and the nuclei in mixed-quantum classical dynamics, we need to bring together both the electronic space, and the nuclear space. The first keyword in the cell below, defines the dimensionality of the nuclear phasespace, and the second line defines the dimensionality of the electronic state with the third line folding both subspaces into one big space. The final line sets the termination criterion.</p>
 <div id="5553b82d-1fc7-4261-98d5-4dabc5a1e553" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Setting up distributions</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -498,7 +498,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="ehrenfest" class="level1">
 <h1>Ehrenfest</h1>
 <p>We have now set everything up to successfully start mixed-quantum classical scattering trajectories. We first start with Ehrenfest simulations. Ehrenfest dynamics is governed by a potential energy surfaces which is averaged from the entire spectrum of potential energy surfaces which are obtained from the Newns-Anderson Hamiltonian. Since Ehrenfest dynamics is entirely determinestic, we only need a single trajectory given our deterministic initial conditions (if we had an ensemble of different positions &amp; velocities, things would be different).</p>
-<p>The first line defines the simulation environment. The second line’s purpose is only to accelerate the actual simulations (blame Diffeq.jl for this lol). The third line launches our IESH simulations. :)</p>
+<p>The first line defines the simulation environment. The second line launches our IESH simulations. :)</p>
 <div id="3febb9b1-6041-4848-beae-f7e05e0d42ad" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run single Ehrenfest calculation</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
