@@ -64,7 +64,7 @@
     "href": "tutorials/overview.html",
     "title": "Overview",
     "section": "",
-    "text": "Overview\nHere you will find an overview of the types of tutorials offered and a quick summary.\nImproving MD simulation throughput by GPU batch evaluation in MACEModels.jl Simulating laser-driven desorption with MDEF and the TTM",
+    "text": "Overview\nHere you will find an overview of the types of tutorials offered and a quick summary.\nImproving MD simulation throughput by GPU batch evaluation in MACEModels.jl Simulating laser-driven desorption with MDEF and the TTM Scattering of a mono-energetic particle from a surface",
     "crumbs": [
       "Tutorials",
       "Overview"
