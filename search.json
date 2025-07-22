@@ -159,7 +159,7 @@
     "href": "index.html",
     "title": "NQCRecipes",
     "section": "",
-    "text": "Welcome to NQCRecipes. This page serves as a collection of tutorials and examples for projects in our group using NQCDynamics.jl.\nThe examples here are more complex than in the NQCD documentation.\n\nOverview\nHere you will find an overview of the types of tutorials offered and a quick summary:\n\nImproving MD simulation throughput by GPU batch evaluation in MACEModels.jl\nSimulating laser-driven desorption with MDEF and the TTM\nScattering of a mono-energetic particle from a surface"
+    "text": "Welcome to NQCRecipes. This page serves as a collection of tutorials and examples for projects in our group using NQCDynamics.jl.\nThe examples here are more complex than in the NQCD documentation.\n\nList of examples:\n\nImproving MD simulation throughput by GPU batch evaluation in MACEModels.jl\nSimulating laser-driven desorption with MDEF and the TTM\nScattering of a mono-energetic particle from a surface"
   },
   {
     "objectID": "tutorials/Tutorial_MQCD_methods.html",
