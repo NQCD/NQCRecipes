@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Example quarto notebook with executable code – NQCRecipes</title>
+<title>overview – NQCRecipes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -295,11 +260,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/overview.html"> 
+    <a class="nav-link active" href="../tutorials/overview.html" aria-current="page"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../contributing/contributing.html" aria-current="page"> 
+    <a class="nav-link" href="../contributing/contributing.html"> 
 <span class="menu-text">How to contribute</span></a>
   </li>  
 </ul>
@@ -314,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../contributing/contributing.html">Contributing</a></li><li class="breadcrumb-item"><a href="../contributing/executable-code-example.html">Example quarto notebook with executable code</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/julia-python-hpc-scaling.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../tutorials/overview.html">Overview</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -329,7 +294,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Contributing</span></a>
+ <span class="menu-text">Tutorials</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -337,20 +302,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../contributing/contributing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Contributing to NQCRecipes</span></a>
+  <a href="../tutorials/julia-python-hpc-scaling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Improving MD simulation throughput by GPU batch evaluation.</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../contributing/example-notebook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Jupyter notebook example</span></a>
+  <a href="../tutorials/mdef-ttm-tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating laser-driven desorption with MDEF and the TTM</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../contributing/executable-code-example.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Example quarto notebook with executable code</span></a>
+  <a href="../tutorials/overview.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/Tutorial_MQCD_methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Scattering of a mono-energetic particle from a surface</span></a>
   </div>
 </li>
       </ul>
@@ -360,51 +331,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../contributing/contributing.html">Contributing</a></li><li class="breadcrumb-item"><a href="../contributing/executable-code-example.html">Example quarto notebook with executable code</a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title">Example quarto notebook with executable code</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/julia-python-hpc-scaling.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../tutorials/overview.html">Overview</a></li></ol></nav></header>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
 
 
-</header>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>Here you will find an overview of the types of tutorials offered and a quick summary:</p>
+<ol type="1">
+<li><a href="../tutorials/julia-python-hpc-scaling.html">Improving MD simulation throughput by GPU batch evaluation in MACEModels.jl</a></li>
+<li><a href="../tutorials/mdef-ttm-tutorial.html">Simulating laser-driven desorption with MDEF and the TTM</a></li>
+<li><a href="../tutorials/Tutorial_MQCD_methods.html">Scattering of a mono-energetic particle from a surface</a></li>
+</ol>
 
 
-<p>This notebook contains a single code cell which runs a bit of Julia code just to demonstrate how execution results are cached.</p>
-<div id="2" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>test_matrix <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">10</span>,<span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>10×10 Matrix{Float64}:
- 0.657005   0.183138   0.0808069  0.570109   …  0.643091  0.671801   0.121435
- 0.989064   0.796656   0.714917   0.704536      0.786184  0.532048   0.868468
- 0.446004   0.772455   0.709376   0.444346      0.52513   0.698942   0.675387
- 0.988399   0.0107792  0.366325   0.192599      0.509549  0.296207   0.330535
- 0.295898   0.715054   0.906218   0.275641      0.401412  0.475633   0.859457
- 0.751324   0.183901   0.138687   0.787041   …  0.354393  0.982124   0.506181
- 0.0341659  0.794492   0.636141   0.295598      0.659028  0.162562   0.165534
- 0.643365   0.95677    0.582924   0.0576614     0.392878  0.0602917  0.959374
- 0.498144   0.766346   0.157821   0.238751      0.372297  0.23881    0.446971
- 0.683848   0.770158   0.426446   0.718226      0.879704  0.97708    0.417502</code></pre>
-</div>
-</div>
-
-
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
