@@ -6,10 +6,7 @@ Welcome to NQCRecipes. This page serves as a collection of tutorials and example
 
 The examples here are more complex than in the [NQCD documentation](https://nqcd.github.io/NQCDynamics.jl/stable/). 
 
-# Overview
-
-Here you will find an overview of the types of tutorials offered and a quick summary:
-
+# List of examples:
 1. [Improving MD simulation throughput by GPU batch evaluation in MACEModels.jl](tutorials/julia-python-hpc-scaling.qmd)
 2. [Simulating laser-driven desorption with MDEF and the TTM](tutorials/mdef-ttm-tutorial.qmd)
 3. [Scattering of a mono-energetic particle from a surface](tutorials/Tutorial_MQCD_methods.ipynb)
