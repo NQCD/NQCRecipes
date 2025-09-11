@@ -20,58 +20,28 @@ format: html
 # Newns-Anderson Hamiltonian tutorial
 
 :::{.callout-note}
-This tutorial focuses using [NQCModels.jl](https://github.com/NQCD/NQCModels.jl) to build a Newns-Anderson model for a molecule chemisorped to a surface. In the process we will also see how one can use [NQCCalculators.jl](https://github.com/NQCD/NQCCalculators.jl) to evaulate and update important properties of the model.
+This tutorial focuses using [NQCModels.jl](https://github.com/NQCD/NQCModels.jl) to build a Newns-Anderson model of a molecule chemisorped to a surface. In the process we will also see how one can use [NQCCalculators.jl](https://github.com/NQCD/NQCCalculators.jl) to evaulate and update important properties of the model.
 :::
 
-## Dependencies
-The follwing packages are all that is required to complete this tutorial. If you don't want to add them to your default Julia environment simply type `] activate 'NQCD Newns-Anderson tutorial'` into the REPL before adding the packages
-```julia
-using Unitful, UnitfulAtomic
-using DelimitedFiles
-using LinearAlgebra
-using Combinatorics
-using NQCModels
-using CairoMakie
-using ColorSchemes, Colors
-```
+## The Newns-Anderson Hamiltonian
 
-## Build a Newns-Anderson model
-Newns-Anderson model is named as `AndersonHolstein()` which generally requires an impurity `DiabaticModel` and a discretised `Bath` type input to construct a system coupling with a bath problem.
-```julia
-"""
-    build_NAmodel is a function to build the NA model with the given parameters.
-        Default inputs should be defined in parameters_PES.jl
-        So, you suppose to just only run build_NAmodel(parameter_dict)
-"""
+The Newns-Anderson model is a lattice Hamiltonian that parameterises a small set of ``impurity states" coupled to a large number of ``bath" states. Within the context of surface science the ``impurity" states are taken to represent the electronic eigenstates of a molecular adsorbate and the ``bath" states the band structure that characterises the material on which it is adsorbed. In second-quantised form of the model Hamiltonian reads
+$$
+\hat{H} = \sum_{a}{\varepsilon_{a}\hat{n}_{a}} + \sum_{k}{\varepsilon_{k}\hat{n}_{k}} + \sum_{a,k}{V_{ak}(\hat{c}_{a}^\dagger)\hat{c}_{k} + \hat{c}_{k}^\dagger\hat{c}_{a})}.
+$$
+Here, the subscript $a$ runs over the adsorbate states and $k$ the bath states. $\varepsilon_a$ and $\varepsilon_k$ are the energies of their respective states which the double sum over $V_{ak}$ encodes the couplings between every given pair of surface and adsorbate states.
 
+The model implemented in [NQCModels.jl](https://github.com/NQCD/NQCModels.jl) has a single adsorbate energy state coupled to a bath of energy states clustered around the fermi-level representing a either a metallic or semiconducting system (depending on the chosen discretisation scheme). The model is also taken to be in the ``wideband limit" where the $k$ dependence of the couplings is dropped and the density of states (DOS) is approximated via variable sparsity of sampling in the bath state discritisation ([Shenvi2009](https://doi.org/10.1063/1.3125436)). In after these simplifications the Hamiltonian is able to be written down in a simplified matrix form,
+$$
+\begin{bmatrix}
+\varepsilon_{a} & V_1 & V_2 & \cdots & V_k \\
+V_1 & \varepsilon_1 & 0 & \cdots & 0 \\
+V_2 & 0 & \varepsilon_2 & \cdots & 0 \\
+vdots & vdots & vdots & \ddots & vdots \\
+V_k & 0 & 0 & \cdots & \varepsilon_k
+\end{bmatrix}
+$$
 
-function build_NAmodel(parameter_dict::Dict{Symbol,Float64};
-                       
-    ## Default inputs should be defined in parameters_initial.jl ##
-                       Molercular_Model= diabaticmodel, 
-                       discretisation=discretisation,
-                       couplings_rescale = couplings_rescale, 
-                       nstates::Int=nstates, 
-                       bandmin=bandmin,
-                       bandmax=bandmax, 
-                       bandgap=bandgap,
-                       centre=centre)
-
-    ## Bulid NA model ##
-    diabaticmodel = eval(Molercular_Model)(;parameter_dict...)
-    bandmin = austrip(bandmin * u"eV")
-    bandmax = austrip(bandmax * u"eV")
-    bath = eval(discretisation)(nstates, bandmin, bandmax, austrip(bandgap * u"eV"))
-    NAmodel = AndersonHolstein(diabaticmodel, bath; couplings_rescale)
-    ## -------------- ##
-
-    return NAmodel
-end
-```
-
-## Adiabatic potential energy surfaces
-
-The NAH can be represented by matrix
 $$
 H_{\text{NA}}(x) = U_0(x) + \begin{pmatrix}
 h(x) & V_{1}(x) & \cdots & V_{k}(x) & \cdots & V_{N}(x) \\
@@ -82,14 +52,82 @@ V_{k}(x) & 0 & \cdots & \epsilon_k & \cdots & 0 \\
 V_{N}(x) & 0 & \cdots & 0 & \cdots & \epsilon_N \\
 \end{pmatrix}.
 $$
-where we have $N$ electronic states and one single state for the impurity. The details of the definition can be found at Ref. 1-3.
 
-**Steps to adiabatic potential energy surfaces (PESs) **
+## Dependencies
+The following packages are all that is required to complete this tutorial. If you don't want to add them to your default Julia environment simply type `] activate 'NQCD Newns-Anderson tutorial'` into the REPL before adding the packages.
 
-1. Generate a ground state electronic population vector $P^1 \in \{0,1\}^{N}$ where the first $N_{\text{el}}$ elements are `1` and the rest of it are `0`. 
-2. Traversal a great amount of combinatoric permutations of $N_{\text{el}}$ `1`s and the rest `0`s to obtain a set of binary-type electronic population, $\mathcal{P}:=\{P^{j}: j \in \mathbb{Z}^{+}\}$.
-3. Diagonalise the NA Hamiltonian $H_{\text{NA}}$ at $x$ and sum those eigenvalues $\epsilon_i$ only when its conjugate electronic popuation is `1`. i.e. In the ground state PES, $P_i^{1} = 1$.
-4. Looping the population from $\mathcal{P}$ and repeating step 3. with the Hamiltonian at various of $x$s generate the PESs.
+```julia
+using Unitful, UnitfulAtomic
+using DelimitedFiles
+using LinearAlgebra
+using Combinatorics
+using NQCModels
+using CairoMakie
+using ColorSchemes, Colors
+```
+
+## Building a Newns-Anderson model
+Newns-Anderson model in NQCModels is given its other common name, `AndersonHolstein()` and requires a `QuantumModel` as input that paramterises both the quantum states of the adsorbate far from the surface and its coupling strength as a function of its distance from the surface. Alongside this `impurity_model` input, `AndersonHolstein()` also requries the input of a `WideBandBathDiscretisation` object which is used to construct the bath energies and is generated automatically by a collection of discretisation functions.
+
+The first thing to do when building a Newns-Anderson model with NQCModels is to choose what kind of impurity model and bath discretisation you would like. Some sensible defaults are the `ErpenbeckThoss()` model and a `ShenviGaussLegendre()` discretisation. 
+
+```{julia eval=false, echo=true}
+impurity_model = NQCModels.QuantumModels.ErpenbeckThoss(;Γ=0.01) #Gamma controls the coupling strength with the surface and can be properly parameterised with DFT, but 0.01 is a sensible default for the purpose of testing
+
+bandmin = austrip(-270 * u"eV") #austrip converts unitful quantities into atomic units, the default units for NQCD
+bandmax = austrip(270 * u"eV")
+nstates = 100 #this controls the number of bath states, after including the additional single adsorbate state the AndersonHolstein Hamiltonain becomes a (nstates + 1, nstates + 1) matrix
+
+bath = ShenviGaussLegendre(nstates, bandmin, bandmax)
+
+NAmodel = AndersonHolstein(impurity_model, bath)
+```
+
+This code creates an instance of the Newns-Anderson model, stored as a julia `struct`. This struct contains all of the information you've input along with the number of electrons (calculated automatically by the discretisation method), the fermi level (defaults to 0.0 but can be set via the kwarg `fermi_level`) and an additional quantity saved as `couplings_rescale` that we will cover later on in the tutorial. For now we shall see what we can achieve with the NQCModels and the `NAmodel struct`.
+
+## NQCCalculators and Adiabatic Potential Energy Surfaces
+
+The most obvious first step is to construct the matrix representation of the Newns-Anderson model that we saw above this can be using the NQCModels function `potential()`. This function takes the model we have already built along with a position argument that encodes the distance between the adsorbate and the surface. This position is wrapped in `hcat()` as in general NQCD functions take position as a matrix.
+
+```{julia eval=false, echo=true}
+Hamiltonian_mat = NQCModels.potential(NAmodel, hcat(1.0))
+```
+
+This matrix should have the same structure as the matrix shown above, a structure characteristic of the Anderson model in the diabatic basis. Finding the adiabatic eigenstates of the system at the given height can be easily achieved using the `LinearAlgebra.eigen()` function. Of more interest in dynamics is the values and derivatives of these eigenstates at range of heights, the potential energy surfaces (PESs) of the system.
+
+Before plotting the potential energy surfaces it would be useful to briefly discuss the applications of NQCModels to dynamics simulations and in doing so mention how it interfaces with the suite of dynamics software available in [NQCDynamics.jl](https://github.com/NQCD/NQCDynamics.jl). The interface between the dynamics algorithms and the library of Hamiltonians and analytic potentials stored in NQCModels is handled by a third package called [NQCCalculators.jl](https://github.com/NQCD/NQCCalculators.jl), this package uses the model to build a new type of struct called a `cache`. This cache contains the current instances of all the values that can be calculated from the model and can be automatically updated at each time-step using the `update_cache!()` function. To create a cache one uses the `Create_Cache()` function which takes as input the model, the number of atoms subject to the model and a type `T` that should almost always be set to `Float64`
+
+```{julia eval=false, echo=true}
+NAcache = Create_Cache(NAmodel, 1, Float64)
+update_cache!(NAcache, hcat(1.0))
+
+println(cache.potential)
+```
+
+**Building Adiabatic Potential Energy Surfaces**
+
+We are now ready to generate a plot of the adiabatic potnetial energy surfaces of our model, for both ground and excited states. We have already shown how to construct a model of an adsorbate on a metal surface, so for this section we will instead plot the adiabatic eigenstates of a molecule chemisorbed to a semiconductor.
+
+```
+impurity_model = NQCModels.QuantumModels.ErpenbeckThoss(;Γ = 2.18305)
+
+bandmin = austrip(-270 * u"eV")
+bandmax = austrip(270 * u"eV")
+gapwidth = austrip(0.49*u"eV")
+nstates = 100
+
+bath = GapTrapezoidalRule(nstates, bandmin, bandmax, gapwidth)
+
+NAmodel = AndersonHolstein(impurity_model, bath)
+```
+
+Now we have built the model the steps required to plot the adiabatic excited states are the following:
+
+1. Generate a ground state electronic occupation vector, a fock state where the first $N_{\text{el}}$ elements are `1` and the rest of it are `0`. 
+2. Generate a large number of combinatoric permutations of excited states with a fixed number of electrons $N_{\text{el}}$ and within some given active space in order to obtain a random collection of low energy excited states.
+3. Diagonalise the Newns-Anderson Hamiltonian $H_{\text{NA}}$ at a given height $x$ and sum the eigenvalues $\varepsilon_i$ of occupied states to obtain the total many-body energy of a given excited state.
+4. Looping over each of the generated excited states and a variety of positions $x$, repeat step 3 to produce the excited state potential energy surfaces.
+
 ```{julia eval=false echo=true}
 """
     adiabatic_surfaces is to compute the eigenvalues and sort it configurations vector according to the adiabatic PES energy at the last grid point.
@@ -100,10 +138,7 @@ where we have $N$ electronic states and one single state for the impurity. The d
         configurations : configurations vector sorted according to the adiabatic PES energy at the last grid point
 """
 
-function adiabatic_surfaces(parameter_dict::Dict{Symbol,Float64}, x_ang::AbstractArray{Float64})
-    
-    ## Building the model
-    NAmodel = build_NAmodel(parameter_dict)
+function adiabatic_surfaces(NAmodel, x_ang::AbstractArray{Float64})
 
     ## The number of bath states
     nstates = NQCModels.nstates(NAmodel)-1
