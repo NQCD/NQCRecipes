@@ -7,52 +7,37 @@ author:
       address: Gibbet Hill Road, Coventry, CV4 7AL
     url: https://louhokseson.github.io
 
-repository: https://github.com/louhokseson/my-repo
+  - name: Ash Baldwin
+    affiliation: 
+      name: University of Vienna
+      department: Department of Physics
+      address: Kolingasse 14-16, 1090 Vienna
+    url: https://github.com/Ash-Baldwin
 
 format: html
 ---
 
-
-
 # Newns-Anderson Hamiltonian tutorial
 
 :::{.callout-note}
-This tutorial is to introduce how we build Newns-Anderson Hamiltonian (NAH) by [NQCModels.jl](https://github.com/NQCD/NQCModels.jl) and evaulate some non-adiabatic properties by [NQCCalculators.jl](https://github.com/NQCD/NQCCalculators.jl).
-
-Reference:
-
-1. **Philip W. Anderson**. *Localized magnetic states in metals.* [Physical Review 124.1 (1961): 41](https://doi.org/10.1103/PhysRev.124.41).
-2. **Xuexun Lu**, **Nils Hertl**, and **Reinhard J. Maurer**. *A Haldane–Anderson Hamiltonian Model for Hyperthermal Hydrogen Scattering from a Semiconductor Surface*. [*arXiv:2508.13360* (2025)](https://doi.org/10.48550/arXiv.2508.13360).
-3. **Xuexun Lu**,  **Matthew Larkin** and **Nils Hertl**. *System-bath models.* [Documentations in NQCD](https://nqcd.github.io/NQCDynamics.jl/stable/NQCModels/systembathmodels/).
-
+This tutorial focuses using [NQCModels.jl](https://github.com/NQCD/NQCModels.jl) to build a Newns-Anderson model for a molecule chemisorped to a surface. In the process we will also see how one can use [NQCCalculators.jl](https://github.com/NQCD/NQCCalculators.jl) to evaulate and update important properties of the model.
 :::
 
 ## Dependencies
-This tutorial uses a personal packages from [HokseonRegistry](https://github.com/Louhokseson/HokseonRegistry) which need to be add via
-```{julia}
-pkg> registry add https://github.com/Louhokseson/HokseonRegistry.git
-```
-
-Loading the needed packages is always the most important step. The way to add a package into a Julia project environment: [Solutions-帮紧你!](https://chatgpt.com)
-```{julia eval=false echo=true}
+The follwing packages are all that is required to complete this tutorial. If you don't want to add them to your default Julia environment simply type `] activate 'NQCD Newns-Anderson tutorial'` into the REPL before adding the packages
+```julia
 using Unitful, UnitfulAtomic
 using DelimitedFiles
 using LinearAlgebra
 using Combinatorics
 using NQCModels
-
-## Load plotting libraries ##
 using CairoMakie
-using HokseonPlots, ColorSchemes, Colors, Printf
-colorscheme = ColorScheme(parse.(Colorant, ["#045275", "#089099", "#7CCBA2", "#FCDE9C", "#F0746E", "#DC3977", "#7C1D6F"]))
-colormap = HokseonPlots.NICECOLORS
-# ------------------------- #
-@info "Packages correcly loaded!"
+using ColorSchemes, Colors
 ```
 
 ## Build a Newns-Anderson model
 Newns-Anderson model is named as `AndersonHolstein()` which generally requires an impurity `DiabaticModel` and a discretised `Bath` type input to construct a system coupling with a bath problem.
-```{julia eval=false echo=true}
+```julia
 """
     build_NAmodel is a function to build the NA model with the given parameters.
         Default inputs should be defined in parameters_PES.jl
@@ -300,12 +285,19 @@ end
 At last the plotting command:
 
 ```{julia eval=false echo=true}
+## Load plotting libraries ##
+
+
+colorscheme = ColorScheme(parse.(Colorant, ["#045275", "#089099", "#7CCBA2", "#FCDE9C", "#F0746E", "#DC3977", "#7C1D6F"]))
+colormap = ColorScheme(parse.(Colorant, ["#FCE1A4","#FABF7B","#F08F6E","#E05C5C","#D12959","#AB1866","#6E005F"]))
+@info "Packages correcly loaded!"
+# ------------------------- #
+
 groundstate_align_zero = true
 
 reduce_PES = false
 
 DFT = readdlm(dft_restatom_path)[:,3:4]
-
 
 plot_DFT_PES(chosen_dict,DFT;groundstate_align_zero,reduce_PES)
 ```
@@ -319,3 +311,13 @@ The repository to reproduce the PESs can be found at <a href="https://github.com
       <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
     </svg>
   </a>.
+
+:::{.callout-note}
+Reference:
+
+1. **Philip W. Anderson**. *Localized magnetic states in metals.* [Physical Review 124.1 (1961): 41](https://doi.org/10.1103/PhysRev.124.41).
+2. **Newns, D. M.** *Self-Consistent Model of Hydrogen Chemisorption.* [Physical Review 178, no. 3 (1969): 1123–35](https://doi.org/10.1103/PhysRev.178.1123). 
+3. **Xuexun Lu**, **Nils Hertl**, and **Reinhard J. Maurer**. *A Haldane–Anderson Hamiltonian Model for Hyperthermal Hydrogen Scattering from a Semiconductor Surface*. [*arXiv:2508.13360* (2025)](https://doi.org/10.48550/arXiv.2508.13360).
+4. **Xuexun Lu**,  **Matthew Larkin** and **Nils Hertl**. *System-bath models.* [NQCD Documentation](https://nqcd.github.io/NQCDynamics.jl/stable/NQCModels/systembathmodels/).
+
+:::
