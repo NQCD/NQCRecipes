@@ -5,3 +5,4 @@ Here you will find an overview of the types of tutorials offered and a quick sum
 1. [Improving MD simulation throughput by GPU batch evaluation in MACEModels.jl](julia-python-hpc-scaling.qmd)
 2. [Simulating laser-driven desorption with MDEF and the TTM](mdef-ttm-tutorial.qmd)
 3. [Scattering of a mono-energetic particle from a surface](Tutorial_MQCD_methods.ipynb)
+4. [Newns-Anderson Hamiltonian tutorial](Newns-Anderson-tutorial.qmd)
