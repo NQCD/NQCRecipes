@@ -17,7 +17,7 @@ author:
 format: html
 ---
 
-# Newns-Anderson Hamiltonian tutorial
+# Calculating potential energy surfaces, forces and non-adiabatic couplings with the Newns-Anderson Hamiltonian
 
 :::{.callout-note}
 This tutorial focuses using [NQCModels.jl](https://github.com/NQCD/NQCModels.jl) to build a Newns-Anderson model of a molecule chemisorped to a surface. In the process we will also see how one can use [NQCCalculators.jl](https://github.com/NQCD/NQCCalculators.jl) to evaulate and update important properties of the model.
