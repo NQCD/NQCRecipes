@@ -56,7 +56,7 @@ $$
 ## Dependencies
 The following packages are all that is required to complete this tutorial. If you don't want to add them to your default Julia environment simply type `] activate 'NQCD Newns-Anderson tutorial'` into the REPL before adding the packages.
 
-```{julia eval=false, echo=true}
+```julia
 using Unitful, UnitfulAtomic
 using DelimitedFiles
 using LinearAlgebra
@@ -72,7 +72,7 @@ Newns-Anderson model in NQCModels is given its other common name, `AndersonHolst
 
 The first thing to do when building a Newns-Anderson model with NQCModels is to choose what kind of impurity model and bath discretisation you would like. Some sensible defaults are the `ErpenbeckThoss()` model and a `ShenviGaussLegendre()` discretisation. 
 
-```{julia eval=false, echo=true}
+```julia
 impurity_model = NQCModels.QuantumModels.ErpenbeckThoss(;Γ=0.01) #Gamma controls the coupling strength with the surface and can be properly parameterised with DFT, but 0.01 is a sensible default for the purpose of testing
 
 bandmin = austrip(-270 * u"eV") #austrip converts unitful quantities into atomic units, the default units for NQCD
@@ -90,7 +90,7 @@ This code creates an instance of the Newns-Anderson model, stored as a julia `st
 
 The most obvious first step is to construct the matrix representation of the Newns-Anderson model that we saw above this can be using the NQCModels function `potential()`. This function takes the model we have already built along with a position argument that encodes the distance between the adsorbate and the surface. This position is wrapped in `hcat()` as in general NQCD functions take position as a matrix.
 
-```{julia eval=false, echo=true}
+```julia
 Hamiltonian_mat = NQCModels.potential(NAmodel, hcat(1.0))
 ```
 
@@ -98,7 +98,7 @@ This matrix should have the same structure as the matrix shown above, a structur
 
 Before plotting the potential energy surfaces it would be useful to briefly discuss the applications of NQCModels to dynamics simulations and in doing so mention how it interfaces with the suite of dynamics software available in [NQCDynamics.jl](https://github.com/NQCD/NQCDynamics.jl). The interface between the dynamics algorithms and the library of Hamiltonians and analytic potentials stored in NQCModels is handled by a third package called [NQCCalculators.jl](https://github.com/NQCD/NQCCalculators.jl), this package uses the model to build a new type of struct called a `cache`. This cache contains the current instances of all the values that can be calculated from the model and can be automatically updated at each time-step using the `update_cache!()` function. To create a cache one uses the `Create_Cache()` function which takes as input the model, the number of atoms subject to the model and a type `T` that should almost always be set to `Float64`
 
-```{julia eval=false, echo=true}
+```julia
 NAcache = Create_Cache(NAmodel, 1, Float64)
 update_cache!(NAcache, hcat(1.0))
 
@@ -129,7 +129,7 @@ Now we have built the model the steps required to plot the adiabatic excited sta
 3. Diagonalise the Newns-Anderson Hamiltonian $H_{\text{NA}}$ at a given height $x$ and sum the eigenvalues $\varepsilon_i$ of occupied states to obtain the total many-body energy of a given excited state.
 4. Looping over each of the generated excited states and a variety of positions $x$, repeat step 3 to produce the excited state potential energy surfaces.
 
-```{julia eval=false echo=true}
+```julia
 """
     adiabatic_surfaces is to compute the eigenvalues and sort it configurations vector according to the adiabatic PES energy at the last grid point.
 
@@ -185,7 +185,7 @@ end
 ### Plotting the PESs
 The previous section gives you an idea how we evaluate the adiabtatic potential spectrum, now it's time to set up the configurations to the NA Hamiltonian for visualisation. For illustration, we use *Lu-Hertl-Maurer* model(Ref. 2) designed for a H atom scattering from a Ge(111) surface.
 
-```{julia eval=false echo=true}
+```julia
 using Unitful, UnitfulAtomic
 global PES_params = Dict{String,Any}(
 
@@ -223,7 +223,7 @@ end
 
 The plotting tool and the actually function powered by `Makie`:
 
-```{julia eval=false echo=true}
+```julia
 function plot_surfaces_DFT!(ax, parameter_dict::Dict{Symbol,Float64}, x_ang::AbstractArray{Float64}, DFT::Matrix{Float64}; groundstate_align_zero::Bool=false, reduce_PES::Bool=false)
     energies_raw, U_0s = adiabatic_surfaces(parameter_dict, x_ang)[1:2]
 
@@ -320,7 +320,7 @@ end
 
 At last the plotting command:
 
-```{julia eval=false echo=true}
+```julia
 ## Load plotting libraries ##
 
 
