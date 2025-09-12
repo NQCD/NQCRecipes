@@ -56,7 +56,7 @@ $$
 ## Dependencies
 The following packages are all that is required to complete this tutorial. If you don't want to add them to your default Julia environment simply type `] activate 'NQCD Newns-Anderson tutorial'` into the REPL before adding the packages.
 
-```julia
+```{julia eval=false, echo=true}
 using Unitful, UnitfulAtomic
 using DelimitedFiles
 using LinearAlgebra
