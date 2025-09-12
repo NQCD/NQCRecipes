@@ -62,6 +62,7 @@ using DelimitedFiles
 using LinearAlgebra
 using Combinatorics
 using NQCModels
+using NQCCalculators
 using CairoMakie
 using ColorSchemes, Colors
 ```
