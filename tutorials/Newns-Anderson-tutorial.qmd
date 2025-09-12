@@ -1,18 +1,18 @@
 ---
 author:
-  - name: Xuexun Lu (Hokseon)
-    affiliation: 
-      name: University of Warwick
-      department: Department of Chemistry
-      address: Gibbet Hill Road, Coventry, CV4 7AL
-    url: https://louhokseson.github.io
-
   - name: Ash Baldwin
     affiliation: 
       name: University of Vienna
       department: Department of Physics
       address: Kolingasse 14-16, 1090 Vienna
     url: https://github.com/Ash-Baldwin
+
+  - name: Xuexun Lu (Hokseon)
+    affiliation: 
+      name: University of Warwick
+      department: Department of Chemistry
+      address: Gibbet Hill Road, Coventry, CV4 7AL
+    url: https://louhokseson.github.io
 
 format: html
 ---
@@ -27,7 +27,7 @@ This tutorial focuses using [NQCModels.jl](https://github.com/NQCD/NQCModels.jl)
 
 The Newns-Anderson model is a lattice Hamiltonian that parameterises a small set of ``impurity states" coupled to a large number of ``bath" states. Within the context of surface science the ``impurity" states are taken to represent the electronic eigenstates of a molecular adsorbate and the ``bath" states the band structure that characterises the material on which it is adsorbed. In second-quantised form of the model Hamiltonian reads
 $$
-\hat{H} = \sum_{a}{\varepsilon_{a}\hat{n}_{a}} + \sum_{k}{\varepsilon_{k}\hat{n}_{k}} + \sum_{a,k}{V_{ak}(\hat{c}_{a}^\dagger)\hat{c}_{k} + \hat{c}_{k}^\dagger\hat{c}_{a})}.
+\hat{H} = \sum_{a}{\varepsilon_{a}\hat{n}_{a}} + \sum_{k}{\varepsilon_{k}\hat{n}_{k}} + \sum_{a,k}{V_{ak}(\hat{c}_{a}^\dagger\hat{c}_{k} + \hat{c}_{k}^\dagger\hat{c}_{a})}.
 $$
 Here, the subscript $a$ runs over the adsorbate states and $k$ the bath states. $\varepsilon_a$ and $\varepsilon_k$ are the energies of their respective states which the double sum over $V_{ak}$ encodes the couplings between every given pair of surface and adsorbate states.
 
@@ -81,6 +81,8 @@ The most obvious first step is to construct the matrix representation of the New
 
 ```julia
 Hamiltonian_mat = NQCModels.potential(NAmodel, hcat(1.0))
+
+println(Hamiltonian_mat)
 ```
 
 This matrix should have the same structure as the matrix shown above, a structure characteristic of the Anderson model in the diabatic basis. Finding the adiabatic eigenstates of the system at the given height can be easily achieved using the `LinearAlgebra.eigen()` function. Of more interest in dynamics is the values and derivatives of these eigenstates at range of heights, the potential energy surfaces (PESs) of the system.
@@ -98,7 +100,7 @@ println(cache.potential)
 
 We are now ready to generate a plot of the adiabatic potnetial energy surfaces of our model, for both ground and excited states. We have already shown how to construct a model of an adsorbate on a metal surface, so for this section we will instead plot the adiabatic eigenstates of a molecule chemisorbed to a semiconductor.
 
-```
+```{julia eval=false, echo=true}
 impurity_model = NQCModels.QuantumModels.ErpenbeckThoss(;Γ = 2.18305)
 
 bandmin = austrip(-270 * u"eV")
