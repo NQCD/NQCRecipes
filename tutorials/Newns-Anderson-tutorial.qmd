@@ -98,60 +98,72 @@ println(cache.potential)
 
 **Building Adiabatic Potential Energy Surfaces**
 
-We are now ready to generate a plot of the adiabatic potnetial energy surfaces of our model, for both ground and excited states. We have already shown how to construct a model of an adsorbate on a metal surface, so for this section we will instead plot the adiabatic eigenstates of a molecule chemisorbed to a semiconductor.
+We are now ready to generate a plot of the adiabatic potnetial energy surfaces of our model, for both ground and excited states. We have already shown how to construct a model of an adsorbate on a metal surface, so for this section we will instead plot the adiabatic eigenstates of a molecule chemisorbed to a semiconductor. For this we employ the LuHertlMaurer() model, an analytic potential fit to DFT data for H/Ge(111) and the GapGaussLegendre() discretisation which uses a modification of the GaussLegendre algorithm to create a set of bathstates for a surface with bandgap.
 
 ```{julia eval=false, echo=true}
-impurity_model = NQCModels.QuantumModels.ErpenbeckThoss(;Γ = 2.18305)
+impurity_model = NQCModels.QuantumModels.LuHertlMaurer()
+bandmin = austrip(-25 * u"eV")
+bandmax = austrip(25 * u"eV")
+gapwidth = austrip(0.49 * u"eV")
+nstates = 150
 
-bandmin = austrip(-270 * u"eV")
-bandmax = austrip(270 * u"eV")
-gapwidth = austrip(0.49*u"eV")
-nstates = 100
+bath = GapGaussLegendre(nstates, bandmin, bandmax, gapwidth)
 
-bath = GapTrapezoidalRule(nstates, bandmin, bandmax, gapwidth)
-
-NAmodel = AndersonHolstein(impurity_model, bath)
+NAmodel = AndersonHolstein(impurity_model, bath; couplings_rescale = 2.5)
+NAcache = Create_Cache(NAmodel, 1, Float64)
 ```
 
-Now we have built the model the steps required to plot the adiabatic excited states are the following:
+Now we have built the model and constructed a cache for it, the steps required to plot the adiabatic excited states are the following:
 
 1. Generate a ground state electronic occupation vector, a fock state where the first $N_{\text{el}}$ elements are `1` and the rest of it are `0`. 
 2. Generate a large number of combinatoric permutations of excited states with a fixed number of electrons $N_{\text{el}}$ and within some given active space in order to obtain a random collection of low energy excited states.
 3. Diagonalise the Newns-Anderson Hamiltonian $H_{\text{NA}}$ at a given height $x$ and sum the eigenvalues $\varepsilon_i$ of occupied states to obtain the total many-body energy of a given excited state.
 4. Looping over each of the generated excited states and a variety of positions $x$, repeat step 3 to produce the excited state potential energy surfaces.
 
-```julia
+These steps are all performed by the `adiabatic_surfaces()` function below which will output a sorted list of PESs in the form of a `Vector{<:Vector}` (a vector of vectors).
+
+```{julia eval=false, echo=true}
 """
-    adiabatic_surfaces is to compute the eigenvalues and sort it configurations vector according to the adiabatic PES energy at the last grid point.
+    adiabatic_surfaces computes the potential energy surfaces, the nonadiabatic couplings between them and the forces due to their derivatives. 
+    The surfaces are sorted according to their energy farthest from the surface.
 
     Output:
-        energies_raw : sorted adiabatic PES energies along the grid points x_ang
-        U_0s : U_0(x) along the grid points x_ang
-        configurations : configurations vector sorted according to the adiabatic PES energy at the last grid point
-"""
+        energies_raw : sorted adiabatic PES energies
+        U_0s : the state independent, external potential at each point
+        configurations : configuration vectors sorted according to the adiabatic PES energy at the last grid point
+        couplings: the non-adiabatic coupling matrix between the single-electron adiabatic states at each evaluated position
+        GS_forces: the forces due to the groundstate PES at each evaluated position
 
-function adiabatic_surfaces(NAmodel, x_ang::AbstractArray{Float64})
+"""
+function adiabatic_surfaces(NAcache, x_ang::AbstractArray{Float64})
 
     ## The number of bath states
-    nstates = NQCModels.nstates(NAmodel)-1
+    nstates = NQCModels.nstates(NAcache)
 
     ## The number of electrons 
-    nelectrons = NQCModels.nelectrons(NAmodel) #NQCModels.nelectrons(model) -> Int(nstates/2)
+    nelectrons = NQCModels.nelectrons(NAcache) #NQCModels.nelectrons(model) -> Int(nstates/2)
 
     x = austrip.(x_ang * u"Å")
     matrix_x = hcat.(x)
-    """
-        U_0 : U_0(x) at each grid point
-        eigs  : eigenvalues of the electronic Hamiltonian Hₑ at each grid point
-    """
-    U_0s = ustrip.(auconvert.(u"eV", NQCModels.state_independent_potential.(NAmodel, matrix_x)))
-    eigs = eigvals.(potential.(NAmodel, matrix_x)) # length of eigs is 200(grid points); eigs[1] has 101 eigenstates
+    U_0s= zero(x)
+    eigs = [zero(NAcache.eigen.values) for _ in CartesianIndices(x)]
+    
+    #NAcache.nonadiabatic_coupling is stored as a Matrix{<:Matrix}, here the exterior matrix is 1x1 so below we only access the internal structure to store the values
+    couplings = [zero(NAcache.nonadiabatic_coupling[1]) for _ in CartesianIndices(x)]
+    GS_forces = zero(x)
 
+    for (i, r) in enumerate(matrix_x)
+        update_cache!(NAcache, r)
+        U_0s[i] = ustrip(auconvert(u"eV", NQCModels.state_independent_potential(NAcache.model, r)))
+        eigs[i] .= NAcache.eigen.values # length of eigs is 200(grid points); eigs[1] has 101 eigenstates
+        couplings[i] .= NAcache.nonadiabatic_coupling[1]
+        GS_forces[i] = -sum(eigen(NAcache.derivative[1]).values[1:nelectrons])
+    end
 
     # groundstate configuration
-    config = vcat(ones(nelectrons), zeros(nstates-nelectrons+1))
+    config = vcat(ones(nelectrons), zeros(nstates-nelectrons))
 
-    perms = multiset_permutations(config, nstates+1)
+    perms = multiset_permutations(config, nstates)
     configurations = []
     energies = []
     sortpoints = []
@@ -166,92 +178,46 @@ function adiabatic_surfaces(NAmodel, x_ang::AbstractArray{Float64})
         push!(configurations, config)
     end
     perm = sortperm(sortpoints)
-    energies_raw = copy(energies[perm]) # sort the energies according to the adiabatic PES energy at the last grid point
+    energies_raw = energies[perm] # sort the energies according to the adiabatic PES energy at the last grid point
     configurations = configurations[perm] # sort the configuration according to the adiabatic PES energy at the last grid point
-    return energies_raw, U_0s, configurations
+    return energies_raw, U_0s, configurations, couplings, GS_forces
 end
 ```
-
 
 ### Plotting the PESs
-The previous section gives you an idea how we evaluate the adiabtatic potential spectrum, now it's time to set up the configurations to the NA Hamiltonian for visualisation. For illustration, we use *Lu-Hertl-Maurer* model(Ref. 2) designed for a H atom scattering from a Ge(111) surface.
+Now that a function has been written to find the ground and excited state adiabatic potential energy surfaces, it's time to set up some functions to visualise the surfaces we can calculate.
 
-```julia
-using Unitful, UnitfulAtomic
-global PES_params = Dict{String,Any}(
-
-    "x_ang" => range(0.8, 6, length=200), # DFT data starts from 0.8Å
-    "x_Mulliken_ang" => range(2.4, 6, length=200), # Mulliken data starts from 2.4Å
-    "bandgap" => 0.49,
-    "centre" => 0.0,
-    "diabaticmodel" => :LuHertlMaurer,
-    "discretisation"=> :GapGaussLegendre,
-    "nstates" => 150,
-    "width" => 50,
-    "sd" => 0.1, # Standard deviation for the Density of States
-    "couplings_rescale" => 2.5,
-    "parameters_choice" => :Default, # Lifted or :Default
-)
-@unpack x_ang, x_Mulliken_ang, bandgap, centre, diabaticmodel, discretisation, nstates, width, sd, couplings_rescale, parameters_choice = PES_params
-
-bandmin = -(width/2 - centre) # unit is eV
-
-bandmax = (width/2 + centre) # unit is eV
-
-x = austrip.(x_ang .* u"Å");
-
-
-dft_restatom_path = "data/ab-inito_cals/DFT_HGe111_restatom.txt"
-
-"""
-Selection of Parameters Dictionary for the Diabatic Model
-"""
-
-if parameters_choice == :Default
-    parameter_dict = Dict{Symbol,Float64}() # Use the default parameters in the selected model
-end
-```
-
-The plotting tool and the actually function powered by `Makie`:
-
-```julia
-function plot_surfaces_DFT!(ax, parameter_dict::Dict{Symbol,Float64}, x_ang::AbstractArray{Float64}, DFT::Matrix{Float64}; groundstate_align_zero::Bool=false, reduce_PES::Bool=false)
-    energies_raw, U_0s = adiabatic_surfaces(parameter_dict, x_ang)[1:2]
+```{julia eval=false, echo=true}
+function plot_surfaces!(NAcache, ax, x_ang::AbstractArray{Float64}, gapwidth, groundstate_align_zero::Bool, reduce_PES::Bool)
+    energies_raw, U_0s = adiabatic_surfaces(NAcache, x_ang)[1:2]
 
     if groundstate_align_zero
         groundstate_energy_end = energies_raw[1][end] + U_0s[end]
-        energies_raw = broadcast(x -> x .- groundstate_energy_end, energies_raw) #broadcast to every PESs
+        energies_raw = broadcast(.-, energies_raw,  groundstate_energy_end) #broadcast to every PESs
     end
 
     if reduce_PES
-        showing_index = vcat(collect(1:2),collect(3:12:20),collect(21:50:2000))
+        plotted_indices = vcat(collect(1:2),collect(3:12:20),collect(21:50:2000))
     else
-        showing_index = collect(1:2000)
+        plotted_indices = collect(1:2000)
     end
     # extract only the indexed PESs
-    energies = energies_raw[showing_index] # energies_raw[1] groundstate 
+    energies = energies_raw[plotted_indices] # energies_raw[1] groundstate 
 
     @info "The depth of the ground state well is $(minimum(energies[1] .+ U_0s) - (energies[1] .+ U_0s)[end]) eV"
 
     # first excited state - ground state
     f_minus_g = energies[2] .- energies[1]
-
-    test = max.(f_minus_g)
-    gap_max = maximum(test)
-
-    test = min.(f_minus_g)
-    gap_min = minimum(test)
+    gap_max = maximum(max.(f_minus_g))
+    gap_min = minimum(min.(f_minus_g))
 
     @info "The maximum gap of ground state and first excited state is $gap_max eV"
     @info "The minimum gap of ground state and first excited state is $gap_min eV"
 
     color_range = []
-    max_e = energies[end][end]
-    min_e = energies[1][end]
-
     ## Plot PES ##
     for e in energies
-        c = (e[end] - min_e) / (max_e - min_e)
+        c = (e[end] - energies[1][end]) / (energies[end][end] - energies[1][end])
         push!(color_range, c)
     end
     colors = [ColorSchemes.get(colormap, 1-c) for c in color_range]
@@ -263,73 +229,69 @@ function plot_surfaces_DFT!(ax, parameter_dict::Dict{Symbol,Float64}, x_ang::Abs
 
         if y[end] < 1.92 && y[end] > 0.4
             push!(excited_PES_energy_5A, y[end])
-            #scatter!(ax, x_ang[end], y[end], color=:blue, markersize=8, marker=:circle, label="")
         end
     end
 
-    writedlm(datadir("LuHertlMaurer_model","adiabatic_PES_energy_5A.txt"), excited_PES_energy_5A)
-    
-    ## -------- ##
-
-    ## Plot DFT ground state ##
-
     ground_end = energies[1][end] + U_0s[end]
 
+    DFT = readdlm("resources/Newns-Anderson-tutorial/DFT_HGe111_restatom.txt")[:,3:4]
     DFT[:,2] = DFT[:,2] .- DFT[end,2]
-    
     aglinment =  ground_end - DFT[end,2] # adiabatic ground state - DFT ground state
-    
     y_DFT = DFT[:,2] .+ aglinment # align the DFT ground state to the adiabatic ground states
 
     lines!(ax, DFT[:,1], y_DFT, label="DFT PES",linestyle=:dash, color=:blue, linewidth=3)
-    ## --------------------- ##
 
     ## bandgap##
-    hlines!(ax, [ground_end + bandgap], color=:black, linestyle=:dash, label="Band Gap", linewidth=3)
+    hlines!(ax, [ground_end + ustrip(auconvert(u"eV", gapwidth))], color=:black, linestyle=:dash, label="Band Gap", linewidth=3)
     hlines!(ax, [ground_end], color=:black, linestyle=:dash,linewidth=3)
-
 end
+```
 
-function plot_DFT_PES(parameter_dict,DFT; groundstate_align_zero::Bool=false, reduce_PES::Bool=false)
-    ylimitslow = [-2]
-    ylimitsup = [4]
+```{julia eval=false, echo=true}
 
-    fig = Figure(figure_padding=(5, 5, 5, 5), fonts=(;regular=projectdir("fonts", "MinionPro-Capt.otf")), size=(HokseonPlots.RESOLUTION[1]*2, HokseonPlots.RESOLUTION[2]*3),fontsize=17)
+function plot_adiabatic_PES(NAcache, positions::AbstractVector, gapwidth::Float64; groundstate_align_zero::Bool=true, reduce_PES::Bool=false)
+    ## set plotting theme ##
+    colorscheme = ColorScheme(parse.(Colorant, ["#045275", "#089099", "#7CCBA2", "#FCDE9C", "#F0746E", "#DC3977", "#7C1D6F"]))
+    colormap = ColorScheme(parse.(Colorant, ["#FCE1A4","#FABF7B","#F08F6E","#E05C5C","#D12959","#AB1866","#6E005F"]))
+
+    ## create plotting figure ##
+    ylimitslow = -2
+    ylimitsup = 4
+
+    fig = Figure(figure_padding=(5, 5, 5, 5), size=(480, 720/MathConstants.golden),fontsize=17)
+
     # PES axis
-    ax1 = MyAxis(fig[1,1]; xlabel="x / Å", limits=(1, 6, ylimitslow[1], ylimitsup[1]), ylabel = "PES: Energy /eV",xgridvisible = false,ygridvisible = false)
+    function CustomAxis(f; kwargs...)
+        my_ax = Axis(f; kwargs...)
+        extra_ax = Axis(f; xaxisposition=:top, yaxisposition=:right, kwargs...)
+        
+        linkaxes!(my_ax, extra_ax)
+        hidespines!(extra_ax)
+        hidedecorations!(extra_ax, ticks=false, minorticks=false)
+
+        return my_ax
+    end
+
+    ax1 = CustomAxis(fig[1,1]; xlabel="x / Å", limits=(1, 6, ylimitslow, ylimitsup), ylabel = "PES: Energy /eV", xgridvisible = false, ygridvisible = false)
     ax1.title = ""
 
     # plot DFT groundstate and adiabatic surfaces
-    plot_surfaces_DFT!(ax1, parameter_dict, x_ang, DFT; groundstate_align_zero, reduce_PES)
+    plot_surfaces!(NAcache, ax1, positions, gapwidth, groundstate_align_zero, reduce_PES)
 
     # label
     Legend(fig[1,1], ax1, tellwidth=false, tellheight=false, valign=:top, halign=:right, margin=(5, 5, 5, 5), orientation=:horizontal)
     return fig
 end
-
 ```
 
-At last the plotting command:
+Now we have constructed the model and written the functions needed to perform the calculations and plotting of the potential energy surfaces, all that remains is to set the range of positions over which the calculation is run and call the functions.
 
-```julia
-## Load plotting libraries ##
-
-
-colorscheme = ColorScheme(parse.(Colorant, ["#045275", "#089099", "#7CCBA2", "#FCDE9C", "#F0746E", "#DC3977", "#7C1D6F"]))
-colormap = ColorScheme(parse.(Colorant, ["#FCE1A4","#FABF7B","#F08F6E","#E05C5C","#D12959","#AB1866","#6E005F"]))
-@info "Packages correcly loaded!"
-# ------------------------- #
-
-groundstate_align_zero = true
-
-reduce_PES = false
-
-DFT = readdlm(dft_restatom_path)[:,3:4]
-
-plot_DFT_PES(chosen_dict,DFT;groundstate_align_zero,reduce_PES)
+```{julia eval=false, echo=true}
+x_ang = range(0.8, 6, length=200) #range of distances in Å for the plot to be calculated over
+plot_DFT_PES(NAcache, x_ang, gapwidth)
 ```
 
-This procedure will return you a plot:
+This procedure should return this plot:
 
 ![Adiabatic potential surfaces of $H_{\text{NA}}$ configurated with the Lu-Hertl-Maurer model and Gapped the Gauss Legendre discretisation with a 0.49 eV bandgap](../resources/Newns-Anderson-tutorial/LuHertlMaurer_DFT_PES.svg)
 
