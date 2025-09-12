@@ -37,20 +37,9 @@ $$
 \varepsilon_{a} & V_1 & V_2 & \cdots & V_k \\
 V_1 & \varepsilon_1 & 0 & \cdots & 0 \\
 V_2 & 0 & \varepsilon_2 & \cdots & 0 \\
-vdots & vdots & vdots & \ddots & vdots \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
 V_k & 0 & 0 & \cdots & \varepsilon_k
 \end{bmatrix}
-$$
-
-$$
-H_{\text{NA}}(x) = U_0(x) + \begin{pmatrix}
-h(x) & V_{1}(x) & \cdots & V_{k}(x) & \cdots & V_{N}(x) \\
-V_{1}(x) & \epsilon_1 & \cdots & 0 & \cdots & 0 \\
-\vdots & \vdots & \ddots & \vdots& \vdots & \vdots \\
-V_{k}(x) & 0 & \cdots & \epsilon_k & \cdots & 0 \\
-\vdots & \vdots & \vdots & \vdots& \ddots & \vdots \\
-V_{N}(x) & 0 & \cdots & 0 & \cdots & \epsilon_N \\
-\end{pmatrix}.
 $$
 
 ## Dependencies
