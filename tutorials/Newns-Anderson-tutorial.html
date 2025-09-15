@@ -422,7 +422,7 @@ window.Quarto = {
   <li><a href="#building-a-newns-anderson-model" id="toc-building-a-newns-anderson-model" class="nav-link" data-scroll-target="#building-a-newns-anderson-model">Building a Newns-Anderson model</a></li>
   <li><a href="#nqccalculators-and-adiabatic-potential-energy-surfaces" id="toc-nqccalculators-and-adiabatic-potential-energy-surfaces" class="nav-link" data-scroll-target="#nqccalculators-and-adiabatic-potential-energy-surfaces">NQCCalculators and Adiabatic Potential Energy Surfaces</a>
   <ul class="collapse">
-  <li><a href="#plotting-the-pess" id="toc-plotting-the-pess" class="nav-link" data-scroll-target="#plotting-the-pess">Plotting the PESs</a></li>
+  <li><a href="#plotting-the-forces-and-non-adiabatic-couplings" id="toc-plotting-the-forces-and-non-adiabatic-couplings" class="nav-link" data-scroll-target="#plotting-the-forces-and-non-adiabatic-couplings">Plotting the Forces and Non-Adiabatic Couplings</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -624,8 +624,7 @@ V_k &amp; 0 &amp; 0 &amp; \cdots &amp; \varepsilon_k
 <span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> configurations[perm] <span class="co"># sort the configuration according to the adiabatic PES energy at the last grid point</span></span>
 <span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> energies_raw, U_0s, configurations, couplings, forces_raw, ∂U_0s</span>
 <span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="plotting-the-pess" class="level3">
-<h3 class="anchored" data-anchor-id="plotting-the-pess">Plotting the PESs</h3>
+<p>** Plotting the Adiabatic PESs **</p>
 <p>Now that a function has been written to find the ground and excited state adiabatic potential energy surfaces, it’s time to set up some functions to visualise the surfaces we can calculate.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_surfaces!</span>(NAcache, ax, x_ang<span class="op">::</span><span class="dt">AbstractArray{Float64}</span>, gapwidth, groundstate_align_zero<span class="op">::</span><span class="dt">Bool</span>, reduce_PES<span class="op">::</span><span class="dt">Bool</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    energies_raw, U_0s <span class="op">=</span> <span class="fu">adiabatic_surfaces</span>(NAcache, x_ang)[<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>]</span>
@@ -727,6 +726,8 @@ V_k &amp; 0 &amp; 0 &amp; \cdots &amp; \varepsilon_k
 <figcaption>Adiabatic potential surfaces of <span class="math inline">\(H_{\text{NA}}\)</span> configurated with the Lu-Hertl-Maurer model and Gapped the Gauss Legendre discretisation with a 0.49 eV bandgap</figcaption>
 </figure>
 </div>
+<section id="plotting-the-forces-and-non-adiabatic-couplings" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-forces-and-non-adiabatic-couplings">Plotting the Forces and Non-Adiabatic Couplings</h3>
 <p>This is no the only thing we can do with the <code>adiabatic_surfaces!()</code> function, however. Using <code>update_cache!()</code> also gives the user direct access to the Hamiltonian derivative which can be used to calculate forces and non-adiabatic couplings, values which are vital to propagating non-adiabatic dynamics. To show how these values change over the trajectory we can write a simple plotting script to visualise the net forces due to the potential energy surfaces and the nonadiabtic couplings between the ground and first excited states.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_derivatives_and_couplings</span>(NAcache, positions)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Create Figure ##</span></span>
