@@ -123,7 +123,7 @@
     "href": "tutorials/overview.html",
     "title": "Overview",
     "section": "",
-    "text": "Overview\nHere you will find an overview of the types of tutorials offered and a quick summary:\n\nImproving MD simulation throughput by GPU batch evaluation in MACEModels.jl\nSimulating laser-driven desorption with MDEF and the TTM\nScattering of a mono-energetic particle from a surface\nNewns-Anderson Hamiltonian tutorial",
+    "text": "Overview\nHere you will find an overview of the types of tutorials offered and a quick summary:\n\nImproving MD simulation throughput by GPU batch evaluation in MACEModels.jl\nSimulating laser-driven desorption with MDEF and the TTM\nScattering of a mono-energetic particle from a surface\nCalculating potential energy surfaces, forces and non-adiabatic couplings with the Newns-Anderson Hamiltonian",
     "crumbs": [
       "Tutorials",
       "Overview"
