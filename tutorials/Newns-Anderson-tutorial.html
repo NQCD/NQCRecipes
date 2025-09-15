@@ -581,42 +581,49 @@ V_k &amp; 0 &amp; 0 &amp; \cdots &amp; \varepsilon_k
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="fu">austrip</span>.(x_ang <span class="op">*</span> u<span class="st">"Å"</span>)</span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    matrix_x <span class="op">=</span> <span class="fu">hcat</span>.(x)</span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    U_0s<span class="op">=</span> <span class="fu">zero</span>(x)</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    eigs <span class="op">=</span> [<span class="fu">zero</span>(NAcache.eigen.values) for _ <span class="kw">in</span> <span class="fu">CartesianIndices</span>(x)]</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#NAcache.nonadiabatic_coupling is stored as a Matrix{&lt;:Matrix}, here the exterior matrix is 1x1 so below we only access the internal structure to store the values</span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    couplings <span class="op">=</span> [<span class="fu">zero</span>(NAcache.nonadiabatic_coupling[<span class="fl">1</span>]) for _ <span class="kw">in</span> <span class="fu">CartesianIndices</span>(x)]</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    GS_forces <span class="op">=</span> <span class="fu">zero</span>(x)</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i, r) <span class="kw">in</span> <span class="fu">enumerate</span>(matrix_x)</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">update_cache!</span>(NAcache, r)</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        U_0s[i] <span class="op">=</span> <span class="fu">ustrip</span>(<span class="fu">auconvert</span>(u<span class="st">"eV"</span>, NQCModels.<span class="fu">state_independent_potential</span>(NAcache.model, r)))</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        eigs[i] <span class="op">.=</span> NAcache.eigen.values <span class="co"># length of eigs is 200(grid points); eigs[1] has 101 eigenstates</span></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        couplings[i] <span class="op">.=</span> NAcache.nonadiabatic_coupling[<span class="fl">1</span>]</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        GS_forces[i] <span class="op">=</span> <span class="fu">-sum</span>(<span class="fu">eigen</span>(NAcache.derivative[<span class="fl">1</span>]).values[<span class="fl">1</span><span class="op">:</span>nelectrons])</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># groundstate configuration</span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    config <span class="op">=</span> <span class="fu">vcat</span>(<span class="fu">ones</span>(nelectrons), <span class="fu">zeros</span>(nstates<span class="op">-</span>nelectrons))</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    ∂U_0s<span class="op">=</span> <span class="fu">zero</span>(x)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    eigs <span class="op">=</span> [<span class="fu">zero</span>(NAcache.eigen.values) for _ <span class="kw">in</span> <span class="fu">CartesianIndices</span>(x)]</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">#NAcache.nonadiabatic_coupling is stored as a Matrix{&lt;:Matrix}, here the exterior matrix is 1x1 so below we only access the internal structure to store the values</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    couplings <span class="op">=</span> [<span class="fu">zero</span>(NAcache.nonadiabatic_coupling[<span class="fl">1</span>]) for _ <span class="kw">in</span> <span class="fu">CartesianIndices</span>(x)]</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    derivative_eigen <span class="op">=</span> [<span class="fu">zero</span>(NAcache.eigen.values) for _ <span class="kw">in</span> <span class="fu">CartesianIndices</span>(x)]</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i, r) <span class="kw">in</span> <span class="fu">enumerate</span>(matrix_x)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">update_cache!</span>(NAcache, r)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        U_0s[i] <span class="op">=</span> <span class="fu">ustrip</span>(<span class="fu">auconvert</span>(u<span class="st">"eV"</span>, NQCModels.<span class="fu">state_independent_potential</span>(NAcache.model, r)))</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        ∂U_0s[i] <span class="op">=</span> <span class="fu">ustrip</span>(<span class="fu">auconvert</span>(u<span class="st">"eV/Å"</span>, NQCModels.<span class="fu">state_independent_derivative</span>(NAcache.model, r)[<span class="fl">1</span>]))</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        eigs[i] <span class="op">.=</span> NAcache.eigen.values <span class="co"># length of eigs is 200(grid points); eigs[1] has 101 eigenstates</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>        couplings[i] <span class="op">.=</span> NAcache.nonadiabatic_coupling[<span class="fl">1</span>]</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        derivative_eigen[i] <span class="op">=</span> <span class="fu">eigvals</span>(NAcache.derivative[<span class="fl">1</span>]) <span class="co">#-sum(eigen(NAcache.derivative[1]).values[1:nelectrons])</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>        <span class="co">#println(i)</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
 <span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    perms <span class="op">=</span> <span class="fu">multiset_permutations</span>(config, nstates)</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> []</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    energies <span class="op">=</span> []</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    sortpoints <span class="op">=</span> []</span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="st">        This setting makes sure that each PES has the same second quantization configuration</span></span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># loop over all the configurational permutations from groundstate to higher excited states</span></span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> config <span class="kw">in</span> <span class="bu">Iterators</span>.<span class="fu">take</span>(perms, <span class="fl">20000</span>)</span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>        E <span class="op">=</span> [<span class="fu">sum</span>(<span class="cn">e</span>[config <span class="op">.!=</span> <span class="fl">0</span>]) for <span class="cn">e</span> <span class="kw">in</span> eigs] <span class="co"># sum the eigenvalues of the occupied states at each grid point</span></span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(energies, <span class="fu">ustrip</span>.(<span class="fu">auconvert</span>.(u<span class="st">"eV"</span>, E)))</span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(sortpoints, E[<span class="kw">end</span>]) <span class="co"># record the adiabatic PES energy at the last grid point</span></span>
-<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(configurations, config)</span>
-<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    perm <span class="op">=</span> <span class="fu">sortperm</span>(sortpoints)</span>
-<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    energies_raw <span class="op">=</span> energies[perm] <span class="co"># sort the energies according to the adiabatic PES energy at the last grid point</span></span>
-<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> configurations[perm] <span class="co"># sort the configuration according to the adiabatic PES energy at the last grid point</span></span>
-<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> energies_raw, U_0s, configurations, couplings, GS_forces</span>
-<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># groundstate configuration</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    config <span class="op">=</span> <span class="fu">vcat</span>(<span class="fu">ones</span>(nelectrons), <span class="fu">zeros</span>(nstates<span class="op">-</span>nelectrons))</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    perms <span class="op">=</span> <span class="fu">multiset_permutations</span>(config, nstates)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> []</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    forces <span class="op">=</span> []</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    energies <span class="op">=</span> []</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    sortpoints <span class="op">=</span> []</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="st">        This setting makes sure that each PES has the same second quantization configuration</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># loop over all the configurational permutations from groundstate to higher excited states</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> config <span class="kw">in</span> <span class="bu">Iterators</span>.<span class="fu">take</span>(perms, <span class="fl">20000</span>)</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        E <span class="op">=</span> [<span class="fu">sum</span>(<span class="cn">e</span>[config <span class="op">.!=</span> <span class="fl">0</span>]) for <span class="cn">e</span> <span class="kw">in</span> eigs] <span class="co"># sum the eigenvalues of the occupied states at each grid point</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        F <span class="op">=</span> [<span class="fu">-sum</span>(d[config <span class="op">.!=</span> <span class="fl">0</span>]) for d <span class="kw">in</span> derivative_eigen] <span class="co"># calculate forces via summing across the eigenvalue derivatives of occupied eigenstates at each grid point</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(energies, <span class="fu">ustrip</span>.(<span class="fu">auconvert</span>.(u<span class="st">"eV"</span>, E)))</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(forces, <span class="fu">ustrip</span>.(<span class="fu">auconvert</span>.(u<span class="st">"eV/Å"</span>, F)))</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(sortpoints, E[<span class="kw">end</span>]) <span class="co"># record the adiabatic PES energy at the last grid point</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(configurations, config)</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>    perm <span class="op">=</span> <span class="fu">sortperm</span>(sortpoints)</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>    energies_raw <span class="op">=</span> energies[perm] <span class="co"># sort the energies according to the adiabatic PES energy at the last grid point</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>    forces_raw <span class="op">=</span> forces[perm]</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> configurations[perm] <span class="co"># sort the configuration according to the adiabatic PES energy at the last grid point</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> energies_raw, U_0s, configurations, couplings, forces_raw, ∂U_0s</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="plotting-the-pess" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-the-pess">Plotting the PESs</h3>
 <p>Now that a function has been written to find the ground and excited state adiabatic potential energy surfaces, it’s time to set up some functions to visualise the surfaces we can calculate.</p>
@@ -720,8 +727,52 @@ V_k &amp; 0 &amp; 0 &amp; \cdots &amp; \varepsilon_k
 <figcaption>Adiabatic potential surfaces of <span class="math inline">\(H_{\text{NA}}\)</span> configurated with the Lu-Hertl-Maurer model and Gapped the Gauss Legendre discretisation with a 0.49 eV bandgap</figcaption>
 </figure>
 </div>
-<p>This is no the only thing we can do with the <code>adiabatic_surfaces!()</code> function, however. Using <code>update_cache!()</code> also gives the user direct access to the Hamiltonian derivative which can be used to calculate forces and non-adiabatic couplings. To show this we can write some simple plotting scripts to visualise the net forces due to the groundstate potential energy surfaces and the nonadiabtic couplings between the ground and first excited states.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is no the only thing we can do with the <code>adiabatic_surfaces!()</code> function, however. Using <code>update_cache!()</code> also gives the user direct access to the Hamiltonian derivative which can be used to calculate forces and non-adiabatic couplings. To show this we can write some a simple plotting script to visualise the net forces due to the potential energy surfaces and the nonadiabtic couplings between the ground and first excited states.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_derivatives_and_couplings</span>(NAcache, positions)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Create Figure ##</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> <span class="fu">Figure</span>(figure_padding<span class="op">=</span>(<span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>), size<span class="op">=</span>(<span class="fl">480</span>, <span class="fl">720</span><span class="op">/</span><span class="bu">MathConstants</span>.<span class="cn">golden</span>),fontsize<span class="op">=</span><span class="fl">17</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># generate axis</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    ylimitslow <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    ylimitsup <span class="op">=</span> <span class="fl">3.0</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    ax1 <span class="op">=</span> <span class="fu">CustomAxis</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>]; limits<span class="op">=</span>(<span class="fl">0.8</span>, <span class="fl">6.0</span>, <span class="op">-</span><span class="fl">3.0</span>, <span class="fl">3.0</span>), ylabel <span class="op">=</span> <span class="st">"Forces (eV/Å)"</span>, xgridvisible <span class="op">=</span> <span class="cn">false</span>, ygridvisible <span class="op">=</span> <span class="cn">false</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    ax2 <span class="op">=</span> <span class="fu">CustomAxis</span>(fig[<span class="fl">2</span>,<span class="fl">1</span>]; xlabel<span class="op">=</span><span class="st">"x (Å)"</span>, limits<span class="op">=</span>(<span class="fl">0.8</span>, <span class="fl">6.0</span>, <span class="fl">0.0</span>, <span class="fl">0.04</span>), ylabel <span class="op">=</span> <span class="st">"Couplings (Å⁻¹)"</span>, xgridvisible <span class="op">=</span> <span class="cn">false</span>, ygridvisible <span class="op">=</span> <span class="cn">false</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    ax1.title <span class="op">=</span> <span class="st">"Forces due to PESs"</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    ax2.title <span class="op">=</span> <span class="st">"Non-adiabaitc Couplings"</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Calculate Forces and Couplings##</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    _, _, _, couplings, forces_raw, ∂U_0s <span class="op">=</span> <span class="fu">adiabatic_surfaces</span>(NAcache, positions)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    plotted_indices <span class="op">=</span> <span class="fu">vcat</span>(<span class="fu">collect</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>),<span class="fu">collect</span>(<span class="fl">3</span><span class="op">:</span><span class="fl">12</span><span class="op">:</span><span class="fl">20</span>),<span class="fu">collect</span>(<span class="fl">21</span><span class="op">:</span><span class="fl">50</span><span class="op">:</span><span class="fl">2000</span>))</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    forces <span class="op">=</span> forces_raw[plotted_indices]</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Plot Forces ##</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    color_range <span class="op">=</span> []</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> f <span class="kw">in</span> forces</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> (f[<span class="kw">end</span>] <span class="op">-</span> forces[<span class="fl">1</span>][<span class="fl">1</span>])</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(color_range, c)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> [ColorSchemes.<span class="fu">get</span>(colormap, <span class="fl">1</span><span class="op">-</span>c) for c <span class="kw">in</span> color_range]</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i, f) <span class="kw">in</span> <span class="bu">Iterators</span>.<span class="fu">reverse</span>(<span class="fu">enumerate</span>(forces))</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        f <span class="op">=</span> f <span class="op">.+</span> ∂U_0s</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lines!</span>(ax1, positions, f, color<span class="op">=</span>colors[i], linewidth <span class="op">=</span> <span class="fl">0.2</span>)<span class="co">#i==1 ? 4 : 1)</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="fu">length</span>(forces))</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Plot Couplings ##</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> []</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (x,_) <span class="kw">in</span> <span class="fu">enumerate</span>(couplings)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(c, couplings[x][<span class="fl">1</span>,<span class="fl">2</span>])</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> <span class="fu">ustrip</span>.(<span class="fu">auconvert</span>.(u<span class="st">"Å^-1"</span>, c))</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(c)</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines!</span>(ax2, positions, c, color<span class="op">=</span>colors[<span class="fl">18</span>], linewidth <span class="op">=</span> <span class="fl">1.0</span>)</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_derivatives_and_couplings</span>(NAcache, x_ang)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
