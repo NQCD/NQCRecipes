@@ -286,7 +286,7 @@ Now we have constructed the model and written the functions needed to perform th
 
 ```julia
 x_ang = range(0.8, 6, length=200) #range of distances in Å for the plot to be calculated over
-plot_DFT_PES(NAcache, x_ang, gapwidth)
+plot_adiabtic_PES(NAcache, x_ang, gapwidth)
 ```
 
 This procedure should return this plot:
