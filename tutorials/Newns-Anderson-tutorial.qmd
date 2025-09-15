@@ -100,7 +100,7 @@ println(cache.potential)
 
 We are now ready to generate a plot of the adiabatic potnetial energy surfaces of our model, for both ground and excited states. We have already shown how to construct a model of an adsorbate on a metal surface, so for this section we will instead plot the adiabatic eigenstates of a molecule chemisorbed to a semiconductor. For this we employ the LuHertlMaurer() model, an analytic potential fit to DFT data for H/Ge(111) and the GapGaussLegendre() discretisation which uses a modification of the GaussLegendre algorithm to create a set of bathstates for a surface with bandgap.
 
-```{julia eval=false, echo=true}
+```julia
 impurity_model = NQCModels.QuantumModels.LuHertlMaurer()
 bandmin = austrip(-25 * u"eV")
 bandmax = austrip(25 * u"eV")
@@ -122,7 +122,7 @@ Now we have built the model and constructed a cache for it, the steps required t
 
 These steps are all performed by the `adiabatic_surfaces()` function below which will output a sorted list of PESs in the form of a `Vector{<:Vector}` (a vector of vectors).
 
-```{julia eval=false, echo=true}
+```julia
 """
     adiabatic_surfaces computes the potential energy surfaces, the nonadiabatic couplings between them and the forces due to their derivatives. 
     The surfaces are sorted according to their energy farthest from the surface.
@@ -187,7 +187,7 @@ end
 ### Plotting the PESs
 Now that a function has been written to find the ground and excited state adiabatic potential energy surfaces, it's time to set up some functions to visualise the surfaces we can calculate.
 
-```{julia eval=false, echo=true}
+```julia
 function plot_surfaces!(NAcache, ax, x_ang::AbstractArray{Float64}, gapwidth, groundstate_align_zero::Bool, reduce_PES::Bool)
     energies_raw, U_0s = adiabatic_surfaces(NAcache, x_ang)[1:2]
 
@@ -247,7 +247,7 @@ function plot_surfaces!(NAcache, ax, x_ang::AbstractArray{Float64}, gapwidth, gr
 end
 ```
 
-```{julia eval=false, echo=true}
+```julia
 
 function plot_adiabatic_PES(NAcache, positions::AbstractVector, gapwidth::Float64; groundstate_align_zero::Bool=true, reduce_PES::Bool=false)
     ## set plotting theme ##
@@ -286,7 +286,7 @@ end
 
 Now we have constructed the model and written the functions needed to perform the calculations and plotting of the potential energy surfaces, all that remains is to set the range of positions over which the calculation is run and call the functions.
 
-```{julia eval=false, echo=true}
+```julia
 x_ang = range(0.8, 6, length=200) #range of distances in Å for the plot to be calculated over
 plot_DFT_PES(NAcache, x_ang, gapwidth)
 ```
