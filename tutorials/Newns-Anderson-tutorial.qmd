@@ -189,7 +189,8 @@ function adiabatic_surfaces(NAcache, x_ang::AbstractArray{Float64})
 end
 ```
 
-### Plotting the PESs
+** Plotting the Adiabatic PESs **
+
 Now that a function has been written to find the ground and excited state adiabatic potential energy surfaces, it's time to set up some functions to visualise the surfaces we can calculate.
 
 ```julia
@@ -298,6 +299,8 @@ plot_adiabtic_PES(NAcache, x_ang, gapwidth)
 Calling these functions together should return this plot:
 
 ![Adiabatic potential surfaces of $H_{\text{NA}}$ configurated with the Lu-Hertl-Maurer model and Gapped the Gauss Legendre discretisation with a 0.49 eV bandgap](../resources/Newns-Anderson-tutorial/LuHertlMaurer_DFT_PES.svg)
+
+### Plotting the Forces and Non-Adiabatic Couplings
 
 This is no the only thing we can do with the `adiabatic_surfaces!()` function, however. Using `update_cache!()` also gives the user direct access to the Hamiltonian derivative which can be used to calculate forces and non-adiabatic couplings, values which are vital to propagating non-adiabatic dynamics. To show how these values change over the trajectory we can write a simple plotting script to visualise the net forces due to the potential energy surfaces and the nonadiabtic couplings between the ground and first excited states.
 
