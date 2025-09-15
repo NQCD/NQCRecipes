@@ -349,6 +349,10 @@ end
 plot_derivatives_and_couplings(NAcache, x_ang)
 ```
 
+These plotting routines should produce the following plot:
+
+![Non-adiabatic couplings and Forces due to potential energy surfaces of $H_{\text{NA}}$ configured with the Lu-Hertl-Maurer model and Gapped the Gauss Legendre discretisation with a 0.49 eV bandgap](../resources/Newns-Anderson-tutorial/Forces_and_NACs_plot.svg)
+
 :::{.callout-note}
 Reference:
 
