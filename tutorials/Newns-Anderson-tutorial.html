@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Xuexun Lu (Hokseon)">
 <meta name="author" content="Ash Baldwin">
+<meta name="author" content="Xuexun Lu (Hokseon)">
 
 <title>newns-anderson-tutorial – NQCRecipes</title>
 <style>
@@ -69,18 +69,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-befe23ebd2f54d8af2c8a89d1a1611f1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-94599a0eca3b0000ac8b8cb7c63e4b76.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-0bbb9d88478d102033c37fea9a42c307.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-94599a0eca3b0000ac8b8cb7c63e4b76.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-5df47603e3b75ee8f755543cdaab90e4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-a3b89e660445efaee61f23d5f61c68a7.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-5df47603e3b75ee8f755543cdaab90e4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,7 +124,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -311,6 +312,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">NQCRecipes</span>
     </a>
@@ -322,11 +325,11 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../tutorials/overview.html" aria-current="page"> 
+    <a class="nav-link" href="../tutorials/overview.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
@@ -345,7 +348,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/julia-python-hpc-scaling.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../tutorials/Newns-Anderson-tutorial.html">Newns-Anderson Hamiltonian tutorial</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/julia-python-hpc-scaling.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../tutorials/Newns-Anderson-tutorial.html">Calculating potential energy surfaces, forces and non-adiabatic couplings with the Newns-Anderson Hamiltonian</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -355,6 +358,10 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
+      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
@@ -381,7 +388,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/Newns-Anderson-tutorial.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Newns-Anderson Hamiltonian tutorial</span></a>
+ <span class="menu-text">Calculating potential energy surfaces, forces and non-adiabatic couplings with the Newns-Anderson Hamiltonian</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -408,7 +415,7 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#newns-anderson-hamiltonian-tutorial" id="toc-newns-anderson-hamiltonian-tutorial" class="nav-link active" data-scroll-target="#newns-anderson-hamiltonian-tutorial">Newns-Anderson Hamiltonian tutorial</a>
+  <li><a href="#calculating-potential-energy-surfaces-forces-and-non-adiabatic-couplings-with-the-newns-anderson-hamiltonian" id="toc-calculating-potential-energy-surfaces-forces-and-non-adiabatic-couplings-with-the-newns-anderson-hamiltonian" class="nav-link active" data-scroll-target="#calculating-potential-energy-surfaces-forces-and-non-adiabatic-couplings-with-the-newns-anderson-hamiltonian">Calculating potential energy surfaces, forces and non-adiabatic couplings with the Newns-Anderson Hamiltonian</a>
   <ul class="collapse">
   <li><a href="#the-newns-anderson-hamiltonian" id="toc-the-newns-anderson-hamiltonian" class="nav-link" data-scroll-target="#the-newns-anderson-hamiltonian">The Newns-Anderson Hamiltonian</a></li>
   <li><a href="#dependencies" id="toc-dependencies" class="nav-link" data-scroll-target="#dependencies">Dependencies</a></li>
@@ -425,7 +432,7 @@ window.Quarto = {
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/julia-python-hpc-scaling.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../tutorials/Newns-Anderson-tutorial.html">Newns-Anderson Hamiltonian tutorial</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/julia-python-hpc-scaling.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../tutorials/Newns-Anderson-tutorial.html">Calculating potential energy surfaces, forces and non-adiabatic couplings with the Newns-Anderson Hamiltonian</a></li></ol></nav>
 <div class="quarto-title">
 </div>
 
@@ -435,19 +442,19 @@ window.Quarto = {
   <div class="quarto-title-meta-heading">Affiliations</div>
   
     <div class="quarto-title-meta-contents">
-    <p class="author"><a href="https://louhokseson.github.io">Xuexun Lu (Hokseon)</a> </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            University of Warwick
-          </p>
-      </div>
-    <div class="quarto-title-meta-contents">
     <p class="author"><a href="https://github.com/Ash-Baldwin">Ash Baldwin</a> </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
             University of Vienna
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author"><a href="https://louhokseson.github.io">Xuexun Lu (Hokseon)</a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Warwick
           </p>
       </div>
   </div>
@@ -464,8 +471,8 @@ window.Quarto = {
 </header>
 
 
-<section id="newns-anderson-hamiltonian-tutorial" class="level1">
-<h1>Newns-Anderson Hamiltonian tutorial</h1>
+<section id="calculating-potential-energy-surfaces-forces-and-non-adiabatic-couplings-with-the-newns-anderson-hamiltonian" class="level1">
+<h1>Calculating potential energy surfaces, forces and non-adiabatic couplings with the Newns-Anderson Hamiltonian</h1>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -482,7 +489,7 @@ Note
 <section id="the-newns-anderson-hamiltonian" class="level2">
 <h2 class="anchored" data-anchor-id="the-newns-anderson-hamiltonian">The Newns-Anderson Hamiltonian</h2>
 <p>The Newns-Anderson model is a lattice Hamiltonian that parameterises a small set of <code>impurity states" coupled to a large number of</code>bath” states. Within the context of surface science the <code>impurity" states are taken to represent the electronic eigenstates of a molecular adsorbate and the</code>bath” states the band structure that characterises the material on which it is adsorbed. In second-quantised form of the model Hamiltonian reads <span class="math display">\[
-\hat{H} = \sum_{a}{\varepsilon_{a}\hat{n}_{a}} + \sum_{k}{\varepsilon_{k}\hat{n}_{k}} + \sum_{a,k}{V_{ak}(\hat{c}_{a}^\dagger)\hat{c}_{k} + \hat{c}_{k}^\dagger\hat{c}_{a})}.
+\hat{H} = \sum_{a}{\varepsilon_{a}\hat{n}_{a}} + \sum_{k}{\varepsilon_{k}\hat{n}_{k}} + \sum_{a,k}{V_{ak}(\hat{c}_{a}^\dagger\hat{c}_{k} + \hat{c}_{k}^\dagger\hat{c}_{a})}.
 \]</span> Here, the subscript <span class="math inline">\(a\)</span> runs over the adsorbate states and <span class="math inline">\(k\)</span> the bath states. <span class="math inline">\(\varepsilon_a\)</span> and <span class="math inline">\(\varepsilon_k\)</span> are the energies of their respective states which the double sum over <span class="math inline">\(V_{ak}\)</span> encodes the couplings between every given pair of surface and adsorbate states.</p>
 <p>The model implemented in <a href="https://github.com/NQCD/NQCModels.jl">NQCModels.jl</a> has a single adsorbate energy state coupled to a bath of energy states clustered around the fermi-level representing a either a metallic or semiconducting system (depending on the chosen discretisation scheme). The model is also taken to be in the ``wideband limit” where the <span class="math inline">\(k\)</span> dependence of the couplings is dropped and the density of states (DOS) is approximated via variable sparsity of sampling in the bath state discritisation (<a href="https://doi.org/10.1063/1.3125436">Shenvi2009</a>). In after these simplifications the Hamiltonian is able to be written down in a simplified matrix form, <span class="math display">\[
 \begin{bmatrix}
@@ -497,20 +504,20 @@ V_k &amp; 0 &amp; 0 &amp; \cdots &amp; \varepsilon_k
 <section id="dependencies" class="level2">
 <h2 class="anchored" data-anchor-id="dependencies">Dependencies</h2>
 <p>The following packages are all that is required to complete this tutorial. If you don’t want to add them to your default Julia environment simply type <code>] activate 'NQCD Newns-Anderson tutorial'</code> into the REPL before adding the packages.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Unitful</span>, <span class="bu">UnitfulAtomic</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Unitful</span>, <span class="bu">UnitfulAtomic</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DelimitedFiles</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Combinatorics</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">NQCModels</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">NQCCalculators</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CairoMakie</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">ColorSchemes</span>, <span class="bu">Colors</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">ColorSchemes</span>, <span class="bu">Colors</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="building-a-newns-anderson-model" class="level2">
 <h2 class="anchored" data-anchor-id="building-a-newns-anderson-model">Building a Newns-Anderson model</h2>
 <p>Newns-Anderson model in NQCModels is given its other common name, <code>AndersonHolstein()</code> and requires a <code>QuantumModel</code> as input that paramterises both the quantum states of the adsorbate far from the surface and its coupling strength as a function of its distance from the surface. Alongside this <code>impurity_model</code> input, <code>AndersonHolstein()</code> also requries the input of a <code>WideBandBathDiscretisation</code> object which is used to construct the bath energies and is generated automatically by a collection of discretisation functions.</p>
 <p>The first thing to do when building a Newns-Anderson model with NQCModels is to choose what kind of impurity model and bath discretisation you would like. Some sensible defaults are the <code>ErpenbeckThoss()</code> model and a <code>ShenviGaussLegendre()</code> discretisation.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>impurity_model <span class="op">=</span> NQCModels.QuantumModels.<span class="fu">ErpenbeckThoss</span>(;Γ<span class="op">=</span><span class="fl">0.01</span>) <span class="co">#Gamma controls the coupling strength with the surface and can be properly parameterised with DFT, but 0.01 is a sensible default for the purpose of testing</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>impurity_model <span class="op">=</span> NQCModels.QuantumModels.<span class="fu">ErpenbeckThoss</span>(;Γ<span class="op">=</span><span class="fl">0.01</span>) <span class="co">#Gamma controls the coupling strength with the surface and can be properly parameterised with DFT, but 0.01 is a sensible default for the purpose of testing</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>bandmin <span class="op">=</span> <span class="fu">austrip</span>(<span class="op">-</span><span class="fl">270</span> <span class="op">*</span> u<span class="st">"eV"</span>) <span class="co">#austrip converts unitful quantities into atomic units, the default units for NQCD</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>bandmax <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">270</span> <span class="op">*</span> u<span class="st">"eV"</span>)</span>
@@ -518,232 +525,198 @@ V_k &amp; 0 &amp; 0 &amp; \cdots &amp; \varepsilon_k
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>bath <span class="op">=</span> <span class="fu">ShenviGaussLegendre</span>(nstates, bandmin, bandmax)</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>NAmodel <span class="op">=</span> <span class="fu">AndersonHolstein</span>(impurity_model, bath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>NAmodel <span class="op">=</span> <span class="fu">AndersonHolstein</span>(impurity_model, bath)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This code creates an instance of the Newns-Anderson model, stored as a julia <code>struct</code>. This struct contains all of the information you’ve input along with the number of electrons (calculated automatically by the discretisation method), the fermi level (defaults to 0.0 but can be set via the kwarg <code>fermi_level</code>) and an additional quantity saved as <code>couplings_rescale</code> that we will cover later on in the tutorial. For now we shall see what we can achieve with the NQCModels and the <code>NAmodel struct</code>.</p>
 </section>
 <section id="nqccalculators-and-adiabatic-potential-energy-surfaces" class="level2">
 <h2 class="anchored" data-anchor-id="nqccalculators-and-adiabatic-potential-energy-surfaces">NQCCalculators and Adiabatic Potential Energy Surfaces</h2>
 <p>The most obvious first step is to construct the matrix representation of the Newns-Anderson model that we saw above this can be using the NQCModels function <code>potential()</code>. This function takes the model we have already built along with a position argument that encodes the distance between the adsorbate and the surface. This position is wrapped in <code>hcat()</code> as in general NQCD functions take position as a matrix.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Hamiltonian_mat <span class="op">=</span> NQCModels.<span class="fu">potential</span>(NAmodel, <span class="fu">hcat</span>(<span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Hamiltonian_mat <span class="op">=</span> NQCModels.<span class="fu">potential</span>(NAmodel, <span class="fu">hcat</span>(<span class="fl">1.0</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(Hamiltonian_mat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This matrix should have the same structure as the matrix shown above, a structure characteristic of the Anderson model in the diabatic basis. Finding the adiabatic eigenstates of the system at the given height can be easily achieved using the <code>LinearAlgebra.eigen()</code> function. Of more interest in dynamics is the values and derivatives of these eigenstates at range of heights, the potential energy surfaces (PESs) of the system.</p>
 <p>Before plotting the potential energy surfaces it would be useful to briefly discuss the applications of NQCModels to dynamics simulations and in doing so mention how it interfaces with the suite of dynamics software available in <a href="https://github.com/NQCD/NQCDynamics.jl">NQCDynamics.jl</a>. The interface between the dynamics algorithms and the library of Hamiltonians and analytic potentials stored in NQCModels is handled by a third package called <a href="https://github.com/NQCD/NQCCalculators.jl">NQCCalculators.jl</a>, this package uses the model to build a new type of struct called a <code>cache</code>. This cache contains the current instances of all the values that can be calculated from the model and can be automatically updated at each time-step using the <code>update_cache!()</code> function. To create a cache one uses the <code>Create_Cache()</code> function which takes as input the model, the number of atoms subject to the model and a type <code>T</code> that should almost always be set to <code>Float64</code></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>NAcache <span class="op">=</span> <span class="fu">Create_Cache</span>(NAmodel, <span class="fl">1</span>, <span class="dt">Float64</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>NAcache <span class="op">=</span> <span class="fu">Create_Cache</span>(NAmodel, <span class="fl">1</span>, <span class="dt">Float64</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">update_cache!</span>(NAcache, <span class="fu">hcat</span>(<span class="fl">1.0</span>))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(cache.potential)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(cache.potential)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Building Adiabatic Potential Energy Surfaces</strong></p>
-<p>We are now ready to generate a plot of the adiabatic potnetial energy surfaces of our model, for both ground and excited states. We have already shown how to construct a model of an adsorbate on a metal surface, so for this section we will instead plot the adiabatic eigenstates of a molecule chemisorbed to a semiconductor.</p>
-<pre><code>impurity_model = NQCModels.QuantumModels.ErpenbeckThoss(;Γ = 2.18305)
-
-bandmin = austrip(-270 * u"eV")
-bandmax = austrip(270 * u"eV")
-gapwidth = austrip(0.49*u"eV")
-nstates = 100
-
-bath = GapTrapezoidalRule(nstates, bandmin, bandmax, gapwidth)
-
-NAmodel = AndersonHolstein(impurity_model, bath)</code></pre>
-<p>Now we have built the model the steps required to plot the adiabatic excited states are the following:</p>
+<p>We are now ready to generate a plot of the adiabatic potnetial energy surfaces of our model, for both ground and excited states. We have already shown how to construct a model of an adsorbate on a metal surface, so for this section we will instead plot the adiabatic eigenstates of a molecule chemisorbed to a semiconductor. For this we employ the LuHertlMaurer() model, an analytic potential fit to DFT data for H/Ge(111) and the GapGaussLegendre() discretisation which uses a modification of the GaussLegendre algorithm to create a set of bathstates for a surface with bandgap.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>impurity_model <span class="op">=</span> NQCModels.QuantumModels.<span class="fu">LuHertlMaurer</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>bandmin <span class="op">=</span> <span class="fu">austrip</span>(<span class="op">-</span><span class="fl">25</span> <span class="op">*</span> u<span class="st">"eV"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>bandmax <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">25</span> <span class="op">*</span> u<span class="st">"eV"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>gapwidth <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">0.49</span> <span class="op">*</span> u<span class="st">"eV"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>nstates <span class="op">=</span> <span class="fl">150</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>bath <span class="op">=</span> <span class="fu">GapGaussLegendre</span>(nstates, bandmin, bandmax, gapwidth)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>NAmodel <span class="op">=</span> <span class="fu">AndersonHolstein</span>(impurity_model, bath; couplings_rescale <span class="op">=</span> <span class="fl">2.5</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>NAcache <span class="op">=</span> <span class="fu">Create_Cache</span>(NAmodel, <span class="fl">1</span>, <span class="dt">Float64</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now we have built the model and constructed a cache for it, the steps required to plot the adiabatic excited states are the following:</p>
 <ol type="1">
 <li>Generate a ground state electronic occupation vector, a fock state where the first <span class="math inline">\(N_{\text{el}}\)</span> elements are <code>1</code> and the rest of it are <code>0</code>.</li>
 <li>Generate a large number of combinatoric permutations of excited states with a fixed number of electrons <span class="math inline">\(N_{\text{el}}\)</span> and within some given active space in order to obtain a random collection of low energy excited states.</li>
 <li>Diagonalise the Newns-Anderson Hamiltonian <span class="math inline">\(H_{\text{NA}}\)</span> at a given height <span class="math inline">\(x\)</span> and sum the eigenvalues <span class="math inline">\(\varepsilon_i\)</span> of occupied states to obtain the total many-body energy of a given excited state.</li>
 <li>Looping over each of the generated excited states and a variety of positions <span class="math inline">\(x\)</span>, repeat step 3 to produce the excited state potential energy surfaces.</li>
 </ol>
-<div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">    adiabatic_surfaces is to compute the eigenvalues and sort it configurations vector according to the adiabatic PES energy at the last grid point.</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">    Output:</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">        energies_raw : sorted adiabatic PES energies along the grid points x_ang</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">        U_0s : U_0(x) along the grid points x_ang</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">        configurations : configurations vector sorted according to the adiabatic PES energy at the last grid point</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">adiabatic_surfaces</span>(NAmodel, x_ang<span class="op">::</span><span class="dt">AbstractArray{Float64}</span>)</span>
+<p>These steps are all performed by the <code>adiabatic_surfaces()</code> function below which will output a sorted list of PESs in the form of a <code>Vector{&lt;:Vector}</code> (a vector of vectors).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">    adiabatic_surfaces computes the potential energy surfaces, the nonadiabatic couplings between them and the forces due to their derivatives. </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">    The surfaces are sorted according to their energy farthest from the surface.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">    Output:</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">        energies_raw : sorted adiabatic PES energies</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">        U_0s : the state independent, external potential at each point</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">        configurations : configuration vectors sorted according to the adiabatic PES energy at the last grid point</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">        couplings: the non-adiabatic coupling matrix between the single-electron adiabatic states at each evaluated position</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">        GS_forces: the forces due to the groundstate PES at each evaluated position</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">## The number of bath states</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    nstates <span class="op">=</span> NQCModels.<span class="fu">nstates</span>(NAmodel)<span class="op">-</span><span class="fl">1</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">adiabatic_surfaces</span>(NAcache, x_ang<span class="op">::</span><span class="dt">AbstractArray{Float64}</span>)</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">## The number of electrons </span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    nelectrons <span class="op">=</span> NQCModels.<span class="fu">nelectrons</span>(NAmodel) <span class="co">#NQCModels.nelectrons(model) -&gt; Int(nstates/2)</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">## The number of bath states</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    nstates <span class="op">=</span> NQCModels.<span class="fu">nstates</span>(NAcache)</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="fu">austrip</span>.(x_ang <span class="op">*</span> u<span class="st">"Å"</span>)</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    matrix_x <span class="op">=</span> <span class="fu">hcat</span>.(x)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="st">        U_0 : U_0(x) at each grid point</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="st">        eigs  : eigenvalues of the electronic Hamiltonian Hₑ at each grid point</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    U_0s <span class="op">=</span> <span class="fu">ustrip</span>.(<span class="fu">auconvert</span>.(u<span class="st">"eV"</span>, NQCModels.<span class="fu">state_independent_potential</span>.(NAmodel, matrix_x)))</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    eigs <span class="op">=</span> <span class="fu">eigvals</span>.(<span class="fu">potential</span>.(NAmodel, matrix_x)) <span class="co"># length of eigs is 200(grid points); eigs[1] has 101 eigenstates</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># groundstate configuration</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    config <span class="op">=</span> <span class="fu">vcat</span>(<span class="fu">ones</span>(nelectrons), <span class="fu">zeros</span>(nstates<span class="op">-</span>nelectrons<span class="op">+</span><span class="fl">1</span>))</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    perms <span class="op">=</span> <span class="fu">multiset_permutations</span>(config, nstates<span class="op">+</span><span class="fl">1</span>)</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> []</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    energies <span class="op">=</span> []</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    sortpoints <span class="op">=</span> []</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="st">        This setting makes sure that each PES has the same second quantization configuration</span></span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># loop over all the configurational permutations from groundstate to higher excited states</span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> config <span class="kw">in</span> <span class="bu">Iterators</span>.<span class="fu">take</span>(perms, <span class="fl">20000</span>)</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>        E <span class="op">=</span> [<span class="fu">sum</span>(<span class="cn">e</span>[config <span class="op">.!=</span> <span class="fl">0</span>]) for <span class="cn">e</span> <span class="kw">in</span> eigs] <span class="co"># sum the eigenvalues of the occupied states at each grid point</span></span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(energies, <span class="fu">ustrip</span>.(<span class="fu">auconvert</span>.(u<span class="st">"eV"</span>, E)))</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(sortpoints, E[<span class="kw">end</span>]) <span class="co"># record the adiabatic PES energy at the last grid point</span></span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(configurations, config)</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    perm <span class="op">=</span> <span class="fu">sortperm</span>(sortpoints)</span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    energies_raw <span class="op">=</span> <span class="fu">copy</span>(energies[perm]) <span class="co"># sort the energies according to the adiabatic PES energy at the last grid point</span></span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> configurations[perm] <span class="co"># sort the configuration according to the adiabatic PES energy at the last grid point</span></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> energies_raw, U_0s, configurations</span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">## The number of electrons </span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    nelectrons <span class="op">=</span> NQCModels.<span class="fu">nelectrons</span>(NAcache) <span class="co">#NQCModels.nelectrons(model) -&gt; Int(nstates/2)</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="fu">austrip</span>.(x_ang <span class="op">*</span> u<span class="st">"Å"</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    matrix_x <span class="op">=</span> <span class="fu">hcat</span>.(x)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    U_0s<span class="op">=</span> <span class="fu">zero</span>(x)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    eigs <span class="op">=</span> [<span class="fu">zero</span>(NAcache.eigen.values) for _ <span class="kw">in</span> <span class="fu">CartesianIndices</span>(x)]</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#NAcache.nonadiabatic_coupling is stored as a Matrix{&lt;:Matrix}, here the exterior matrix is 1x1 so below we only access the internal structure to store the values</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    couplings <span class="op">=</span> [<span class="fu">zero</span>(NAcache.nonadiabatic_coupling[<span class="fl">1</span>]) for _ <span class="kw">in</span> <span class="fu">CartesianIndices</span>(x)]</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    GS_forces <span class="op">=</span> <span class="fu">zero</span>(x)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i, r) <span class="kw">in</span> <span class="fu">enumerate</span>(matrix_x)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">update_cache!</span>(NAcache, r)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        U_0s[i] <span class="op">=</span> <span class="fu">ustrip</span>(<span class="fu">auconvert</span>(u<span class="st">"eV"</span>, NQCModels.<span class="fu">state_independent_potential</span>(NAcache.model, r)))</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        eigs[i] <span class="op">.=</span> NAcache.eigen.values <span class="co"># length of eigs is 200(grid points); eigs[1] has 101 eigenstates</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        couplings[i] <span class="op">.=</span> NAcache.nonadiabatic_coupling[<span class="fl">1</span>]</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        GS_forces[i] <span class="op">=</span> <span class="fu">-sum</span>(<span class="fu">eigen</span>(NAcache.derivative[<span class="fl">1</span>]).values[<span class="fl">1</span><span class="op">:</span>nelectrons])</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># groundstate configuration</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    config <span class="op">=</span> <span class="fu">vcat</span>(<span class="fu">ones</span>(nelectrons), <span class="fu">zeros</span>(nstates<span class="op">-</span>nelectrons))</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    perms <span class="op">=</span> <span class="fu">multiset_permutations</span>(config, nstates)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> []</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    energies <span class="op">=</span> []</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    sortpoints <span class="op">=</span> []</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="st">        This setting makes sure that each PES has the same second quantization configuration</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># loop over all the configurational permutations from groundstate to higher excited states</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> config <span class="kw">in</span> <span class="bu">Iterators</span>.<span class="fu">take</span>(perms, <span class="fl">20000</span>)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>        E <span class="op">=</span> [<span class="fu">sum</span>(<span class="cn">e</span>[config <span class="op">.!=</span> <span class="fl">0</span>]) for <span class="cn">e</span> <span class="kw">in</span> eigs] <span class="co"># sum the eigenvalues of the occupied states at each grid point</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(energies, <span class="fu">ustrip</span>.(<span class="fu">auconvert</span>.(u<span class="st">"eV"</span>, E)))</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(sortpoints, E[<span class="kw">end</span>]) <span class="co"># record the adiabatic PES energy at the last grid point</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(configurations, config)</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    perm <span class="op">=</span> <span class="fu">sortperm</span>(sortpoints)</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    energies_raw <span class="op">=</span> energies[perm] <span class="co"># sort the energies according to the adiabatic PES energy at the last grid point</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    configurations <span class="op">=</span> configurations[perm] <span class="co"># sort the configuration according to the adiabatic PES energy at the last grid point</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> energies_raw, U_0s, configurations, couplings, GS_forces</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="plotting-the-pess" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-the-pess">Plotting the PESs</h3>
-<p>The previous section gives you an idea how we evaluate the adiabtatic potential spectrum, now it’s time to set up the configurations to the NA Hamiltonian for visualisation. For illustration, we use <em>Lu-Hertl-Maurer</em> model(Ref. 2) designed for a H atom scattering from a Ge(111) surface.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Unitful</span>, <span class="bu">UnitfulAtomic</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">global</span> PES_params <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{String,Any}</span>(</span>
+<p>Now that a function has been written to find the ground and excited state adiabatic potential energy surfaces, it’s time to set up some functions to visualise the surfaces we can calculate.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_surfaces!</span>(NAcache, ax, x_ang<span class="op">::</span><span class="dt">AbstractArray{Float64}</span>, gapwidth, groundstate_align_zero<span class="op">::</span><span class="dt">Bool</span>, reduce_PES<span class="op">::</span><span class="dt">Bool</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    energies_raw, U_0s <span class="op">=</span> <span class="fu">adiabatic_surfaces</span>(NAcache, x_ang)[<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x_ang"</span> <span class="op">=&gt;</span> <span class="fu">range</span>(<span class="fl">0.8</span>, <span class="fl">6</span>, length<span class="op">=</span><span class="fl">200</span>), <span class="co"># DFT data starts from 0.8Å</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x_Mulliken_ang"</span> <span class="op">=&gt;</span> <span class="fu">range</span>(<span class="fl">2.4</span>, <span class="fl">6</span>, length<span class="op">=</span><span class="fl">200</span>), <span class="co"># Mulliken data starts from 2.4Å</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bandgap"</span> <span class="op">=&gt;</span> <span class="fl">0.49</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"centre"</span> <span class="op">=&gt;</span> <span class="fl">0.0</span>,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"diabaticmodel"</span> <span class="op">=&gt;</span> <span class="op">:</span>LuHertlMaurer,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"discretisation"</span><span class="op">=&gt;</span> <span class="op">:</span>GapGaussLegendre,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nstates"</span> <span class="op">=&gt;</span> <span class="fl">150</span>,</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"width"</span> <span class="op">=&gt;</span> <span class="fl">50</span>,</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sd"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="co"># Standard deviation for the Density of States</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"couplings_rescale"</span> <span class="op">=&gt;</span> <span class="fl">2.5</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"parameters_choice"</span> <span class="op">=&gt;</span> <span class="op">:</span>Default, <span class="co"># Lifted or :Default</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="pp">@unpack</span> x_ang, x_Mulliken_ang, bandgap, centre, diabaticmodel, discretisation, nstates, width, sd, couplings_rescale, parameters_choice <span class="op">=</span> PES_params</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>bandmin <span class="op">=</span> <span class="fu">-</span>(width<span class="op">/</span><span class="fl">2</span> <span class="op">-</span> centre) <span class="co"># unit is eV</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>bandmax <span class="op">=</span> (width<span class="op">/</span><span class="fl">2</span> <span class="op">+</span> centre) <span class="co"># unit is eV</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">austrip</span>.(x_ang <span class="op">.*</span> u<span class="st">"Å"</span>);</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> groundstate_align_zero</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        groundstate_energy_end <span class="op">=</span> energies_raw[<span class="fl">1</span>][<span class="kw">end</span>] <span class="op">+</span> U_0s[<span class="kw">end</span>]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        energies_raw <span class="op">=</span> <span class="fu">broadcast</span>(<span class="op">.-</span>, energies_raw,  groundstate_energy_end) <span class="co">#broadcast to every PESs</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> reduce_PES</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        plotted_indices <span class="op">=</span> <span class="fu">vcat</span>(<span class="fu">collect</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>),<span class="fu">collect</span>(<span class="fl">3</span><span class="op">:</span><span class="fl">12</span><span class="op">:</span><span class="fl">20</span>),<span class="fu">collect</span>(<span class="fl">21</span><span class="op">:</span><span class="fl">50</span><span class="op">:</span><span class="fl">2000</span>))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        plotted_indices <span class="op">=</span> <span class="fu">collect</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2000</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># extract only the indexed PESs</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    energies <span class="op">=</span> energies_raw[plotted_indices] <span class="co"># energies_raw[1] groundstate </span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"The depth of the ground state well is </span><span class="sc">$</span>(<span class="fu">minimum</span>(energies[<span class="fl">1</span>] <span class="op">.+</span> U_0s) <span class="op">-</span> (energies[<span class="fl">1</span>] <span class="op">.+</span> U_0s)[<span class="kw">end</span>])<span class="st"> eV"</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># first excited state - ground state</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    f_minus_g <span class="op">=</span> energies[<span class="fl">2</span>] <span class="op">.-</span> energies[<span class="fl">1</span>]</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    gap_max <span class="op">=</span> <span class="fu">maximum</span>(<span class="fu">max</span>.(f_minus_g))</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    gap_min <span class="op">=</span> <span class="fu">minimum</span>(<span class="fu">min</span>.(f_minus_g))</span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>dft_restatom_path <span class="op">=</span> <span class="st">"data/ab-inito_cals/DFT_HGe111_restatom.txt"</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"The maximum gap of ground state and first excited state is </span><span class="sc">$</span>gap_max<span class="st"> eV"</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"The minimum gap of ground state and first excited state is </span><span class="sc">$</span>gap_min<span class="st"> eV"</span></span>
 <span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="st">Selection of Parameters Dictionary for the Diabatic Model</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> parameters_choice <span class="op">==</span> <span class="op">:</span>Default</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    parameter_dict <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{Symbol,Float64}</span>() <span class="co"># Use the default parameters in the selected model</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The plotting tool and the actually function powered by <code>Makie</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_surfaces_DFT!</span>(ax, parameter_dict<span class="op">::</span><span class="dt">Dict{Symbol,Float64}</span>, x_ang<span class="op">::</span><span class="dt">AbstractArray{Float64}</span>, DFT<span class="op">::</span><span class="dt">Matrix{Float64}</span>; groundstate_align_zero<span class="op">::</span><span class="dt">Bool</span>=<span class="cn">false</span>, reduce_PES<span class="op">::</span><span class="dt">Bool</span>=<span class="cn">false</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    energies_raw, U_0s <span class="op">=</span> <span class="fu">adiabatic_surfaces</span>(parameter_dict, x_ang)[<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>]</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> groundstate_align_zero</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        groundstate_energy_end <span class="op">=</span> energies_raw[<span class="fl">1</span>][<span class="kw">end</span>] <span class="op">+</span> U_0s[<span class="kw">end</span>]</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        energies_raw <span class="op">=</span> <span class="fu">broadcast</span>(x <span class="op">-&gt;</span> x <span class="op">.-</span> groundstate_energy_end, energies_raw) <span class="co">#broadcast to every PESs</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> reduce_PES</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        showing_index <span class="op">=</span> <span class="fu">vcat</span>(<span class="fu">collect</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>),<span class="fu">collect</span>(<span class="fl">3</span><span class="op">:</span><span class="fl">12</span><span class="op">:</span><span class="fl">20</span>),<span class="fu">collect</span>(<span class="fl">21</span><span class="op">:</span><span class="fl">50</span><span class="op">:</span><span class="fl">2000</span>))</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        showing_index <span class="op">=</span> <span class="fu">collect</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2000</span>)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># extract only the indexed PESs</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    energies <span class="op">=</span> energies_raw[showing_index] <span class="co"># energies_raw[1] groundstate </span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"The depth of the ground state well is </span><span class="sc">$</span>(<span class="fu">minimum</span>(energies[<span class="fl">1</span>] <span class="op">.+</span> U_0s) <span class="op">-</span> (energies[<span class="fl">1</span>] <span class="op">.+</span> U_0s)[<span class="kw">end</span>])<span class="st"> eV"</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># first excited state - ground state</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    f_minus_g <span class="op">=</span> energies[<span class="fl">2</span>] <span class="op">.-</span> energies[<span class="fl">1</span>]</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    color_range <span class="op">=</span> []</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Plot PES ##</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> energies</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> (<span class="cn">e</span>[<span class="kw">end</span>] <span class="op">-</span> energies[<span class="fl">1</span>][<span class="kw">end</span>]) <span class="op">/</span> (energies[<span class="kw">end</span>][<span class="kw">end</span>] <span class="op">-</span> energies[<span class="fl">1</span>][<span class="kw">end</span>])</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(color_range, c)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> [ColorSchemes.<span class="fu">get</span>(colormap, <span class="fl">1</span><span class="op">-</span>c) for c <span class="kw">in</span> color_range]</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    excited_PES_energy_5A <span class="op">=</span> []</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i, <span class="cn">e</span>) <span class="kw">in</span> <span class="bu">Iterators</span>.<span class="fu">reverse</span>(<span class="fu">enumerate</span>(energies))</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> <span class="cn">e</span> <span class="op">.+</span> U_0s <span class="co"># NA Hamiltonian = adiabatic eigenvalues + U_0</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lines!</span>(ax, x_ang, y, color<span class="op">=</span>colors[i], linewidth<span class="op">=</span> i<span class="op">==</span><span class="fl">1</span> ? <span class="fl">4</span> <span class="op">:</span> <span class="fl">1</span>)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> y[<span class="kw">end</span>] <span class="op">&lt;</span> <span class="fl">1.92</span> <span class="op">&amp;&amp;</span> y[<span class="kw">end</span>] <span class="op">&gt;</span> <span class="fl">0.4</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(excited_PES_energy_5A, y[<span class="kw">end</span>])</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    ground_end <span class="op">=</span> energies[<span class="fl">1</span>][<span class="kw">end</span>] <span class="op">+</span> U_0s[<span class="kw">end</span>]</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    DFT <span class="op">=</span> <span class="fu">readdlm</span>(<span class="st">"resources/Newns-Anderson-tutorial/DFT_HGe111_restatom.txt"</span>)[<span class="op">:</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">4</span>]</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    DFT[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">=</span> DFT[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">.-</span> DFT[<span class="kw">end</span>,<span class="fl">2</span>]</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    aglinment <span class="op">=</span>  ground_end <span class="op">-</span> DFT[<span class="kw">end</span>,<span class="fl">2</span>] <span class="co"># adiabatic ground state - DFT ground state</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>    y_DFT <span class="op">=</span> DFT[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">.+</span> aglinment <span class="co"># align the DFT ground state to the adiabatic ground states</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines!</span>(ax, DFT[<span class="op">:</span>,<span class="fl">1</span>], y_DFT, label<span class="op">=</span><span class="st">"DFT PES"</span>,linestyle<span class="op">=:</span>dash, color<span class="op">=:</span>blue, linewidth<span class="op">=</span><span class="fl">3</span>)</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    <span class="co">## bandgap##</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hlines!</span>(ax, [ground_end <span class="op">+</span> <span class="fu">ustrip</span>(<span class="fu">auconvert</span>(u<span class="st">"eV"</span>, gapwidth))], color<span class="op">=:</span>black, linestyle<span class="op">=:</span>dash, label<span class="op">=</span><span class="st">"Band Gap"</span>, linewidth<span class="op">=</span><span class="fl">3</span>)</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hlines!</span>(ax, [ground_end], color<span class="op">=:</span>black, linestyle<span class="op">=:</span>dash,linewidth<span class="op">=</span><span class="fl">3</span>)</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_adiabatic_PES</span>(NAcache, positions<span class="op">::</span><span class="dt">AbstractVector</span>, gapwidth<span class="op">::</span><span class="dt">Float64</span>; groundstate_align_zero<span class="op">::</span><span class="dt">Bool</span>=<span class="cn">true</span>, reduce_PES<span class="op">::</span><span class="dt">Bool</span>=<span class="cn">false</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">## set plotting theme ##</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    colorscheme <span class="op">=</span> <span class="fu">ColorScheme</span>(<span class="fu">parse</span>.(Colorant, [<span class="st">"#045275"</span>, <span class="st">"#089099"</span>, <span class="st">"#7CCBA2"</span>, <span class="st">"#FCDE9C"</span>, <span class="st">"#F0746E"</span>, <span class="st">"#DC3977"</span>, <span class="st">"#7C1D6F"</span>]))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    colormap <span class="op">=</span> <span class="fu">ColorScheme</span>(<span class="fu">parse</span>.(Colorant, [<span class="st">"#FCE1A4"</span>,<span class="st">"#FABF7B"</span>,<span class="st">"#F08F6E"</span>,<span class="st">"#E05C5C"</span>,<span class="st">"#D12959"</span>,<span class="st">"#AB1866"</span>,<span class="st">"#6E005F"</span>]))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">## create plotting figure ##</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    ylimitslow <span class="op">=</span> <span class="op">-</span><span class="fl">2</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    ylimitsup <span class="op">=</span> <span class="fl">4</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> <span class="fu">Figure</span>(figure_padding<span class="op">=</span>(<span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>), size<span class="op">=</span>(<span class="fl">480</span>, <span class="fl">720</span><span class="op">/</span><span class="bu">MathConstants</span>.<span class="cn">golden</span>),fontsize<span class="op">=</span><span class="fl">17</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PES axis</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">CustomAxis</span>(f; kwargs<span class="op">...</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        my_ax <span class="op">=</span> <span class="fu">Axis</span>(f; kwargs<span class="op">...</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        extra_ax <span class="op">=</span> <span class="fu">Axis</span>(f; xaxisposition<span class="op">=:</span>top, yaxisposition<span class="op">=:</span>right, kwargs<span class="op">...</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linkaxes!</span>(my_ax, extra_ax)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">hidespines!</span>(extra_ax)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">hidedecorations!</span>(extra_ax, ticks<span class="op">=</span><span class="cn">false</span>, minorticks<span class="op">=</span><span class="cn">false</span>)</span>
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    test <span class="op">=</span> <span class="fu">max</span>.(f_minus_g)</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    gap_max <span class="op">=</span> <span class="fu">maximum</span>(test)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> my_ax</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    test <span class="op">=</span> <span class="fu">min</span>.(f_minus_g)</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    gap_min <span class="op">=</span> <span class="fu">minimum</span>(test)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    ax1 <span class="op">=</span> <span class="fu">CustomAxis</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>]; xlabel<span class="op">=</span><span class="st">"x / Å"</span>, limits<span class="op">=</span>(<span class="fl">1</span>, <span class="fl">6</span>, ylimitslow, ylimitsup), ylabel <span class="op">=</span> <span class="st">"PES: Energy /eV"</span>, xgridvisible <span class="op">=</span> <span class="cn">false</span>, ygridvisible <span class="op">=</span> <span class="cn">false</span>)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    ax1.title <span class="op">=</span> <span class="st">""</span></span>
 <span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"The maximum gap of ground state and first excited state is </span><span class="sc">$</span>gap_max<span class="st"> eV"</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"The minimum gap of ground state and first excited state is </span><span class="sc">$</span>gap_min<span class="st"> eV"</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot DFT groundstate and adiabatic surfaces</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_surfaces!</span>(NAcache, ax1, positions, gapwidth, groundstate_align_zero, reduce_PES)</span>
 <span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    color_range <span class="op">=</span> []</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    max_e <span class="op">=</span> energies[<span class="kw">end</span>][<span class="kw">end</span>]</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    min_e <span class="op">=</span> energies[<span class="fl">1</span>][<span class="kw">end</span>]</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Plot PES ##</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> energies</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> (<span class="cn">e</span>[<span class="kw">end</span>] <span class="op">-</span> min_e) <span class="op">/</span> (max_e <span class="op">-</span> min_e)</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(color_range, c)</span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> [ColorSchemes.<span class="fu">get</span>(colormap, <span class="fl">1</span><span class="op">-</span>c) for c <span class="kw">in</span> color_range]</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    excited_PES_energy_5A <span class="op">=</span> []</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i, <span class="cn">e</span>) <span class="kw">in</span> <span class="bu">Iterators</span>.<span class="fu">reverse</span>(<span class="fu">enumerate</span>(energies))</span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> <span class="cn">e</span> <span class="op">.+</span> U_0s <span class="co"># NA Hamiltonian = adiabatic eigenvalues + U_0</span></span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lines!</span>(ax, x_ang, y, color<span class="op">=</span>colors[i], linewidth<span class="op">=</span> i<span class="op">==</span><span class="fl">1</span> ? <span class="fl">4</span> <span class="op">:</span> <span class="fl">1</span>)</span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> y[<span class="kw">end</span>] <span class="op">&lt;</span> <span class="fl">1.92</span> <span class="op">&amp;&amp;</span> y[<span class="kw">end</span>] <span class="op">&gt;</span> <span class="fl">0.4</span></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(excited_PES_energy_5A, y[<span class="kw">end</span>])</span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>            <span class="co">#scatter!(ax, x_ang[end], y[end], color=:blue, markersize=8, marker=:circle, label="")</span></span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">writedlm</span>(<span class="fu">datadir</span>(<span class="st">"LuHertlMaurer_model"</span>,<span class="st">"adiabatic_PES_energy_5A.txt"</span>), excited_PES_energy_5A)</span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    <span class="co">## -------- ##</span></span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Plot DFT ground state ##</span></span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>    ground_end <span class="op">=</span> energies[<span class="fl">1</span>][<span class="kw">end</span>] <span class="op">+</span> U_0s[<span class="kw">end</span>]</span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>    DFT[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">=</span> DFT[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">.-</span> DFT[<span class="kw">end</span>,<span class="fl">2</span>]</span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>    aglinment <span class="op">=</span>  ground_end <span class="op">-</span> DFT[<span class="kw">end</span>,<span class="fl">2</span>] <span class="co"># adiabatic ground state - DFT ground state</span></span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>    y_DFT <span class="op">=</span> DFT[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">.+</span> aglinment <span class="co"># align the DFT ground state to the adiabatic ground states</span></span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines!</span>(ax, DFT[<span class="op">:</span>,<span class="fl">1</span>], y_DFT, label<span class="op">=</span><span class="st">"DFT PES"</span>,linestyle<span class="op">=:</span>dash, color<span class="op">=:</span>blue, linewidth<span class="op">=</span><span class="fl">3</span>)</span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>    <span class="co">## --------------------- ##</span></span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>    <span class="co">## bandgap##</span></span>
-<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hlines!</span>(ax, [ground_end <span class="op">+</span> bandgap], color<span class="op">=:</span>black, linestyle<span class="op">=:</span>dash, label<span class="op">=</span><span class="st">"Band Gap"</span>, linewidth<span class="op">=</span><span class="fl">3</span>)</span>
-<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hlines!</span>(ax, [ground_end], color<span class="op">=:</span>black, linestyle<span class="op">=:</span>dash,linewidth<span class="op">=</span><span class="fl">3</span>)</span>
-<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_DFT_PES</span>(parameter_dict,DFT; groundstate_align_zero<span class="op">::</span><span class="dt">Bool</span>=<span class="cn">false</span>, reduce_PES<span class="op">::</span><span class="dt">Bool</span>=<span class="cn">false</span>)</span>
-<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>    ylimitslow <span class="op">=</span> [<span class="op">-</span><span class="fl">2</span>]</span>
-<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>    ylimitsup <span class="op">=</span> [<span class="fl">4</span>]</span>
-<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> <span class="fu">Figure</span>(figure_padding<span class="op">=</span>(<span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>), fonts<span class="op">=</span>(;regular<span class="op">=</span><span class="fu">projectdir</span>(<span class="st">"fonts"</span>, <span class="st">"MinionPro-Capt.otf"</span>)), size<span class="op">=</span>(HokseonPlots.RESOLUTION[<span class="fl">1</span>]<span class="op">*</span><span class="fl">2</span>, HokseonPlots.RESOLUTION[<span class="fl">2</span>]<span class="op">*</span><span class="fl">3</span>),fontsize<span class="op">=</span><span class="fl">17</span>)</span>
-<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PES axis</span></span>
-<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>    ax1 <span class="op">=</span> <span class="fu">MyAxis</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>]; xlabel<span class="op">=</span><span class="st">"x / Å"</span>, limits<span class="op">=</span>(<span class="fl">1</span>, <span class="fl">6</span>, ylimitslow[<span class="fl">1</span>], ylimitsup[<span class="fl">1</span>]), ylabel <span class="op">=</span> <span class="st">"PES: Energy /eV"</span>,xgridvisible <span class="op">=</span> <span class="cn">false</span>,ygridvisible <span class="op">=</span> <span class="cn">false</span>)</span>
-<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>    ax1.title <span class="op">=</span> <span class="st">""</span></span>
-<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot DFT groundstate and adiabatic surfaces</span></span>
-<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_surfaces_DFT!</span>(ax1, parameter_dict, x_ang, DFT; groundstate_align_zero, reduce_PES)</span>
-<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>    <span class="co"># label</span></span>
-<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Legend</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>], ax1, tellwidth<span class="op">=</span><span class="cn">false</span>, tellheight<span class="op">=</span><span class="cn">false</span>, valign<span class="op">=:</span>top, halign<span class="op">=:</span>right, margin<span class="op">=</span>(<span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>), orientation<span class="op">=:</span>horizontal)</span>
-<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span>
-<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>At last the plotting command:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Load plotting libraries ##</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>colorscheme <span class="op">=</span> <span class="fu">ColorScheme</span>(<span class="fu">parse</span>.(Colorant, [<span class="st">"#045275"</span>, <span class="st">"#089099"</span>, <span class="st">"#7CCBA2"</span>, <span class="st">"#FCDE9C"</span>, <span class="st">"#F0746E"</span>, <span class="st">"#DC3977"</span>, <span class="st">"#7C1D6F"</span>]))</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> <span class="fu">ColorScheme</span>(<span class="fu">parse</span>.(Colorant, [<span class="st">"#FCE1A4"</span>,<span class="st">"#FABF7B"</span>,<span class="st">"#F08F6E"</span>,<span class="st">"#E05C5C"</span>,<span class="st">"#D12959"</span>,<span class="st">"#AB1866"</span>,<span class="st">"#6E005F"</span>]))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@info</span> <span class="st">"Packages correcly loaded!"</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------- #</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>groundstate_align_zero <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>reduce_PES <span class="op">=</span> <span class="cn">false</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>DFT <span class="op">=</span> <span class="fu">readdlm</span>(dft_restatom_path)[<span class="op">:</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">4</span>]</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_DFT_PES</span>(chosen_dict,DFT;groundstate_align_zero,reduce_PES)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This procedure will return you a plot:</p>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># label</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Legend</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>], ax1, tellwidth<span class="op">=</span><span class="cn">false</span>, tellheight<span class="op">=</span><span class="cn">false</span>, valign<span class="op">=:</span>top, halign<span class="op">=:</span>right, margin<span class="op">=</span>(<span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>), orientation<span class="op">=:</span>horizontal)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now we have constructed the model and written the functions needed to perform the calculations and plotting of the potential energy surfaces, all that remains is to set the range of positions over which the calculation is run and call the functions.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x_ang <span class="op">=</span> <span class="fu">range</span>(<span class="fl">0.8</span>, <span class="fl">6</span>, length<span class="op">=</span><span class="fl">200</span>) <span class="co">#range of distances in Å for the plot to be calculated over</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_DFT_PES</span>(NAcache, x_ang, gapwidth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This procedure should return this plot:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../resources/Newns-Anderson-tutorial/LuHertlMaurer_DFT_PES.svg" class="img-fluid figure-img"></p>
@@ -841,13 +814,14 @@ Note
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
