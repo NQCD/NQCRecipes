@@ -4,9 +4,9 @@ code-annotations: below
 author:
   - name: Alexander Spears
     affiliation: 
-        name: University of Warwick
-        department: Department of Chemistry
-        address: Gibbet Hill Road, Coventry, CV4 7AL
+      name: University of Vienna
+      department: Department of Physics
+      address: Kolingasse 14-16, 1090 Vienna
     url: https://warwick.ac.uk/fac/sci/chemistry/research/maurer/maurergroup/people/alex/
 
 ---
