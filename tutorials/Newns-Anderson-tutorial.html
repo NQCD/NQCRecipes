@@ -713,7 +713,7 @@ V_k &amp; 0 &amp; 0 &amp; \cdots &amp; \varepsilon_k
 <span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now we have constructed the model and written the functions needed to perform the calculations and plotting of the potential energy surfaces, all that remains is to set the range of positions over which the calculation is run and call the functions.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x_ang <span class="op">=</span> <span class="fu">range</span>(<span class="fl">0.8</span>, <span class="fl">6</span>, length<span class="op">=</span><span class="fl">200</span>) <span class="co">#range of distances in Å for the plot to be calculated over</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_DFT_PES</span>(NAcache, x_ang, gapwidth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_adiabtic_PES</span>(NAcache, x_ang, gapwidth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This procedure should return this plot:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
