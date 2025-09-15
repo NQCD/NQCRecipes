@@ -144,18 +144,21 @@ function adiabatic_surfaces(NAcache, x_ang::AbstractArray{Float64})
     x = austrip.(x_ang * u"Å")
     matrix_x = hcat.(x)
     U_0s= zero(x)
+    ∂U_0s= zero(x)
     eigs = [zero(NAcache.eigen.values) for _ in CartesianIndices(x)]
     
     #NAcache.nonadiabatic_coupling is stored as a Matrix{<:Matrix}, here the exterior matrix is 1x1 so below we only access the internal structure to store the values
     couplings = [zero(NAcache.nonadiabatic_coupling[1]) for _ in CartesianIndices(x)]
-    GS_forces = zero(x)
+    derivative_eigen = [zero(NAcache.eigen.values) for _ in CartesianIndices(x)]
 
     for (i, r) in enumerate(matrix_x)
         update_cache!(NAcache, r)
         U_0s[i] = ustrip(auconvert(u"eV", NQCModels.state_independent_potential(NAcache.model, r)))
+        ∂U_0s[i] = ustrip(auconvert(u"eV/Å", NQCModels.state_independent_derivative(NAcache.model, r)[1]))
         eigs[i] .= NAcache.eigen.values # length of eigs is 200(grid points); eigs[1] has 101 eigenstates
         couplings[i] .= NAcache.nonadiabatic_coupling[1]
-        GS_forces[i] = -sum(eigen(NAcache.derivative[1]).values[1:nelectrons])
+        derivative_eigen[i] = eigvals(NAcache.derivative[1]) #-sum(eigen(NAcache.derivative[1]).values[1:nelectrons])
+        #println(i)
     end
 
     # groundstate configuration
@@ -163,6 +166,7 @@ function adiabatic_surfaces(NAcache, x_ang::AbstractArray{Float64})
 
     perms = multiset_permutations(config, nstates)
     configurations = []
+    forces = []
     energies = []
     sortpoints = []
     """
@@ -171,14 +175,17 @@ function adiabatic_surfaces(NAcache, x_ang::AbstractArray{Float64})
     # loop over all the configurational permutations from groundstate to higher excited states
     for config in Iterators.take(perms, 20000)
         E = [sum(e[config .!= 0]) for e in eigs] # sum the eigenvalues of the occupied states at each grid point
+        F = [-sum(d[config .!= 0]) for d in derivative_eigen] # calculate forces via summing across the eigenvalue derivatives of occupied eigenstates at each grid point
         push!(energies, ustrip.(auconvert.(u"eV", E)))
+        push!(forces, ustrip.(auconvert.(u"eV/Å", F)))
         push!(sortpoints, E[end]) # record the adiabatic PES energy at the last grid point
         push!(configurations, config)
     end
     perm = sortperm(sortpoints)
     energies_raw = energies[perm] # sort the energies according to the adiabatic PES energy at the last grid point
+    forces_raw = forces[perm]
     configurations = configurations[perm] # sort the configuration according to the adiabatic PES energy at the last grid point
-    return energies_raw, U_0s, configurations, couplings, GS_forces
+    return energies_raw, U_0s, configurations, couplings, forces_raw, ∂U_0s
 end
 ```
 
@@ -292,10 +299,54 @@ Calling these functions together should return this plot:
 
 ![Adiabatic potential surfaces of $H_{\text{NA}}$ configurated with the Lu-Hertl-Maurer model and Gapped the Gauss Legendre discretisation with a 0.49 eV bandgap](../resources/Newns-Anderson-tutorial/LuHertlMaurer_DFT_PES.svg)
 
-This is no the only thing we can do with the `adiabatic_surfaces!()` function, however. Using `update_cache!()` also gives the user direct access to the Hamiltonian derivative which can be used to calculate forces and non-adiabatic couplings. To show this we can write some simple plotting scripts to visualise the net forces due to the groundstate potential energy surfaces and the nonadiabtic couplings between the ground and first excited states.
+This is no the only thing we can do with the `adiabatic_surfaces!()` function, however. Using `update_cache!()` also gives the user direct access to the Hamiltonian derivative which can be used to calculate forces and non-adiabatic couplings. To show this we can write some a simple plotting script to visualise the net forces due to the potential energy surfaces and the nonadiabtic couplings between the ground and first excited states.
 
 ```julia
+function plot_derivatives_and_couplings(NAcache, positions)
+    ## Create Figure ##
+    fig = Figure(figure_padding=(5, 5, 5, 5), size=(480, 720/MathConstants.golden),fontsize=17)
 
+    # generate axis
+    ylimitslow = 0.0
+    ylimitsup = 3.0
+    ax1 = CustomAxis(fig[1,1]; limits=(0.8, 6.0, -3.0, 3.0), ylabel = "Forces (eV/Å)", xgridvisible = false, ygridvisible = false)
+    ax2 = CustomAxis(fig[2,1]; xlabel="x (Å)", limits=(0.8, 6.0, 0.0, 0.04), ylabel = "Couplings (Å⁻¹)", xgridvisible = false, ygridvisible = false)
+    ax1.title = "Forces due to PESs"
+    ax2.title = "Non-adiabaitc Couplings"
+
+    ## Calculate Forces and Couplings##
+    _, _, _, couplings, forces_raw, ∂U_0s = adiabatic_surfaces(NAcache, positions)
+    plotted_indices = vcat(collect(1:2),collect(3:12:20),collect(21:50:2000))
+    forces = forces_raw[plotted_indices]
+
+    ## Plot Forces ##
+    color_range = []
+    for f in forces
+        c = (f[end] - forces[1][1])
+        push!(color_range, c)
+    end
+    colors = [ColorSchemes.get(colormap, 1-c) for c in color_range]
+
+    for (i, f) in Iterators.reverse(enumerate(forces))
+        f = f .+ ∂U_0s
+        lines!(ax1, positions, f, color=colors[i], linewidth = 0.2)#i==1 ? 4 : 1)
+        println(length(forces))
+    end
+
+    ## Plot Couplings ##
+    c = []
+    for (x,_) in enumerate(couplings)
+        push!(c, couplings[x][1,2])
+    end
+    c = ustrip.(auconvert.(u"Å^-1", c))
+    println(c)
+    lines!(ax2, positions, c, color=colors[18], linewidth = 1.0)
+    
+
+    return fig
+end
+
+plot_derivatives_and_couplings(NAcache, x_ang)
 ```
 
 :::{.callout-note}
