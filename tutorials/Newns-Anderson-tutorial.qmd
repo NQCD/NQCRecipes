@@ -89,7 +89,9 @@ Before plotting the potential energy surfaces it would be useful to briefly disc
 
 ```julia
 NAcache = Create_Cache(NAmodel, 1, Float64)
+NAcache.potential
 update_cache!(NAcache, hcat(1.0))
+NAcache.potential
 ```
 
 **Building Adiabatic Potential Energy Surfaces**
