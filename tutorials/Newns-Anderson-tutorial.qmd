@@ -81,8 +81,6 @@ The most obvious first step is to construct the matrix representation of the New
 
 ```julia
 Hamiltonian_mat = NQCModels.potential(NAmodel, hcat(1.0))
-
-println(Hamiltonian_mat)
 ```
 
 This matrix should have the same structure as the matrix shown above, a structure characteristic of the Anderson model in the diabatic basis. Finding the adiabatic eigenstates of the system at the given height can be easily achieved using the `LinearAlgebra.eigen()` function. Of more interest in dynamics is the values and derivatives of these eigenstates at range of heights, the potential energy surfaces (PESs) of the system.
@@ -92,8 +90,6 @@ Before plotting the potential energy surfaces it would be useful to briefly disc
 ```julia
 NAcache = Create_Cache(NAmodel, 1, Float64)
 update_cache!(NAcache, hcat(1.0))
-
-println(cache.potential)
 ```
 
 **Building Adiabatic Potential Energy Surfaces**
