@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Scattering of a mono-energetic particle from a surface – NQCRecipes</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -67,19 +73,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-c2184ee79b4189700a07fecab5507ffb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-6b74d00bf9800a17f7fea13582486bf4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-c2184ee79b4189700a07fecab5507ffb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-6493d055a62f6a5fae3ea0397f3ce425.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-b194be8c6145450876393aceb1e5b7bc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-6493d055a62f6a5fae3ea0397f3ce425.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -382,7 +387,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#definition-of-the-model" id="toc-definition-of-the-model" class="nav-link" data-scroll-target="#definition-of-the-model">Definition of the model</a></li>
   <li><a href="#combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces" id="toc-combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces" class="nav-link" data-scroll-target="#combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces">Combining the intial conditions for both the electronic and nuclear subspaces</a></li>
   <li><a href="#ehrenfest" id="toc-ehrenfest" class="nav-link" data-scroll-target="#ehrenfest">Ehrenfest</a></li>
-  <li><a href="#independent-electron-surface-hopping" id="toc-independent-electron-surface-hopping" class="nav-link" data-scroll-target="#independent-electron-surface-hopping">Independent electron surface hopping</a></li>
+  <li><a href="#independent-electron-surface-hopping" id="toc-independent-electron-surface-hopping" class="nav-link" data-scroll-target="#independent-electron-surface-hopping">Independent electron surface hopping</a>
+  <ul class="collapse">
+  <li><a href="#molecular-dynamics-with-electronic-friction" id="toc-molecular-dynamics-with-electronic-friction" class="nav-link" data-scroll-target="#molecular-dynamics-with-electronic-friction">Molecular Dynamics with Electronic Friction</a></li>
+  </ul></li>
   <li><a href="#broadened-classical-master-equation" id="toc-broadened-classical-master-equation" class="nav-link" data-scroll-target="#broadened-classical-master-equation">Broadened Classical Master Equation</a></li>
   </ul>
 </nav>
@@ -410,17 +418,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="42d83cc1-f514-4662-9de4-63ce40a06433" class="cell" data-execution_count="1">
+<div id="2" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Loading required packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">NQCDynamics</span>, <span class="bu">NQCCalculators</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Unitful</span>, <span class="bu">UnitfulAtomic</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Statistics</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Statistics</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">GLMakie</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This tutorial covers how to run atomic scattering simulations from a metal surface with NQCDynamics where electronic excitations in various flavours are included. To demonstrate how this is done, we will use a simple one-dimensional model, a Newns-Anderson Hamiltonian constructed from a simple one-dimensional, diabatic two-state model, for a neutral and a charged particle interacting with a substrate.</p>
 <p>With intention to convey the concepts in the most simplifying manner, we will focus onto a monoenergetic ensemble of impinging Li atoms. At the very beginning, we will define the initial conditions and the other propagation settings which is done in the cell below.</p>
 <p>This toy model is supposed to mimic the scattering of a single, mono-energetic Li atom from a metal surface. #7up!</p>
-<div id="50ef5e32-3eef-4b0c-a04d-01f28588bea9" class="cell" data-execution_count="2">
+<div id="4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Define initial conditions and output</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>atoms <span class="op">=</span> <span class="fu">Atoms</span>(<span class="fl">7</span>u<span class="st">"u"</span>) <span class="co"># Our projectile is a Li atom; #7up!</span></span>
@@ -429,9 +438,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>ke <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">2</span>u<span class="st">"eV"</span>) <span class="co"># Initial kinetic energy</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>v0 <span class="op">=</span> <span class="fu">-sqrt</span>(<span class="fl">2</span><span class="op">*</span>ke<span class="op">/</span>m) <span class="co"># Velocity direction towards the surface with magnitude defined by kinetic energy</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">0.01</span>u<span class="st">"fs"</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>0.01 fs</code></pre>
 </div>
 </div>
@@ -441,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The parameter ‘tcut’ defines the maximum runtime. Yet, this single termination criterion is not enough because the scattered particle will travel through the vacuum until the run time meets our termination criterion (in periodic surface cells this is even worse because the particle might impact with the periodic images of the surface in perpendicular direction). Lest to artificially increase the required time for our batch of trajectories, we insert a second criterion namely that the trajectory gets terminated once the particle’s position is higher than it’s initial position and the sign of the velocity has changed.</p>
 <p>Next, we also set the number of trajectories we want to run: the amount of required trajectories are typically determined by the quantity of interest and sensitivity of the quantity of interest against the number of trajectories should always be checked! Here, we will use only 10 trajectories to ensure very quick runtimes so that one gets a feeling for the simulation and can easily play with other parameters (:</p>
 <p>Finally, we also set the required output. For scattering simulations, all quantities of interest can typically extracted from the initial &amp; final positions along with the inital &amp; final velocities of the system. For convenience, we also set the kinetic energy directly albeit not being necessary from a technical point of view.</p>
-<div id="d14a3faf-05c1-4cf7-8c49-3f20fa506d83" class="cell" data-execution_count="3">
+<div id="6" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dcut <span class="op">=</span> <span class="fl">3</span><span class="op">*</span>r0</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tcut <span class="op">=</span> <span class="fu">abs</span>(dcut<span class="op">/</span>v0)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -451,12 +459,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ntrajs <span class="op">=</span> <span class="fl">10</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>output<span class="op">=</span> (OutputVelocity, OutputPosition, OutputKineticEnergy)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>output<span class="op">=</span> (OutputVelocity, OutputPosition, OutputKineticEnergy, OutputDynamicsVariables)</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">### Defining termination criterion</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>(NQCDynamics.DynamicsOutputs.OutputVelocity, NQCDynamics.DynamicsOutputs.OutputPosition, NQCDynamics.DynamicsOutputs.OutputKineticEnergy)</code></pre>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">### Defining termination criterion</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>(OutputVelocity, OutputPosition, OutputKineticEnergy, OutputDynamicsVariables)</code></pre>
 </div>
 </div>
 </section>
@@ -465,7 +472,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Now it’s getting more technical. The first two lines of the cell below define the parameterisation of the diabatic two-state model. Γ is a measure for the coupling between the neutral state and the charged state of the incoming atom (the larger Γ, the stronger the avoided crossing of the adiabats and thus the less non-adiabatic the simulations are going to be</p>
 <p>The next lines describe the discretisation of the electronic band from the spectral properties of the bath to the method of the discretisation. Here, we’re using the ‘ShenviGaussLegendre’ method, the method of choice in NQCDynamics for metal substrates.</p>
 <p>Next, we construct our Newns-Anderson Hamiltonian from the two diabates, the finite number of bathstates and the couplings between them which is done with the keyword ‘AndersonHolstein’. The following two keywords define the temperature of the electronic subsystem of the solid, i.e., the population of the substrate’s states with the electrons.</p>
-<div id="21188841-d47c-4a67-93a6-fadfd2b9df0c" class="cell" data-execution_count="5">
+<div id="8" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#### Using model and setting its parameters</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Γ <span class="op">=</span> <span class="fu">austrip</span>(<span class="fl">0.2</span>u<span class="st">"eV"</span>) <span class="co"># Defines coupling strength between diabatic ground state and diabatic excited state</span></span>
@@ -481,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">AndersonHolstein</span>(thossmodel, bath)</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>temperature <span class="op">=</span> <span class="fl">300</span>u<span class="st">"K"</span></span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>β <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fu">austrip</span>(temperature)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>1052.5834160174613</code></pre>
 </div>
 </div>
@@ -489,7 +496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="combining-the-intial-conditions-for-both-the-electronic-and-nuclear-subspaces" class="level1">
 <h1>Combining the intial conditions for both the electronic and nuclear subspaces</h1>
 <p>Since we’re evolving both the electrons and the nuclei in mixed-quantum classical dynamics, we need to bring together both the electronic space, and the nuclear space. The first keyword in the cell below, defines the dimensionality of the nuclear phasespace, and the second line defines the dimensionality of the electronic state with the third line folding both subspaces into one big space. The final line sets the termination criterion.</p>
-<div id="5553b82d-1fc7-4261-98d5-4dabc5a1e553" class="cell" data-execution_count="6">
+<div id="10" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Setting up distributions</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>nuclear_distribution <span class="op">=</span> <span class="fu">DynamicalDistribution</span>(v0, r0, (<span class="fl">1</span>,<span class="fl">1</span>))</span>
@@ -497,8 +504,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> electronic_distribution <span class="op">*</span> nuclear_distribution</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>terminate <span class="op">=</span> DynamicsUtils.<span class="fu">TerminatingCallback</span>(termination_condition)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>SciMLBase.DiscreteCallback{typeof(termination_condition), typeof(SciMLBase.terminate!), typeof(SciMLBase.INITIALIZE_DEFAULT), typeof(SciMLBase.FINALIZE_DEFAULT), Nothing}(Main.termination_condition, SciMLBase.terminate!, SciMLBase.INITIALIZE_DEFAULT, SciMLBase.FINALIZE_DEFAULT, Bool[1, 1], nothing)</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>SciMLBase.DiscreteCallback{typeof(termination_condition), typeof(SciMLBase.terminate!), typeof(SciMLBase.INITIALIZE_DEFAULT), typeof(SciMLBase.FINALIZE_DEFAULT), Nothing, Tuple{}}(termination_condition, SciMLBase.terminate!, SciMLBase.INITIALIZE_DEFAULT, SciMLBase.FINALIZE_DEFAULT, Bool[1, 1], nothing, (), true)</code></pre>
 </div>
 </div>
 </section>
@@ -506,122 +513,162 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Ehrenfest</h1>
 <p>We have now set everything up to successfully start mixed-quantum classical scattering trajectories. We first start with Ehrenfest simulations. Ehrenfest dynamics is governed by a potential energy surfaces which is averaged from the entire spectrum of potential energy surfaces which are obtained from the Newns-Anderson Hamiltonian. Since Ehrenfest dynamics is entirely determinestic, we only need a single trajectory given our deterministic initial conditions (if we had an ensemble of different positions &amp; velocities, things would be different).</p>
 <p>The first line defines the simulation environment. The second line launches our IESH simulations. :)</p>
-<div id="3febb9b1-6041-4848-beae-f7e05e0d42ad" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run single Ehrenfest calculation</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run single Ehrenfest calculation</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> <span class="fu">Simulation</span><span class="dt">{EhrenfestNA}</span>(atoms, model)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>kick <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, dt),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, tcut),</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span><span class="fl">1</span>,</span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                    dt</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                   )</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, tcut),</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span><span class="fl">1</span>,</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                    dt</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                   )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-yellow-fg ansi-bold">┌ </span><span class="ansi-yellow-fg ansi-bold">Warning: </span>No friction evaluation algorithm has been specified, the friction tensor will be empty
-
-<span class="ansi-yellow-fg ansi-bold">└ </span><span class="ansi-bright-black-fg">@ NQCCalculators ~/.julia/packages/NQCCalculators/t5bm5/src/Caches.jl:425</span>
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 6.671770086 seconds.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 1 trajectory.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 0.00196775 seconds.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 1.096891014 seconds.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 1 trajectory.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 1.655033598 seconds.
-</pre>
-</div>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>4-element Dictionaries.Dictionary{Symbol, Any}:
-                :Time │ [0.0, 4553.338859154286, 4553.338859154286]
-      :OutputVelocity │ [[-0.0033941074835368125;;], [0.002989208858542591;;], …
-      :OutputPosition │ [[9.448630623128851;;], [10.394314983127463;;], [10.394…
- :OutputKineticEnergy │ [0.07349864435103717, 0.057008638273709694, 0.057008638…</code></pre>
-</div>
-</div>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                    dt</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                   )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="independent-electron-surface-hopping" class="level1">
 <h1>Independent electron surface hopping</h1>
 <p>Next, we will run independent electron surface hopping (IESH) simulations. Since IESH is stochastic, we need to run a batch of trajectories. Here, we do only 10 trajectories for briefness’s sake but in practice one should do several hundreds for a 1D model to ensure numerical convergence!</p>
-<div id="adf0402f-a29c-482d-8ea0-1192972bdb9c" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run IESH simulations</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> <span class="fu">Simulation</span><span class="dt">{AdiabaticIESH}</span>(atoms, model)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>kick <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, dt),</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span><span class="fl">1</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                    dt</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                   )</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">run_dynamics</span>(sim,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                    (<span class="fl">0.0</span>, tcut),</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                    dist;</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>                    trajectories<span class="op">=</span>ntrajs,</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>                    dt</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>                   )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
+<div id="12" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run IESH simulations</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> <span class="fu">Simulation</span><span class="dt">{AdiabaticIESH}</span>(atoms, model)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">run_dynamics</span>(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    sim,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.0</span>, tcut),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    dist;</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    trajectories<span class="op">=</span>ntrajs,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    callback<span class="op">=</span>terminate,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    output<span class="op">=</span>(output<span class="op">...</span>, OutputDiscreteState),</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># saveat=[0,tcut],</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    dt <span class="op">=</span> dt,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    reduction <span class="op">=</span> <span class="fu">SortByOutputReduction</span>(),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
-<pre><span class="ansi-yellow-fg ansi-bold">┌ </span><span class="ansi-yellow-fg ansi-bold">Warning: </span>No friction evaluation algorithm has been specified, the friction tensor will be empty
-
-<span class="ansi-yellow-fg ansi-bold">└ </span><span class="ansi-bright-black-fg">@ NQCCalculators ~/.julia/packages/NQCCalculators/t5bm5/src/Caches.jl:425</span>
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 8.984125601 seconds.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 1 trajectory.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 0.00293141 seconds.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 4.484304186 seconds.
-
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 6.153458666 seconds.
 <span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 10 trajectories.
-
 <span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 30.387933773 seconds.
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 19.464154958 seconds.
 </pre>
 </div>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>10-element Vector{Dictionaries.Dictionary{Symbol, Any}}:
- {:Time = [0.0, 4755.498174763943, 4755.498174763943], :OutputVelocity = [[-0.0033941074835368125;;], [0.003390554049472842;;], [0.003390554049472842;;]], :OutputPosition = [[9.448630623128851;;], [10.394067981186835;;], [10.394067981186835;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07334482725981725, 0.07334482725981725]}
- {:Time = [0.0, 6908.143484333439, 6908.143484333439], :OutputVelocity = [[-0.0033941074835368125;;], [0.0019137599364812902;;], [0.0019137599364812902;;]], :OutputPosition = [[9.448630623128851;;], [10.393977928595763;;], [10.393977928595763;;]], :OutputKineticEnergy = [0.07349864435103717, 0.023367005642973365, 0.023367005642973365]}
- {:Time = [0.0, 5149.894876382783, 5149.894876382783], :OutputVelocity = [[-0.0033941074835368125;;], [0.003391372268450932;;], [0.003391372268450932;;]], :OutputPosition = [[9.448630623128851;;], [10.39460863098261;;], [10.39460863098261;;]], :OutputKineticEnergy = [0.07349864435103717, 0.0733802311318035, 0.0733802311318035]}
- {:Time = [0.0, 4779.476171298422, 4779.476171298422], :OutputVelocity = [[-0.0033941074835368125;;], [0.003389471655311061;;], [0.003389471655311061;;]], :OutputPosition = [[9.448630623128851;;], [10.39457013031362;;], [10.39457013031362;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07329800580242475, 0.07329800580242475]}
- {:Time = [0.0, 4755.498174763943, 4755.498174763943], :OutputVelocity = [[-0.0033941074835368125;;], [0.003390554049472842;;], [0.003390554049472842;;]], :OutputPosition = [[9.448630623128851;;], [10.394067981186835;;], [10.394067981186835;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07334482725981725, 0.07334482725981725]}
- {:Time = [0.0, 4755.498174763943, 4755.498174763943], :OutputVelocity = [[-0.0033941074835368125;;], [0.003390554049472842;;], [0.003390554049472842;;]], :OutputPosition = [[9.448630623128851;;], [10.394067981186835;;], [10.394067981186835;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07334482725981725, 0.07334482725981725]}
- {:Time = [0.0, 6867.215524731484, 6867.215524731484], :OutputVelocity = [[-0.0033941074835368125;;], [0.0019159104212118413;;], [0.0019159104212118413;;]], :OutputPosition = [[9.448630623128851;;], [10.394006780484904;;], [10.394006780484904;;]], :OutputKineticEnergy = [0.07349864435103717, 0.02341954997830035, 0.02341954997830035]}
- {:Time = [0.0, 6920.1324826006785, 6920.1324826006785], :OutputVelocity = [[-0.0033941074835368125;;], [0.0019131900032905525;;], [0.0019131900032905525;;]], :OutputPosition = [[9.448630623128851;;], [10.393625057469878;;], [10.393625057469878;;]], :OutputKineticEnergy = [0.07349864435103717, 0.02335308994876223, 0.02335308994876223]}
- {:Time = [0.0, 6932.121480867918, 6932.121480867918], :OutputVelocity = [[-0.0033941074835368125;;], [0.001912343383677912;;], [0.001912343383677912;;]], :OutputPosition = [[9.448630623128851;;], [10.39359885110002;;], [10.39359885110002;;]], :OutputKineticEnergy = [0.07349864435103717, 0.02333242623069217, 0.02333242623069217]}
- {:Time = [0.0, 5371.898051193388, 5371.898051193388], :OutputVelocity = [[-0.0033941074835368125;;], [0.0033903822208739354;;], [0.0033903822208739354;;]], :OutputPosition = [[9.448630623128851;;], [10.393584023900164;;], [10.393584023900164;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07333739341898975, 0.07333739341898975]}</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>6-element Dictionaries.Dictionary{Symbol, Vector}:
+                    :Time │ [[0.0, 0.4134137333533518, 0.8268274667067036, 1.24…
+          :OutputVelocity │ [[[-0.0033941074835368125;;], [-0.00339411452744389…
+          :OutputPosition │ [[[9.448630623128851;;], [9.447227451027294;;], [9.…
+     :OutputKineticEnergy │ [[0.07349864435103717, 0.07349894941984327, 0.07349…
+ :OutputDynamicsVariables │ Vector{NQCDynamics.DynamicsMethods.SurfaceHoppingMe…
+     :OutputDiscreteState │ [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1  …  1, 1, 1, 1, 1, 1…</code></pre>
 </div>
 </div>
-<div id="5c8527f0-7683-4907-8102-a221e421c109" class="cell" data-execution_count="9">
+<div id="14" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_trajectory</span>(idx)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> [colorant<span class="st">"#201e50"</span>, colorant<span class="st">"#ed254e"</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    GLMakie.<span class="fu">activate!</span>(; px_per_unit<span class="op">=</span><span class="fl">4.0</span>,)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> <span class="fu">Figure</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        size <span class="op">=</span> <span class="fl">28.1</span> <span class="op">.*</span> (<span class="fl">18</span>,<span class="fl">12</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        fontsize <span class="op">=</span> <span class="fl">20</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    potential_ax <span class="op">=</span> <span class="fu">Axis</span>(</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        fig[<span class="fl">1</span>,<span class="fl">1</span>],</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        xgridvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        xminorgridvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        ygridvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        yminorgridvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        xlabel <span class="op">=</span> <span class="st">"Distance to surface / a.u."</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        ylabel <span class="op">=</span> <span class="st">"Energy / Hartree"</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        xautolimitmargin <span class="op">=</span> (<span class="fl">0.0</span>,<span class="fl">0.0</span>),</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    r_values <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">0.02</span><span class="op">:</span><span class="fu">austrip</span>(<span class="fl">5.0</span>u<span class="st">"Å"</span>) <span class="op">|&gt;</span> collect</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    model_potential <span class="op">=</span> [NQCDynamics.NQCModels.<span class="fu">potential</span>(thossmodel, <span class="fu">hcat</span>(R)) for R <span class="kw">in</span> r_values]</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines!</span>(</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        potential_ax,</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>        r_values,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">getindex</span>.(model_potential, <span class="fl">1</span>, <span class="fl">1</span>),</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        label <span class="op">=</span> <span class="st">"ground state"</span>,</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        color <span class="op">=</span> colors[<span class="fl">1</span>],</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        linewidth <span class="op">=</span> <span class="fl">2.0</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines!</span>(</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        potential_ax,</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>        r_values,</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">getindex</span>.(model_potential, <span class="fl">2</span>, <span class="fl">2</span>),</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        label <span class="op">=</span> <span class="st">"excited state"</span>,</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>        color <span class="op">=</span> colors[<span class="fl">2</span>],</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        linewidth <span class="op">=</span> <span class="fl">2.0</span>,</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>    particle_pos <span class="op">=</span> <span class="fu">scatter!</span>(</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>        potential_ax,</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>        result[<span class="op">:</span>OutputPosition][idx][<span class="fl">1500</span>] <span class="op">|&gt;</span> first,</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>        NQCModels.<span class="fu">potential</span>(thossmodel, result[<span class="op">:</span>OutputPosition][idx][<span class="fl">1500</span>])[</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>            result[<span class="op">:</span>OutputDiscreteState][idx][<span class="fl">1500</span>] <span class="op">|&gt;</span> last,</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>            result[<span class="op">:</span>OutputDiscreteState][idx][<span class="fl">1500</span>] <span class="op">|&gt;</span> last,</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>        markersize <span class="op">=</span> <span class="fl">24</span>,</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>        strokewidth <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>        strokecolor <span class="op">=</span> colorant<span class="st">"black"</span>,</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># marker = :circle,</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlims!</span>(<span class="fl">0.5</span>, <span class="fl">8</span>)</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylims!</span>(<span class="op">-</span><span class="fl">0.2</span>,<span class="fl">0.75</span>)</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Electrons in IESH states</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>    electrons_ax <span class="op">=</span> <span class="fu">Axis</span>(</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>        fig[<span class="fl">1</span>,<span class="fl">2</span>],</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>        xgridvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>        xminorgridvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>        ygridvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>        yminorgridvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>        width <span class="op">=</span> <span class="fl">50</span>,</span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>        xticklabelsvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>        yticklabelsvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>        xticksvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>        yticksvisible <span class="op">=</span> <span class="cn">false</span>,</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colgap!</span>(fig.layout, <span class="fl">1</span>,<span class="fl">4</span>)</span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hlines!</span>(bath.bathstates;color <span class="op">=</span> colorant<span class="st">"black"</span>, xmin <span class="op">=</span> <span class="fl">0.25</span>, xmax <span class="op">=</span> <span class="fl">0.75</span>)</span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>    el_sc <span class="op">=</span> <span class="fu">scatter!</span>(</span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>        electrons_ax,</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">1</span> for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>nstates<span class="op">/</span><span class="fl">2</span>],</span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>        bath.bathstates[result[<span class="op">:</span>OutputDynamicsVariables][idx][<span class="fl">1500</span>].state <span class="op">.|&gt;</span> <span class="dt">Int</span>],</span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a>        color <span class="op">=</span> bath.bathstates[result[<span class="op">:</span>OutputDynamicsVariables][idx][<span class="fl">1500</span>].state <span class="op">.|&gt;</span> <span class="dt">Int</span>],</span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a>        <span class="co"># strokewidth = 0.75,</span></span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>        markersize <span class="op">=</span> <span class="fl">20</span>,</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>        marker <span class="op">=</span> <span class="ch">'↑'</span>,</span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>        colormap <span class="op">=</span> <span class="op">:</span>turbo</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylims!</span>(electrons_ax, bath.bathstates[<span class="fl">7</span>] <span class="op">-</span> <span class="fl">0.025</span>, bath.bathstates[<span class="fl">13</span>] <span class="op">+</span> <span class="fl">0.025</span>)</span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>    <span class="fu">axislegend</span>(potential_ax, position <span class="op">=</span> <span class="op">:</span>rt)</span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>    <span class="fu">record</span>(fig, <span class="st">"../resources/Tutorial_MQCD_methods/trj2.mp4"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">:</span><span class="fu">length</span>(result[<span class="op">:</span>OutputPosition][idx])) <span class="cf">do</span> i</span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>        particle_pos.positions[] <span class="op">=</span> [</span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>            <span class="fu">Point2f</span>(</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>                result[<span class="op">:</span>OutputPosition][idx][i] <span class="op">|&gt;</span> first,</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>                NQCModels.<span class="fu">potential</span>(thossmodel, result[<span class="op">:</span>OutputPosition][idx][i])[</span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>                    result[<span class="op">:</span>OutputDiscreteState][idx][i] <span class="op">|&gt;</span> last,</span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>                    result[<span class="op">:</span>OutputDiscreteState][idx][i] <span class="op">|&gt;</span> last,</span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a>                ],</span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>            )]</span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>        particle_pos.color <span class="op">=</span> colors[result[<span class="op">:</span>OutputDiscreteState][idx][i] <span class="op">|&gt;</span> first]</span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>        el_sc.positions[] <span class="op">=</span> [</span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>            <span class="fu">Point2f</span>(<span class="fl">1</span>, bath.bathstates[<span class="fu">Int</span>(el)]) for el <span class="kw">in</span> result[<span class="op">:</span>OutputDynamicsVariables][idx][i].state</span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_trajectory</span>(<span class="fl">2</span>)</span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a><span class="cn">nothing</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><video src="../resources/Tutorial_MQCD_methods/trj2.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="../resources/Tutorial_MQCD_methods/trj2.mp4">Video</a></video></p>
+<figcaption>Example IESH trajectory animation. The electronic ground and excited states for the particle scattering from the surface are shown in the left panel. The right panel shows impurity and bath electronic states and their current occupation with independent electrons.</figcaption>
+</figure>
+</div>
+<section id="molecular-dynamics-with-electronic-friction" class="level2">
+<h2 class="anchored" data-anchor-id="molecular-dynamics-with-electronic-friction">Molecular Dynamics with Electronic Friction</h2>
+<div id="16" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Run MDEF calculations</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ρ <span class="op">=</span> (nstates<span class="op">+</span><span class="fl">1</span>)<span class="op">/</span>(bandwidth)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> nuclear_distribution</span>
@@ -642,45 +689,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>                    dt</span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                   )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
+<div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 7.318874167 seconds.
-
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 2.92208725 seconds.
 <span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 10 trajectories.
-
 <span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 11.450519627 seconds.
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 5.722769666 seconds.
 </pre>
 </div>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>10-element Vector{Dictionaries.Dictionary{Symbol, Any}}:
- {:Time = [0.0, 4034.918037529455, 4034.918037529455], :OutputVelocity = [[-0.0033941074835368125;;], [0.003193553989325685;;], [0.003193553989325685;;]], :OutputPosition = [[9.448630623128851;;], [10.394478255783389;;], [10.394478255783389;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06506938041276734, 0.06506938041276734]}
- {:Time = [0.0, 4160.182398735506, 4160.182398735506], :OutputVelocity = [[-0.0033941074835368125;;], [0.0031109426375222366;;], [0.0031109426375222366;;]], :OutputPosition = [[9.448630623128851;;], [10.39424342624923;;], [10.39424342624923;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06174647260912539, 0.06174647260912539]}
- {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [-0.0008992790747204714;;]], :OutputPosition = [[9.448630623128851;;], [3.630990717748359;;]], :OutputKineticEnergy = [0.07349864435103717, 0.005159612926114991]}
- {:Time = [0.0, 4202.35059953752, 4202.35059953752], :OutputVelocity = [[-0.0033941074835368125;;], [0.003067233235301346;;], [0.003067233235301346;;]], :OutputPosition = [[9.448630623128851;;], [10.394359440789202;;], [10.394359440789202;;]], :OutputKineticEnergy = [0.07349864435103717, 0.060023559877279885, 0.060023559877279885]}
- {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [0.0031150647333923914;;]], :OutputPosition = [[9.448630623128851;;], [8.07614955243684;;]], :OutputKineticEnergy = [0.07349864435103717, 0.061910213015883495]}
- {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [-0.0010694066620026246;;]], :OutputPosition = [[9.448630623128851;;], [3.607434621185741;;]], :OutputKineticEnergy = [0.07349864435103717, 0.007296488742024349]}
- {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [0.0009207799154834855;;]], :OutputPosition = [[9.448630623128851;;], [3.5398661907586115;;]], :OutputKineticEnergy = [0.07349864435103717, 0.005409284473658406]}
- {:Time = [0.0, 4326.788133276797, 4326.788133276797], :OutputVelocity = [[-0.0033941074835368125;;], [0.003122846551089521;;], [0.003122846551089521;;]], :OutputPosition = [[9.448630623128851;;], [10.393550854060857;;], [10.393550854060857;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06221991814122039, 0.06221991814122039]}
- {:Time = [0.0, 5793.166645480178, 5793.166645480178], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030642385556808034;;], [0.0030642385556808034;;]], :OutputPosition = [[9.448630623128851;;], [10.394637039995343;;], [10.394637039995343;;]], :OutputKineticEnergy = [0.07349864435103717, 0.059906409619686254, 0.059906409619686254]}
- {:Time = [0.0, 4223.84811367188, 4223.84811367188], :OutputVelocity = [[-0.0033941074835368125;;], [0.003054213014402486;;], [0.003054213014402486;;]], :OutputPosition = [[9.448630623128851;;], [10.393969614940438;;], [10.393969614940438;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05951504865810761, 0.05951504865810761]}</code></pre>
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [-3.67352697973401e-5;;]], :OutputPosition = [[9.448630623128851;;], [3.733364305552911;;]], :OutputKineticEnergy = [0.07349864435103717, 8.609830740728939e-6], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-3.67352697973401e-5;;], [3.733364305552911;;]))]}
+ {:Time = [0.0, 7730.836813706072, 7730.836813706072], :OutputVelocity = [[-0.0033941074835368125;;], [0.003042455053074378;;], [0.003042455053074378;;]], :OutputPosition = [[9.448630623128851;;], [10.394725376115256;;], [10.394725376115256;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05905769440279816, 0.05905769440279816], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.003042455053074378;;], [10.394725376115256;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.003042455053074378;;], [10.394725376115256;;]))]}
+ {:Time = [0.0, 7178.5160659463545, 7178.5160659463545], :OutputVelocity = [[-0.0033941074835368125;;], [0.003197021146561491;;], [0.003197021146561491;;]], :OutputPosition = [[9.448630623128851;;], [10.394247291570297;;], [10.394247291570297;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06521074532533636, 0.06521074532533636], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.003197021146561491;;], [10.394247291570297;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.003197021146561491;;], [10.394247291570297;;]))]}
+ {:Time = [0.0, 4338.777131544037, 4338.777131544037], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030350946811241748;;], [0.0030350946811241748;;]], :OutputPosition = [[9.448630623128851;;], [10.393850011843464;;], [10.393850011843464;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05877229278586498, 0.05877229278586498], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.0030350946811241748;;], [10.393850011843464;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.0030350946811241748;;], [10.393850011843464;;]))]}
+ {:Time = [0.0, 4140.338539534558, 4140.338539534558], :OutputVelocity = [[-0.0033941074835368125;;], [0.003101770562619906;;], [0.003101770562619906;;]], :OutputPosition = [[9.448630623128851;;], [10.393833158673782;;], [10.393833158673782;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06138291181411692, 0.06138291181411692], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.003101770562619906;;], [10.393833158673782;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.003101770562619906;;], [10.393833158673782;;]))]}
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [-0.0005183610570836693;;]], :OutputPosition = [[9.448630623128851;;], [3.7122680138595845;;]], :OutputKineticEnergy = [0.07349864435103717, 0.0017143239001597547], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0005183610570836693;;], [3.7122680138595845;;]))]}
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [-0.000937834821437652;;]], :OutputPosition = [[9.448630623128851;;], [3.149035876931468;;]], :OutputKineticEnergy = [0.07349864435103717, 0.005611524378125343], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.000937834821437652;;], [3.149035876931468;;]))]}
+ {:Time = [0.0, 4206.898150604404, 4206.898150604404], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030241025340672447;;], [0.0030241025340672447;;]], :OutputPosition = [[9.448630623128851;;], [10.393815978889709;;], [10.393815978889709;;]], :OutputKineticEnergy = [0.07349864435103717, 0.058347354595318486, 0.058347354595318486], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.0030241025340672447;;], [10.393815978889709;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.0030241025340672447;;], [10.393815978889709;;]))]}
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [-0.00020084611683819292;;]], :OutputPosition = [[9.448630623128851;;], [3.759249858792797;;]], :OutputKineticEnergy = [0.07349864435103717, 0.0002573682829776626], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.00020084611683819292;;], [3.759249858792797;;]))]}
+ {:Time = [0.0, 4235.423698205766, 4235.423698205766], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030712458819135073;;], [0.0030712458819135073;;]], :OutputPosition = [[9.448630623128851;;], [10.394250624970008;;], [10.394250624970008;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06018071185202984, 0.06018071185202984], :OutputDynamicsVariables = RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}[RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([-0.0033941074835368125;;], [9.448630623128851;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.0030712458819135073;;], [10.394250624970008;;])), RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}}}(([0.0030712458819135073;;], [10.394250624970008;;]))]}</code></pre>
 </div>
 </div>
-<div id="ac948e29-0d6e-4e67-989b-9fc9dd15b71e" class="cell" data-execution_count="25">
+<div id="18" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">typeof</span>(atoms))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Atoms{Float64}</code></pre>
 </div>
 </div>
 </section>
+</section>
 <section id="broadened-classical-master-equation" class="level1">
 <h1>Broadened Classical Master Equation</h1>
 <p>Finally, we can also use the Broadened Classical Master Equation (BCME) which is governed by the two diabatic energy curves and the hybridisation function Γ themselves instead of a Newns-Anderson Hamiltonian. We therefore have to adapt the electronic subspace and thence the total space which is done in the first and second line, respectively. The rest goes as ever. Albeit one might consider BCME calculations to be gimmicky, an advantageous attribute of them is that they are computationally extremely efficient and can therefore serve as a nice test system for analysis tools which require numerical statics on the one hand, and electronically non-adiabatic effects on the other hand. I definitely learned to love them ;P</p>
-<div id="c56efc33-6f8d-496a-b5e0-461fbad40b93" class="cell" data-execution_count="10">
+<div id="20" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Calculation of BCME</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>electronic_distribution <span class="op">=</span> <span class="fu">PureState</span>(<span class="fl">1</span>, <span class="fu">Diabatic</span>())</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> electronic_distribution <span class="op">*</span> nuclear_distribution</span>
@@ -696,34 +740,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>                    callback<span class="op">=</span>terminate,</span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>                    output<span class="op">=</span>output,</span>
 <span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>                    saveat<span class="op">=</span>[<span class="fl">0</span>,tcut],</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                    dt</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>                   )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                    dt,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>                    abstol <span class="op">=</span> <span class="fl">1e-6</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>                    reltol <span class="op">=</span> <span class="fl">1e-6</span>,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>                   )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 23.242684995 seconds.
-
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Pre-compiled dynamics in 10.725150084 seconds.
 <span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Performing 10 trajectories.
-
 <span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Sampling randomly from provided distribution.
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 2.196294334 seconds.
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Finished after 0.031583292 seconds.
 </pre>
 </div>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>10-element Vector{Dictionaries.Dictionary{Symbol, Any}}:
- {:Time = [0.0, 4484.063935063259, 4484.063935063259], :OutputVelocity = [[-0.0033941074835368125;;], [0.0035949399176046074;;], [0.0035949399176046074;;]], :OutputPosition = [[9.448630623128851;;], [10.590909554623925;;], [10.590909554623925;;]], :OutputKineticEnergy = [0.07349864435103717, 0.08245394115227975, 0.08245394115227975]}
- {:Time = [0.0, 4812.37182697698, 4812.37182697698], :OutputVelocity = [[-0.0033941074835368125;;], [0.003294608187157551;;], [0.003294608187157551;;]], :OutputPosition = [[9.448630623128851;;], [10.996908751639259;;], [10.996908751639259;;]], :OutputKineticEnergy = [0.07349864435103717, 0.069252537773449, 0.069252537773449]}
- {:Time = [0.0, 5844.0894748216915, 5844.0894748216915], :OutputVelocity = [[-0.0033941074835368125;;], [0.00245585220525486;;], [0.00245585220525486;;]], :OutputPosition = [[9.448630623128851;;], [11.212913643901299;;], [11.212913643901299;;]], :OutputKineticEnergy = [0.07349864435103717, 0.03847978177923337, 0.03847978177923337]}
- {:Time = [0.0, 5281.757657152533, 5281.757657152533], :OutputVelocity = [[-0.0033941074835368125;;], [0.0031512592107842234;;], [0.0031512592107842234;;]], :OutputPosition = [[9.448630623128851;;], [11.199215174953348;;], [11.199215174953348;;]], :OutputKineticEnergy = [0.07349864435103717, 0.06335726222062493, 0.06335726222062493]}
- {:Time = [0.0, 5056.621156805089, 5056.621156805089], :OutputVelocity = [[-0.0033941074835368125;;], [0.0033187663627387903;;], [0.0033187663627387903;;]], :OutputPosition = [[9.448630623128851;;], [10.97440389512251;;], [10.97440389512251;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07027186916569567, 0.07027186916569567]}
- {:Time = [0.0, 5411.944547755553, 5411.944547755553], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030283382572178245;;], [0.0030283382572178245;;]], :OutputPosition = [[9.448630623128851;;], [11.19285857013145;;], [11.19285857013145;;]], :OutputKineticEnergy = [0.07349864435103717, 0.058510918045305955, 0.058510918045305955]}
- {:Time = [0.0, 5546.172057013184, 5546.172057013184], :OutputVelocity = [[-0.0033941074835368125;;], [0.002856339750440248;;], [0.002856339750440248;;]], :OutputPosition = [[9.448630623128851;;], [10.921674310694197;;], [10.921674310694197;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05205325281345526, 0.05205325281345526]}
- {:Time = [0.0, 5883.752328813726, 5883.752328813726], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030119621079222466;;], [0.0030119621079222466;;]], :OutputPosition = [[9.448630623128851;;], [11.265588538394013;;], [11.265588538394013;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05787981762351772, 0.05787981762351772]}
- {:Time = [0.0, 5555.143439497792, 5555.143439497792], :OutputVelocity = [[-0.0033941074835368125;;], [0.0030619046335191315;;], [0.0030619046335191315;;]], :OutputPosition = [[9.448630623128851;;], [10.831537877460322;;], [10.831537877460322;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05981518718533298, 0.05981518718533298]}
- {:Time = [0.0, 5495.630579476603, 5495.630579476603], :OutputVelocity = [[-0.0033941074835368125;;], [0.0029345289845891256;;], [0.0029345289845891256;;]], :OutputPosition = [[9.448630623128851;;], [11.097839346861583;;], [11.097839346861583;;]], :OutputKineticEnergy = [0.07349864435103717, 0.054942061798054644, 0.054942061798054644]}</code></pre>
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [0.00011269537185680292;;]], :OutputPosition = [[9.448630623128851;;], [3.6183214707408227;;]], :OutputKineticEnergy = [0.07349864435103717, 8.102896806551502e-5], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [3.6183214707408227, 0.00011269537185680292, 1.0]]}
+ {:Time = [0.0, 5710.510668421319, 5710.510668421319], :OutputVelocity = [[-0.0033941074835368125;;], [0.0028766890190744542;;], [0.0028766890190744542;;]], :OutputPosition = [[9.448630623128851;;], [10.509327924996953;;], [10.509327924996953;;]], :OutputKineticEnergy = [0.07349864435103717, 0.0527975751848534, 0.0527975751848534], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [10.509327924996953, 0.0028766890190744542, 2.0], [10.509327924996953, 0.0028766890190744542, 2.0]]}
+ {:Time = [0.0, 6110.643955889959, 6110.643955889959], :OutputVelocity = [[-0.0033941074835368125;;], [0.0027265091980518664;;], [0.0027265091980518664;;]], :OutputPosition = [[9.448630623128851;;], [11.448835660121953;;], [11.448835660121953;;]], :OutputKineticEnergy = [0.07349864435103717, 0.04742879386374899, 0.04742879386374899], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [11.448835660121953, 0.0027265091980518664, 2.0], [11.448835660121953, 0.0027265091980518664, 2.0]]}
+ {:Time = [0.0, 5441.992254139246, 5441.992254139246], :OutputVelocity = [[-0.0033941074835368125;;], [0.002826213639873677;;], [0.002826213639873677;;]], :OutputPosition = [[9.448630623128851;;], [10.585515200826077;;], [10.585515200826077;;]], :OutputKineticEnergy = [0.07349864435103717, 0.05096102121477403, 0.05096102121477403], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [10.585515200826077, 0.002826213639873677, 2.0], [10.585515200826077, 0.002826213639873677, 2.0]]}
+ {:Time = [0.0, 4776.181735345739, 4776.181735345739], :OutputVelocity = [[-0.0033941074835368125;;], [0.0034105201618294455;;], [0.0034105201618294455;;]], :OutputPosition = [[9.448630623128851;;], [11.208942998061884;;], [11.208942998061884;;]], :OutputKineticEnergy = [0.07349864435103717, 0.0742111888119235, 0.0742111888119235], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [11.208942998061884, 0.0034105201618294455, 2.0], [11.208942998061884, 0.0034105201618294455, 2.0]]}
+ {:Time = [0.0, 4036.239702391223, 4036.239702391223], :OutputVelocity = [[-0.0033941074835368125;;], [0.003528624476762427;;], [0.003528624476762427;;]], :OutputPosition = [[9.448630623128851;;], [10.67617270886745;;], [10.67617270886745;;]], :OutputKineticEnergy = [0.07349864435103717, 0.07943996257082518, 0.07943996257082518], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [10.67617270886745, 0.003528624476762427, 2.0], [10.67617270886745, 0.003528624476762427, 2.0]]}
+ {:Time = [0.0, 4776.181735345739, 4776.181735345739], :OutputVelocity = [[-0.0033941074835368125;;], [0.0034105201618294455;;], [0.0034105201618294455;;]], :OutputPosition = [[9.448630623128851;;], [11.208942998061884;;], [11.208942998061884;;]], :OutputKineticEnergy = [0.07349864435103717, 0.0742111888119235, 0.0742111888119235], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [11.208942998061884, 0.0034105201618294455, 2.0], [11.208942998061884, 0.0034105201618294455, 2.0]]}
+ {:Time = [0.0, 6190.869315291103, 6190.869315291103], :OutputVelocity = [[-0.0033941074835368125;;], [0.002716746803962239;;], [0.002716746803962239;;]], :OutputPosition = [[9.448630623128851;;], [11.427785760321408;;], [11.427785760321408;;]], :OutputKineticEnergy = [0.07349864435103717, 0.04708975987306522, 0.04708975987306522], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [11.427785760321408, 0.002716746803962239, 2.0], [11.427785760321408, 0.002716746803962239, 2.0]]}
+ {:Time = [0.0, 8351.500948888295], :OutputVelocity = [[-0.0033941074835368125;;], [0.0005291239536066064;;]], :OutputPosition = [[9.448630623128851;;], [3.1313588097958585;;]], :OutputKineticEnergy = [0.07349864435103717, 0.0017862530832669066], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [3.1313588097958585, 0.0005291239536066064, 1.0]]}
+ {:Time = [0.0, 4275.104951975047, 4275.104951975047], :OutputVelocity = [[-0.0033941074835368125;;], [0.003910988269645446;;], [0.003910988269645446;;]], :OutputPosition = [[9.448630623128851;;], [10.715278214687448;;], [10.715278214687448;;]], :OutputKineticEnergy = [0.07349864435103717, 0.09758906856443929, 0.09758906856443929], :OutputDynamicsVariables = NQCDynamics.DynamicsMethods.SurfaceHoppingMethods.SurfaceHoppingVariables{Float64, RecursiveArrayTools.ArrayPartition{Float64, Tuple{Matrix{Float64}, Matrix{Float64}, Vector{Float64}}}, @NamedTuple{r::Int64, v::Int64, state::Int64}}[[9.448630623128851, -0.0033941074835368125, 1.0], [10.715278214687448, 0.003910988269645446, 2.0], [10.715278214687448, 0.003910988269645446, 2.0]]}</code></pre>
 </div>
 </div>
 
