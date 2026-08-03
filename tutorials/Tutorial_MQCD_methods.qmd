@@ -1,0 +1,297 @@
+---
+title: Scattering of a mono-energetic particle from a surface
+engine: julia
+cache: true
+freeze: auto
+eval: true
+---
+
+```{julia}
+### Loading required packages
+
+using NQCDynamics, NQCCalculators
+using Unitful, UnitfulAtomic
+using Statistics
+using GLMakie
+```
+
+This tutorial covers how to run atomic scattering simulations from a metal surface with NQCDynamics where electronic excitations in various flavours are included. To demonstrate how this is done, we will use a simple one-dimensional model, a Newns-Anderson Hamiltonian constructed from a simple one-dimensional, diabatic two-state model, for a neutral and a charged particle interacting with a substrate.
+
+With intention to convey the concepts in the most simplifying manner, we will focus onto a monoenergetic ensemble of impinging Li atoms. At the very beginning, we will define the initial conditions and the other propagation settings which is done in the cell below.
+
+This toy model is supposed to mimic the scattering of a single, mono-energetic Li atom from a metal surface. #7up!
+
+
+```{julia}
+### Define initial conditions and output
+
+atoms = Atoms(7u"u") # Our projectile is a Li atom; #7up!
+r0 = austrip(5u"Å") # Projectile is 5A away from surface
+m = atoms.masses[1] # Mass of projectile
+ke = austrip(2u"eV") # Initial kinetic energy
+v0 = -sqrt(2*ke/m) # Velocity direction towards the surface with magnitude defined by kinetic energy
+dt = 0.01u"fs"
+
+
+```
+
+### Termination criteria & Output
+We are interested in scattering simulations. Typcially for this type of simulations, we need to ensure that the run time is sufficiently long which we ensure by setting the maximum distance the particle is allowed to travel to three times of the initial distance from the surface. This is very sufficient for a simple 1D model (in full dimensions, where subsurface scattering can occur, we might need to be more tolerant to longer trajectories). With velocity calculated from the initial kinetic energy, this gives us our maximum run time parameter, tcut.
+
+The parameter 'tcut' defines the maximum runtime. Yet, this single termination criterion is not enough because the scattered particle will travel through the vacuum until the run time meets our termination criterion (in periodic surface cells this is even worse because the particle might impact with the periodic images of the surface in perpendicular direction). Lest to artificially increase the required time for our batch of trajectories, we insert a second criterion namely that the trajectory gets terminated once the particle's position is higher than it's initial position and the sign of the velocity has changed.
+
+Next, we also set the number of trajectories we want to run: the amount of required trajectories are typically determined by the quantity of interest and sensitivity of the quantity of interest against the number of trajectories should always be checked! Here, we will use only 10 trajectories to ensure very quick runtimes so that one gets a feeling for the simulation and can easily play with other parameters (:
+
+Finally, we also set the required output. For scattering simulations, all quantities of interest can typically extracted from the initial & final positions along with the inital & final velocities of the system. For convenience, we also set the kinetic energy directly albeit not being necessary from a technical point of view.
+
+```{julia}
+dcut = 3*r0
+tcut = abs(dcut/v0)
+
+function termination_condition(u, t, integrator)::Bool
+
+    return ((t > tcut) || ((mean(DynamicsUtils.get_positions(u)) > austrip(5.5u"Å")) && (mean(DynamicsUtils.get_velocities(u)) > 0)))
+end
+
+ntrajs = 10
+output= (OutputVelocity, OutputPosition, OutputKineticEnergy, OutputDynamicsVariables)
+
+### Defining termination criterion
+
+```
+
+# Definition of the model
+Now it's getting more technical. The first two lines of the cell below define the parameterisation of the diabatic two-state model. Γ is a measure for the coupling between the neutral state and the charged state of the incoming atom (the larger Γ, the stronger the avoided crossing of the adiabats and thus the less non-adiabatic the simulations are going to be
+
+The next lines describe the discretisation of the electronic band from the spectral properties of the bath to the method of the discretisation. Here, we're using the  'ShenviGaussLegendre' method, the method of choice in NQCDynamics for metal substrates.
+
+Next, we construct our Newns-Anderson Hamiltonian from the two diabates, the finite number of bathstates and the couplings between them which is done with the keyword 'AndersonHolstein'. The following two keywords define the temperature of the electronic subsystem of the solid, i.e., the population of the substrate's states with the electrons.
+
+```{julia}
+#### Using model and setting its parameters
+
+Γ = austrip(0.2u"eV") # Defines coupling strength between diabatic ground state and diabatic excited state
+thossmodel = ErpenbeckThoss(;Γ, m=atoms.masses[1]) # This model defines the position dependence of the ingredients for the Newns-Anderson Hamiltonian U0, U1, and Vk. Here, we're using the Erpenbeck-Thoss model.
+
+fermi_level = 0*u"eV" # We reference the spectrum of electronic states of the surface to the Fermi level
+nstates = 20 # Number of states into which the electronic continuum of the substrate is discretised into
+bandwidth = austrip(50*u"eV") #Spectral width of the electronic bands
+bandmin = -bandwidth / 2
+bandmax = bandwidth / 2
+bath = ShenviGaussLegendre(nstates, bandmin, bandmax) #Discretisation method
+
+model = AndersonHolstein(thossmodel, bath)
+temperature = 300u"K"
+β = 1/austrip(temperature)
+```
+
+# Combining the intial conditions for both the electronic and nuclear subspaces
+Since we're evolving both the electrons and the nuclei in mixed-quantum classical dynamics, we need to bring together both the electronic space, and the nuclear space.
+The first keyword in the cell below, defines the dimensionality of the nuclear phasespace, and the second line defines the dimensionality of the electronic state with the third line folding both subspaces into one big space. The final line sets the termination criterion.
+
+```{julia}
+### Setting up distributions
+
+nuclear_distribution = DynamicalDistribution(v0, r0, (1,1))
+electronic_distribution = FermiDiracState(fermi_level, temperature)
+dist = electronic_distribution * nuclear_distribution
+
+terminate = DynamicsUtils.TerminatingCallback(termination_condition)
+```
+
+# Ehrenfest
+We have now set everything up to successfully start mixed-quantum classical scattering trajectories. We first start with Ehrenfest simulations. Ehrenfest dynamics is governed by a potential energy surfaces which is averaged from the entire spectrum of potential energy surfaces which are obtained from the Newns-Anderson Hamiltonian. Since Ehrenfest dynamics is entirely determinestic, we only need a single trajectory given our deterministic initial conditions (if we had an ensemble of different positions & velocities, things would be different).
+
+The first line defines the simulation environment. The second line launches our IESH simulations. :)
+
+```julia
+### Run single Ehrenfest calculation
+
+sim = Simulation{EhrenfestNA}(atoms, model)
+
+result = run_dynamics(sim,
+                    (0.0, tcut),
+                    dist;
+                    trajectories=1,
+                    callback=terminate,
+                    output=output,
+                    saveat=[0,tcut],
+                    dt
+                   )
+```
+
+# Independent electron surface hopping
+Next, we will run independent electron surface hopping (IESH) simulations. Since IESH is stochastic, we need to run a batch of trajectories. Here, we do only 10 trajectories for briefness's sake but in practice one should do several hundreds for a 1D model to ensure numerical convergence!
+
+```{julia}
+### Run IESH simulations
+sim = Simulation{AdiabaticIESH}(atoms, model)
+
+result = run_dynamics(
+    sim,
+    (0.0, tcut),
+    dist;
+    trajectories=ntrajs,
+    callback=terminate,
+    output=(output..., OutputDiscreteState),
+    # saveat=[0,tcut],
+    dt = dt,
+    reduction = SortByOutputReduction(),
+)
+```
+
+```{julia}
+#| code-summary: "Animate one of the IESH trajectories"
+
+function plot_trajectory(idx)
+	colors = [colorant"#201e50", colorant"#ed254e"]
+	GLMakie.activate!(; px_per_unit=4.0,)
+	fig = Figure(
+		size = 28.1 .* (18,12),
+		fontsize = 20,
+	)
+	potential_ax = Axis(
+		fig[1,1],
+		xgridvisible = false,
+		xminorgridvisible = false,
+		ygridvisible = false,
+		yminorgridvisible = false,
+		xlabel = "Distance to surface / a.u.",
+		ylabel = "Energy / Hartree",
+		xautolimitmargin = (0.0,0.0),
+	)
+	r_values = 0:0.02:austrip(5.0u"Å") |> collect
+	model_potential = [NQCDynamics.NQCModels.potential(thossmodel, hcat(R)) for R in r_values]
+	lines!(
+		potential_ax,
+		r_values,
+		getindex.(model_potential, 1, 1),
+		label = "ground state",
+		color = colors[1],
+		linewidth = 2.0,
+	)
+	lines!(
+		potential_ax,
+		r_values,
+		getindex.(model_potential, 2, 2),
+		label = "excited state",
+		color = colors[2],
+		linewidth = 2.0,
+	)
+	particle_pos = scatter!(
+		potential_ax,
+		result[:OutputPosition][idx][1500] |> first,
+		NQCModels.potential(thossmodel, result[:OutputPosition][idx][1500])[
+			result[:OutputDiscreteState][idx][1500] |> last,
+			result[:OutputDiscreteState][idx][1500] |> last,
+		],
+		markersize = 24,
+		strokewidth = 0.75,
+		strokecolor = colorant"black",
+		# marker = :circle,
+	)
+	xlims!(0.5, 8)
+	ylims!(-0.2,0.75)
+	# Electrons in IESH states
+	electrons_ax = Axis(
+		fig[1,2],
+		xgridvisible = false,
+		xminorgridvisible = false,
+		ygridvisible = false,
+		yminorgridvisible = false,
+		width = 50,
+		xticklabelsvisible = false,
+		yticklabelsvisible = false,
+		xticksvisible = false,
+		yticksvisible = false,
+	)
+	colgap!(fig.layout, 1,4)
+	hlines!(bath.bathstates;color = colorant"black", xmin = 0.25, xmax = 0.75)
+	el_sc = scatter!(
+		electrons_ax,
+		[1 for i in 1:nstates/2],
+		bath.bathstates[result[:OutputDynamicsVariables][idx][1500].state .|> Int],
+		color = bath.bathstates[result[:OutputDynamicsVariables][idx][1500].state .|> Int],
+		# strokewidth = 0.75,
+		markersize = 20,
+		marker = '↑',
+		colormap = :turbo
+	)
+	ylims!(electrons_ax, bath.bathstates[7] - 0.025, bath.bathstates[13] + 0.025)
+	axislegend(potential_ax, position = :rt)
+	record(fig, "../resources/Tutorial_MQCD_methods/trj2.mp4", 1:15:length(result[:OutputPosition][idx])) do i
+		particle_pos.positions[] = [
+			Point2f(
+				result[:OutputPosition][idx][i] |> first,
+				NQCModels.potential(thossmodel, result[:OutputPosition][idx][i])[
+					result[:OutputDiscreteState][idx][i] |> last,
+					result[:OutputDiscreteState][idx][i] |> last,
+				],
+			)]
+		particle_pos.color = colors[result[:OutputDiscreteState][idx][i] |> first]
+		el_sc.positions[] = [
+			Point2f(1, bath.bathstates[Int(el)]) for el in result[:OutputDynamicsVariables][idx][i].state
+		]
+	end
+end
+plot_trajectory(2)
+nothing
+
+```
+
+![Example IESH trajectory animation. The electronic ground and excited states for the particle scattering from the surface are shown in the left panel. The right panel shows impurity and bath electronic states and their current occupation with independent electrons.](../resources/Tutorial_MQCD_methods/trj2.mp4){width="100%"}
+
+
+## Molecular Dynamics with Electronic Friction
+
+```{julia}
+### Run MDEF calculations
+ρ = (nstates+1)/(bandwidth)
+dist = nuclear_distribution
+bath = TrapezoidalRule(nstates, bandmin, bandmax)
+model = AndersonHolstein(thossmodel, bath)
+
+sim = Simulation{DiabaticMDEF}(atoms, model; temperature,
+    friction_method=DynamicsMethods.ClassicalMethods.WideBandExact(ρ, β)
+)
+
+
+result = run_dynamics(sim,
+                    (0.0, tcut),
+                    dist;
+                    trajectories=ntrajs,
+                    callback=terminate,
+                    output=output,
+                    saveat=[0,tcut],
+                    dt
+                   )
+```
+
+```{julia}
+println(typeof(atoms))
+```
+
+# Broadened Classical Master Equation
+Finally, we can also use the Broadened Classical Master Equation (BCME) which is governed by the two diabatic energy curves and the hybridisation function Γ themselves instead of a Newns-Anderson Hamiltonian. We therefore have to adapt the electronic subspace and thence the total space which is done in the first and second line, respectively. The rest goes as ever. Albeit one might consider BCME calculations to be gimmicky, an advantageous attribute of them is that they are computationally extremely efficient and can therefore serve as a nice test system for analysis tools which require numerical statics on the one hand, and electronically non-adiabatic effects on the other hand. I definitely learned to love them ;P
+
+```{julia}
+### Calculation of BCME
+electronic_distribution = PureState(1, Diabatic())
+dist = electronic_distribution * nuclear_distribution
+
+sim = Simulation{BCME}(atoms, thossmodel;
+    temperature, bandwidth=bandwidth)
+
+
+result = run_dynamics(sim,
+                    (0.0, tcut),
+                    dist;
+                    trajectories=ntrajs,
+                    callback=terminate,
+                    output=output,
+                    saveat=[0,tcut],
+                    dt,
+                    abstol = 1e-6,
+                    reltol = 1e-6,
+                   )
+```

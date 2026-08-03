@@ -1,0 +1,501 @@
+{
+    "cells": [
+        {
+            "id": "1",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "---\n",
+                "title: Scattering of a mono-energetic particle from a surface\n",
+                "engine: julia\n",
+                "cache: true\n",
+                "freeze: auto\n",
+                "---"
+            ]
+        },
+        {
+            "id": "2",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "### Loading required packages\n",
+                "\n",
+                "using NQCDynamics, NQCCalculators\n",
+                "using Unitful, UnitfulAtomic\n",
+                "using Statistics\n",
+                "using GLMakie"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "3",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "This tutorial covers how to run atomic scattering simulations from a metal surface with NQCDynamics where electronic excitations in various flavours are included. To demonstrate how this is done, we will use a simple one-dimensional model, a Newns-Anderson Hamiltonian constructed from a simple one-dimensional, diabatic two-state model, for a neutral and a charged particle interacting with a substrate.\n",
+                "\n",
+                "With intention to convey the concepts in the most simplifying manner, we will focus onto a monoenergetic ensemble of impinging Li atoms. At the very beginning, we will define the initial conditions and the other propagation settings which is done in the cell below.\n",
+                "\n",
+                "This toy model is supposed to mimic the scattering of a single, mono-energetic Li atom from a metal surface. #7up!\n",
+                ""
+            ]
+        },
+        {
+            "id": "4",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "### Define initial conditions and output\n",
+                "\n",
+                "atoms = Atoms(7u\"u\") # Our projectile is a Li atom; #7up!\n",
+                "r0 = austrip(5u\"Å\") # Projectile is 5A away from surface\n",
+                "m = atoms.masses[1] # Mass of projectile\n",
+                "ke = austrip(2u\"eV\") # Initial kinetic energy\n",
+                "v0 = -sqrt(2*ke/m) # Velocity direction towards the surface with magnitude defined by kinetic energy\n",
+                "dt = 0.01u\"fs\"\n",
+                "\n",
+                ""
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "5",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "### Termination criteria & Output\n",
+                "We are interested in scattering simulations. Typcially for this type of simulations, we need to ensure that the run time is sufficiently long which we ensure by setting the maximum distance the particle is allowed to travel to three times of the initial distance from the surface. This is very sufficient for a simple 1D model (in full dimensions, where subsurface scattering can occur, we might need to be more tolerant to longer trajectories). With velocity calculated from the initial kinetic energy, this gives us our maximum run time parameter, tcut.\n",
+                "\n",
+                "The parameter 'tcut' defines the maximum runtime. Yet, this single termination criterion is not enough because the scattered particle will travel through the vacuum until the run time meets our termination criterion (in periodic surface cells this is even worse because the particle might impact with the periodic images of the surface in perpendicular direction). Lest to artificially increase the required time for our batch of trajectories, we insert a second criterion namely that the trajectory gets terminated once the particle's position is higher than it's initial position and the sign of the velocity has changed.\n",
+                "\n",
+                "Next, we also set the number of trajectories we want to run: the amount of required trajectories are typically determined by the quantity of interest and sensitivity of the quantity of interest against the number of trajectories should always be checked! Here, we will use only 10 trajectories to ensure very quick runtimes so that one gets a feeling for the simulation and can easily play with other parameters (:\n",
+                "\n",
+                "Finally, we also set the required output. For scattering simulations, all quantities of interest can typically extracted from the initial & final positions along with the inital & final velocities of the system. For convenience, we also set the kinetic energy directly albeit not being necessary from a technical point of view."
+            ]
+        },
+        {
+            "id": "6",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "dcut = 3*r0\n",
+                "tcut = abs(dcut/v0)\n",
+                "\n",
+                "function termination_condition(u, t, integrator)::Bool\n",
+                "\n",
+                "    return ((t > tcut) || ((mean(DynamicsUtils.get_positions(u)) > austrip(5.5u\"Å\")) && (mean(DynamicsUtils.get_velocities(u)) > 0)))\n",
+                "end\n",
+                "\n",
+                "ntrajs = 10\n",
+                "output= (OutputVelocity, OutputPosition, OutputKineticEnergy)\n",
+                "\n",
+                "### Defining termination criterion\n",
+                ""
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "7",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "# Definition of the model\n",
+                "Now it's getting more technical. The first two lines of the cell below define the parameterisation of the diabatic two-state model. Γ is a measure for the coupling between the neutral state and the charged state of the incoming atom (the larger Γ, the stronger the avoided crossing of the adiabats and thus the less non-adiabatic the simulations are going to be\n",
+                "\n",
+                "The next lines describe the discretisation of the electronic band from the spectral properties of the bath to the method of the discretisation. Here, we're using the  'ShenviGaussLegendre' method, the method of choice in NQCDynamics for metal substrates.\n",
+                "\n",
+                "Next, we construct our Newns-Anderson Hamiltonian from the two diabates, the finite number of bathstates and the couplings between them which is done with the keyword 'AndersonHolstein'. The following two keywords define the temperature of the electronic subsystem of the solid, i.e., the population of the substrate's states with the electrons."
+            ]
+        },
+        {
+            "id": "8",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "#### Using model and setting its parameters\n",
+                "\n",
+                "Γ = austrip(0.2u\"eV\") # Defines coupling strength between diabatic ground state and diabatic excited state\n",
+                "thossmodel = ErpenbeckThoss(;Γ, m=atoms.masses[1]) # This model defines the position dependence of the ingredients for the Newns-Anderson Hamiltonian U0, U1, and Vk. Here, we're using the Erpenbeck-Thoss model.\n",
+                "\n",
+                "fermi_level = 0*u\"eV\" # We reference the spectrum of electronic states of the surface to the Fermi level\n",
+                "nstates = 20 # Number of states into which the electronic continuum of the substrate is discretised into\n",
+                "bandwidth = austrip(50*u\"eV\") #Spectral width of the electronic bands\n",
+                "bandmin = -bandwidth / 2\n",
+                "bandmax = bandwidth / 2\n",
+                "bath = ShenviGaussLegendre(nstates, bandmin, bandmax) #Discretisation method\n",
+                "\n",
+                "model = AndersonHolstein(thossmodel, bath)\n",
+                "temperature = 300u\"K\"\n",
+                "β = 1/austrip(temperature)"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "9",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "# Combining the intial conditions for both the electronic and nuclear subspaces\n",
+                "Since we're evolving both the electrons and the nuclei in mixed-quantum classical dynamics, we need to bring together both the electronic space, and the nuclear space.\n",
+                "The first keyword in the cell below, defines the dimensionality of the nuclear phasespace, and the second line defines the dimensionality of the electronic state with the third line folding both subspaces into one big space. The final line sets the termination criterion."
+            ]
+        },
+        {
+            "id": "10",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "### Setting up distributions\n",
+                "\n",
+                "nuclear_distribution = DynamicalDistribution(v0, r0, (1,1))\n",
+                "electronic_distribution = FermiDiracState(fermi_level, temperature)\n",
+                "dist = electronic_distribution * nuclear_distribution\n",
+                "\n",
+                "terminate = DynamicsUtils.TerminatingCallback(termination_condition)"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "11",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "# Ehrenfest\n",
+                "We have now set everything up to successfully start mixed-quantum classical scattering trajectories. We first start with Ehrenfest simulations. Ehrenfest dynamics is governed by a potential energy surfaces which is averaged from the entire spectrum of potential energy surfaces which are obtained from the Newns-Anderson Hamiltonian. Since Ehrenfest dynamics is entirely determinestic, we only need a single trajectory given our deterministic initial conditions (if we had an ensemble of different positions & velocities, things would be different).\n",
+                "\n",
+                "The first line defines the simulation environment. The second line launches our IESH simulations. :)"
+            ]
+        },
+        {
+            "id": "12",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "### Run single Ehrenfest calculation\n",
+                "\n",
+                "sim = Simulation{EhrenfestNA}(atoms, model)\n",
+                "\n",
+                "kick = run_dynamics(sim,\n",
+                "                    (0.0, dt),\n",
+                "                    dist;\n",
+                "                    trajectories=1,\n",
+                "                    callback=terminate,\n",
+                "                    output=output,\n",
+                "                    dt\n",
+                "                   )\n",
+                "\n",
+                "result = run_dynamics(sim,\n",
+                "                    (0.0, tcut),\n",
+                "                    dist;\n",
+                "                    trajectories=1,\n",
+                "                    callback=terminate,\n",
+                "                    output=output,\n",
+                "                    saveat=[0,tcut],\n",
+                "                    dt\n",
+                "                   )"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "13",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "# Independent electron surface hopping\n",
+                "Next, we will run independent electron surface hopping (IESH) simulations. Since IESH is stochastic, we need to run a batch of trajectories. Here, we do only 10 trajectories for briefness's sake but in practice one should do several hundreds for a 1D model to ensure numerical convergence!"
+            ]
+        },
+        {
+            "id": "14",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "### Run IESH simulations\n",
+                "sim = Simulation{AdiabaticIESH}(atoms, model)\n",
+                "\n",
+                "kick = run_dynamics(sim,\n",
+                "                    (0.0, dt),\n",
+                "                    dist;\n",
+                "                    trajectories=1,\n",
+                "                    callback=terminate,\n",
+                "                    output=output,\n",
+                "                    dt\n",
+                "                   )\n",
+                "\n",
+                "result = run_dynamics(sim,\n",
+                "                    (0.0, tcut),\n",
+                "                    dist;\n",
+                "                    trajectories=ntrajs,\n",
+                "                    callback=terminate,\n",
+                "                    output=output,\n",
+                "                    saveat=[0,tcut],\n",
+                "                    dt\n",
+                "                   )"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "15",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+            ]
+        },
+        {
+            "id": "16",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "#| code-summary: \"Animate one of the IESH trajectories\"\n",
+                "\n",
+                "function plot_trajectory(idx)\n",
+                "\tcolors = [colorant\"#201e50\", colorant\"#ed254e\"]\n",
+                "\tGLMakie.activate!(; px_per_unit=4.0,)\n",
+                "\tfig = Figure(\n",
+                "\t\tsize = 28.1 .* (18,12),\n",
+                "\t\tfontsize = 20,\n",
+                "\t)\n",
+                "\tpotential_ax = Axis(\n",
+                "\t\tfig[1,1],\n",
+                "\t\txgridvisible = false,\n",
+                "\t\txminorgridvisible = false,\n",
+                "\t\tygridvisible = false,\n",
+                "\t\tyminorgridvisible = false,\n",
+                "\t\txlabel = \"Distance to surface / a.u.\",\n",
+                "\t\tylabel = \"Energy / Hartree\",\n",
+                "\t\txautolimitmargin = (0.0,0.0),\n",
+                "\t)\n",
+                "\tr_values = 0:0.02:austrip(5.0u\"Å\") |> collect\n",
+                "\tmodel_potential = [NQCDynamics.NQCModels.potential(thossmodel, hcat(R)) for R in r_values]\n",
+                "\tlines!(\n",
+                "\t\tpotential_ax,\n",
+                "\t\tr_values,\n",
+                "\t\tgetindex.(model_potential, 1, 1),\n",
+                "\t\tlabel = \"ground state\",\n",
+                "\t\tcolor = colors[1],\n",
+                "\t\tlinewidth = 2.0,\n",
+                "\t)\n",
+                "\tlines!(\n",
+                "\t\tpotential_ax,\n",
+                "\t\tr_values,\n",
+                "\t\tgetindex.(model_potential, 2, 2),\n",
+                "\t\tlabel = \"excited state\",\n",
+                "\t\tcolor = colors[2],\n",
+                "\t\tlinewidth = 2.0,\n",
+                "\t)\n",
+                "\tparticle_pos = scatter!(\n",
+                "\t\tpotential_ax,\n",
+                "\t\tresult[:OutputPosition][idx][1500] |> first,\n",
+                "\t\tNQCModels.potential(thossmodel, result[:OutputPosition][idx][1500])[\n",
+                "\t\t\tresult[:OutputDiscreteState][idx][1500] |> last,\n",
+                "\t\t\tresult[:OutputDiscreteState][idx][1500] |> last,\n",
+                "\t\t],\n",
+                "\t\tmarkersize = 24,\n",
+                "\t\tstrokewidth = 0.75,\n",
+                "\t\tstrokecolor = colorant\"black\",\n",
+                "\t\t# marker = :circle,\n",
+                "\t)\n",
+                "\txlims!(0.5, 8)\n",
+                "\tylims!(-0.2,0.75)\n",
+                "\t# Electrons in IESH states\n",
+                "\telectrons_ax = Axis(\n",
+                "\t\tfig[1,2],\n",
+                "\t\txgridvisible = false,\n",
+                "\t\txminorgridvisible = false,\n",
+                "\t\tygridvisible = false,\n",
+                "\t\tyminorgridvisible = false,\n",
+                "\t\twidth = 50,\n",
+                "\t\txticklabelsvisible = false,\n",
+                "\t\tyticklabelsvisible = false,\n",
+                "\t\txticksvisible = false,\n",
+                "\t\tyticksvisible = false,\n",
+                "\t)\n",
+                "\tcolgap!(fig.layout, 1,4)\n",
+                "\thlines!(bath.bathstates;color = colorant\"black\", xmin = 0.25, xmax = 0.75)\n",
+                "\tel_sc = scatter!(\n",
+                "\t\telectrons_ax,\n",
+                "\t\t[1 for i in 1:nstates/2],\n",
+                "\t\tbath.bathstates[result[:OutputDynamicsVariables][idx][1500].state .|> Int],\n",
+                "\t\tcolor = bath.bathstates[result[:OutputDynamicsVariables][idx][1500].state .|> Int],\n",
+                "\t\t# strokewidth = 0.75,\n",
+                "\t\tmarkersize = 20,\n",
+                "\t\tmarker = '↑',\n",
+                "\t\tcolormap = :turbo\n",
+                "\t)\n",
+                "\tylims!(electrons_ax, bath.bathstates[7] - 0.025, bath.bathstates[13] + 0.025)\n",
+                "\taxislegend(potential_ax, position = :rt)\n",
+                "\trecord(fig, \"../resources/Tutorial_MQCD_methods/trj2.mp4\", 1:15:length(result[:OutputPosition][idx])) do i\n",
+                "\t\tparticle_pos.positions[] = [\n",
+                "\t\t\tPoint2f(\n",
+                "\t\t\t\tresult[:OutputPosition][idx][i] |> first,\n",
+                "\t\t\t\tNQCModels.potential(thossmodel, result[:OutputPosition][idx][i])[\n",
+                "\t\t\t\t\tresult[:OutputDiscreteState][idx][i] |> last,\n",
+                "\t\t\t\t\tresult[:OutputDiscreteState][idx][i] |> last,\n",
+                "\t\t\t\t],\n",
+                "\t\t\t)]\n",
+                "\t\tparticle_pos.color = colors[result[:OutputDiscreteState][idx][i] |> first]\n",
+                "\t\tel_sc.positions[] = [\n",
+                "\t\t\tPoint2f(1, bath.bathstates[Int(el)]) for el in result[:OutputDynamicsVariables][idx][i].state\n",
+                "\t\t]\n",
+                "\tend\n",
+                "end\n",
+                "plot_trajectory(2)\n",
+                "nothing\n",
+                ""
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "17",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "![Example IESH trajectory animation. The electronic ground and excited states for the particle scattering from the surface are shown in the left panel. The right panel shows impurity and bath electronic states and their current occupation with independent electrons.](../resources/Tutorial_MQCD_methods/trj2.mp4){width=\"100%\"}\n",
+                "\n",
+                "\n",
+                "## Molecular Dynamics with Electronic Friction"
+            ]
+        },
+        {
+            "id": "18",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "### Run MDEF calculations\n",
+                "ρ = (nstates+1)/(bandwidth)\n",
+                "dist = nuclear_distribution\n",
+                "bath = TrapezoidalRule(nstates, bandmin, bandmax)\n",
+                "model = AndersonHolstein(thossmodel, bath)\n",
+                "\n",
+                "sim = Simulation{DiabaticMDEF}(atoms, model; temperature,\n",
+                "    friction_method=DynamicsMethods.ClassicalMethods.WideBandExact(ρ, β)\n",
+                ")\n",
+                "\n",
+                "\n",
+                "result = run_dynamics(sim,\n",
+                "                    (0.0, tcut),\n",
+                "                    dist;\n",
+                "                    trajectories=ntrajs,\n",
+                "                    callback=terminate,\n",
+                "                    output=output,\n",
+                "                    saveat=[0,tcut],\n",
+                "                    dt\n",
+                "                   )"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "19",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+            ]
+        },
+        {
+            "id": "20",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "println(typeof(atoms))"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "21",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "# Broadened Classical Master Equation\n",
+                "Finally, we can also use the Broadened Classical Master Equation (BCME) which is governed by the two diabatic energy curves and the hybridisation function Γ themselves instead of a Newns-Anderson Hamiltonian. We therefore have to adapt the electronic subspace and thence the total space which is done in the first and second line, respectively. The rest goes as ever. Albeit one might consider BCME calculations to be gimmicky, an advantageous attribute of them is that they are computationally extremely efficient and can therefore serve as a nice test system for analysis tools which require numerical statics on the one hand, and electronically non-adiabatic effects on the other hand. I definitely learned to love them ;P"
+            ]
+        },
+        {
+            "id": "22",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "### Calculation of BCME\n",
+                "electronic_distribution = PureState(1, Diabatic())\n",
+                "dist = electronic_distribution * nuclear_distribution\n",
+                "\n",
+                "sim = Simulation{BCME}(atoms, thossmodel;\n",
+                "    temperature, bandwidth=bandwidth)\n",
+                "\n",
+                "\n",
+                "result = run_dynamics(sim,\n",
+                "                    (0.0, tcut),\n",
+                "                    dist;\n",
+                "                    trajectories=ntrajs,\n",
+                "                    callback=terminate,\n",
+                "                    output=output,\n",
+                "                    saveat=[0,tcut],\n",
+                "                    dt\n",
+                "                   )"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 0
+        },
+        {
+            "id": "23",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+            ]
+        }
+    ],
+    "timestamp": "2026-07-31T14:26:30.759",
+    "file": "/Users/spears/Documents/Projects/Repos/NQCRecipes/tutorials/Tutorial_MQCD_methods.qmd",
+    "qnr_schema_version": "1.0.0"
+}

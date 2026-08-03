@@ -2,3 +2,4 @@
 /_site/
 .vscode/
 .python-version
+**/*.quarto_ipynb
